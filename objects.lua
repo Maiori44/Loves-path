@@ -139,8 +139,13 @@ function TryMove(mo, momx, momy)
       collisions[obstmo.type][TILE_CUSTOM2] = tilesets[tilesetname].collision[TILE_CUSTOM2]
       collisions[obstmo.type][TILE_CUSTOM3] = tilesets[tilesetname].collision[TILE_CUSTOM3]
       if not collisions[mo.type][obstmo.type] then return false end
-      local check = collisions[mo.type][obstmo.type](mo, obstmo, momx, momy)
-      if check ~= nil then return check end
+      local check
+      if type(collisions[mo.type][obstmo.type]) == "function" then
+        check = collisions[mo.type][obstmo.type](mo, obstmo, momx, momy)
+      else
+        check = true
+      end
+      if check ~= nil then return true end
     end
     mo.y = mo.y+momy
     mo.x = mo.x+momx
