@@ -350,7 +350,7 @@ AddObjectType("snowman", {}, function(mo)
   if not player then return end
   local time = leveltime%180
   if time == 0 then
-    FireShot(mo, mo.sprite, GetExtraQuad(mo.sprite), 0.7)
+    FireShot(mo, mo.sprite, GetExtraQuad(mo.sprite))
   elseif time == 110 then
     FacePlayer(mo)
     local tx, ty = DirectionMomentum(mo.direction)
