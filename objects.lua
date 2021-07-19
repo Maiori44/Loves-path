@@ -317,6 +317,7 @@ AddObjectType("bullet", {
   [TILE_SLIME] = true,
   [TILE_CHASM1] = true,
   [TILE_CHASM2] = true,
+  bullet = true,
 }, RemoveStandingObject)
 
 ---CHAPTER 2
