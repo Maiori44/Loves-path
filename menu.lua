@@ -79,7 +79,7 @@ menu = {
     {name = "Start Game", func = function() 
       if lastmap == 1 then 
         gamemap = 0
-        LoadMap("map0.map")
+        LoadMap("map00.map")
         frames = 0
         seconds = 0
         minutes = 0
