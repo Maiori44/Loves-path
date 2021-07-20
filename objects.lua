@@ -100,16 +100,17 @@ function StopObject(mo, momx, momy)
   mo.momy = 0
 end
 
-function PushObject(_, obstmo, momx, momy)
-  obstmo.lastaxis = (momx ~= 0 and "x") or "y"
-  if not TryMove(obstmo, momx, momy) then return false end
-end
-
 local function PusherCheck(mo)
   local mopos = tilemap[mo.y][mo.x]
   if mopos == TILE_EMPTY or mopos == TILE_CHASM1 or mopos == TILE_CHASM2 then
     RemoveObject(mo)
   end
+end
+
+function PushObject(_, obstmo, momx, momy)
+  obstmo.lastaxis = (momx ~= 0 and "x") or "y"
+  PusherCheck(obstmo)
+  if not TryMove(obstmo, momx, momy) then return false end
 end
 
 function SlowPushObject(mo, obstmo, momx, momy)
@@ -145,7 +146,7 @@ function TryMove(mo, momx, momy)
       else
         check = true
       end
-      if check ~= nil then return true end
+      if check ~= nil then return check end
     end
     mo.y = mo.y+momy
     mo.x = mo.x+momx
@@ -182,7 +183,7 @@ function MomentumDirection(checkx, checky)
 end
 
 function GetDistance(mo1, mo2)
-  return math.abs(mo1.x-mo2.x), math.abs(mo1.y-mo2.y)
+  return mo1.x-mo2.x, mo1.y-mo2.y
 end
 
 function DashObject(mo)
@@ -197,8 +198,8 @@ end
 
 function FacePlayer(mo)
   distx, disty = GetDistance(mo, player)
-  local py = (disty/disty)*-1
-  local px = (distx/distx)*-1
+  local py = (disty/math.abs(disty))*-1
+  local px = (distx/math.abs(distx))*-1
   if ((distx ~= 0 and distx < disty and collisions[mo.type][tilemap[mo.y][mo.x-distx]])
   or (disty == 0 or not collisions[mo.type][tilemap[mo.y+py][mo.x]])) and collisions[mo.type][tilemap[mo.y][mo.x+px]] then
     mo.direction = MomentumDirection(px, 0) or DIR_LEFT
