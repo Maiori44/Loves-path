@@ -89,7 +89,7 @@ function SearchCustom()
           finalname = finalname..".dat"
         end
         savefile = finalname
-        LoadLastmap()
+        LoadData()
       end,
       UpdateFrame = nil,
       leveltime = nil,
@@ -178,6 +178,7 @@ function SearchCustom()
       RemoveMovingObject = RemoveMovingObject,
       RemoveStandingObject = RemoveStandingObject,
       RemoveCollidedObject = RemoveCollidedObject,
+      EraseObject = EraseObject,
       StopObject = StopObject,
       PushObject = PushObject,
       SlowPushObject = SlowPushObject,

@@ -1,5 +1,6 @@
 local sound = require "music"
 local particles = require "particles"
+local coins = require "coins"
 
 -- TILESET STRUCTURE
 -- 01 02 03 WALLS
@@ -76,6 +77,7 @@ tilemap = {}
 local playersprite = love.graphics.newImage("Sprites/player.png")
 local keysprite = love.graphics.newImage("Sprites/key.png")
 local enemysprite = love.graphics.newImage("Sprites/Enemies/forest.png")
+local coinsprite = love.graphics.newImage("Sprites/coin.png")
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -123,6 +125,9 @@ function LoadMap(mapname)
     end
   end
   file:close()
+  if coins[gamemap] and not coins[gamemap].got then
+    SpawnObject(coinsprite, coins[gamemap].x, coins[gamemap].y, "coin", GetQuads(8, coinsprite))
+  end
   if customEnv then customEnv.tilemap = tilemap end
   if oldtileset ~= tilesetname then
     enemysprite = love.graphics.newImage(path.."Enemies/"..tilesetname)

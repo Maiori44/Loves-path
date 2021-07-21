@@ -1,4 +1,4 @@
-VERSION = "Version 44 ALPHA 1.2"
+VERSION = "Version 45 ALPHA 1.3"
 
 local SetColor = love.graphics.setColor
 
@@ -93,7 +93,7 @@ function love.load(args)
   player = nil
   gamemapname = ""
   musicname = ""
-  pcall(LoadData)
+  pcall(LoadSettings)
   --[[if menu.settings[7].value == 1 then
     local console = io.open("log "..os.date()..".txt", "w+")
     io.output(console)
@@ -643,8 +643,8 @@ end
 
 function love.quit()
   if dontquit then return false end
+  SaveSettings()
   SaveData()
-  SaveLastmap()
 end
 
 --[[function love.errorhandler(msg)

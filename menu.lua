@@ -1,4 +1,5 @@
 local sound = require "music"
+local coins = require "coins"
 
 pointer = 1
 local valuesnames = {[0] = "off", [1] = "on"}
@@ -70,8 +71,8 @@ local function ResetData()
   for i = 1,#menu.settings-2 do
     menu.settings[i].valuename = valuesnames[menu.settings[i].value]
   end
+  SaveSettings()
   SaveData()
-  SaveLastmap()
 end
 
 menu = {
@@ -138,7 +139,7 @@ menu = {
     end},
     {name = "Back", func = function()
       menu.settings[#menu.settings-1].name = "Erase Data"
-      SaveData() 
+      SaveSettings() 
       gamestate = "title"
       pointer = 1
     end}
@@ -243,7 +244,7 @@ menu = {
 
 GetAllMaps()
 
-function SaveData()
+function SaveSettings()
   local file = io.open("settings.cfg", "w+b")
   for i = 1,#menu.settings-2 do
     file:write(string.char(menu.settings[i].value))
@@ -260,17 +261,23 @@ local function DataCheck(val)
 end
 
 savefile = "save.dat"
-function SaveLastmap()
+function SaveData()
   local file = io.open(savefile, "w+b")
   file:write(string.char(math.min(lastmap, 255)))
   file:write(string.char(math.min(lastmap, 255)))
+  for k, coin in pairs(coins) do
+    if type(k) == "number" then
+      file:write(string.char(k))
+      file:write(string.char((coin.got and 1) or 0))
+    end
+  end
   file:close()
 end
 
-function LoadLastmap()
+function LoadData()
   local savefile = io.open(savefile, "rb")
   if not savefile then
-    SaveLastmap()
+    SaveData()
     return
   end
   local possibleval = savefile:read(1)
@@ -289,11 +296,11 @@ function LoadLastmap()
   end
 end
 
-function LoadData()
-  LoadLastmap()
+function LoadSettings()
+  LoadData()
   local file = io.open("settings.cfg", "rb")
   if not file then
-    SaveData()
+    SaveSettings()
     return
   end
   for i = 1,#menu.settings-2 do

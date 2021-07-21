@@ -1,5 +1,6 @@
 local sound = require "music"
 local particles = require "particles"
+local coins = require "coins"
 
 -- DIRECTIONAL OBJECT SPRITE STRUCTURE
 -- 1 2 LEFT
@@ -56,6 +57,11 @@ end
 
 function RemoveCollidedObject(_, obstmo)
   RemoveObject(obstmo)
+end
+
+function EraseObject(mo)
+  objects[mo.key] = nil
+  if mo.type == "player" then player = nil end
 end
 
 local function RedSwitch(mo, momx, momy)
@@ -210,7 +216,6 @@ end
 
 function AddObjectType(typename, collision, thinker)
   CheckArgument(1, "AddObjectType", typename, "string")
-  CheckArgument(2, "AddObjectType", collision, "table")
   if collisions[typename] then error('object type "'..typename..'" arleady exists!') end
   collisions[typename] = setmetatable(collision or {}, {
     __index = {
@@ -254,7 +259,7 @@ AddObjectType("player", {
   [TILE_GOAL] = function()
   gamemap = gamemap+1
   lastmap = math.max(gamemap+1, lastmap)
-  SaveLastmap()
+  SaveData()
   if gamemap == #menu["select level"]-1 then
     pointer = 1
     gamestate = "the end"
@@ -275,12 +280,16 @@ AddObjectType("player", {
   sound.reset()
   sound.playSound("win.wav")
   end,
+  coin = function(_, obstmo) coins[gamemap].got = true EraseObject(obstmo) end,
   key = PushObject,
   enemy = RemoveObject,
   bullet = RemoveObject,
   snowball = SlowPushObject,
   snowman = RemoveObject,
 })
+
+--COIN
+AddObjectType("coin")
 
 --KEY
 AddObjectType("key", {
