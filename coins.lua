@@ -1,6 +1,8 @@
+local sprite = love.graphics.newImage("Sprites/coin.png")
+
 local coins = {
-  sprite = love.graphics.newImage("Sprites/coin.png"),
-  quads = GetQuads(8, love.graphics.newImage("Sprites/coin.png")),
+  sprite = sprite,
+  quads = GetQuads(8, sprite),
   hudtimer = 0;
   [0] = {x = 2, y = 2, got = false},
   [4] = {x = 13, y = 9, got = false},

@@ -15,6 +15,8 @@ function love.graphics.setColor(r, g, b, a)
   SetColor(r, g, b, a)
 end
 
+love.graphics.setBackgroundColor(0.1, 0.1, 0.1, 1)
+
 function GetMapNum(mapnum)
   mapnum = tostring(mapnum)
   if tonumber(mapnum) < 10 then mapnum = "0"..mapnum end
@@ -258,6 +260,12 @@ local function DrawTilemap()
   end
 end
 
+local hudcoin = love.graphics.newImage("Sprites/hudcoin.png")
+local hudcoinquads = {
+  notgot = love.graphics.newQuad(1, 1, 8, 8, 20, 10),
+  got = love.graphics.newQuad(11, 1, 8, 8, 20, 10),
+}
+
 local function DrawMenu()
   if gamestate == "title" then
     love.graphics.draw(titlescreen, (screenwidth/2)-150, 50)
@@ -309,9 +317,27 @@ local function DrawMenu()
         love.graphics.printf("back", 0, 470, screenwidth, "center")
       else
         love.graphics.print(menu[gamestate][i].name, x, ly)
+        if coins[i-1] then
+          love.graphics.draw(hudcoin, hudcoinquads[((coins[i-1].got and "got") or "notgot")], x, ly-5)
+        end
       end
     end
   end
+end
+
+local function DrawCoinHud(time)
+  love.graphics.draw(coins.sprite, coins.quads[math.floor((time%(#coins.quads*10))/10)+1], 10, screenheight-50)
+  local coinstotal = 0
+  local coinsgot = 0
+    for k, coin in pairs(coins) do
+      if type(k) == "number" then
+        coinstotal = coinstotal+1
+      if coin.got then
+        coinsgot = coinsgot+1
+      end
+    end
+  end
+  love.graphics.print(coinsgot.."/"..coinstotal, 50, screenheight-40)
 end
 
 local snowsprite = love.graphics.newImage("Sprites/Chapter 2/snowball.png")
@@ -455,18 +481,7 @@ local drawModes = {
     end
     if coins.hudtimer > 0 then
       love.graphics.setColor(1, 1, 1, ((math.min(math.max(coins.hudtimer, 0), 60)%160)/60))
-      love.graphics.draw(coins.sprite, coins.quads[math.floor((leveltime%(#coins*10))/10)+1], 10, screenheight-50)
-      local coinstotal = 0
-      local coinsgot = 0
-      for k, coin in pairs(coins) do
-        if type(k) == "number" then
-          coinstotal = coinstotal+1
-          if coin.got then
-            coinsgot = coinsgot+1
-          end
-        end
-      end
-      love.graphics.print(coinsgot.."/"..coinstotal, 50, screenheight-40)
+      DrawCoinHud(leveltime)
       love.graphics.setColor(1, 1, 1, 1)
     end
   end,
@@ -482,7 +497,7 @@ local drawModes = {
     love.graphics.printf(credits, 0, 120, screenwidth, "center")
     DrawMenu()
   end,
-  ["select level"] = DrawMenu,
+  ["select level"] = function() DrawMenu() love.graphics.setColor(1, 1, 1, 1) DrawCoinHud(os.clock()*50) end,
   ["select map"] = DrawMenu,
   editing = function()
     DrawTilemap()
