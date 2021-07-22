@@ -49,11 +49,26 @@ function particles.spawnWarning(x, y)
   for i = 1,40 do
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
-      particles.list[i].particle = love.graphics.newParticleSystem(love.graphics.newImage(path.."warning.png"), 2)
+      particles.list[i].particle = love.graphics.newParticleSystem(love.graphics.newImage(path.."warning.png"), 1)
       particles.list[i].particle:setParticleLifetime(1)
       particles.list[i].particle:setSizes(1, 1.5)
       particles.list[i].particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
       particles.list[i].particle:emit(1)
+      break
+    end
+  end
+end
+
+function particles.spawnStars(x, y)
+  for i = 1,40 do
+    if not particles.list[i] then
+      particles.list[i] = {x = x, y = y}
+      particles.list[i].particle = love.graphics.newParticleSystem(love.graphics.newImage(path.."star.png"), 10)
+      particles.list[i].particle:setParticleLifetime(2, 3)
+      particles.list[i].particle:setLinearAcceleration(-100, -100, 100, 100)
+      particles.list[i].particle:setSizes(1, 0)
+      particles.list[i].particle:setColors(1, 1, 1, 0.7, 1, 1, 1, 0)
+      particles.list[i].particle:emit(10)
       break
     end
   end
