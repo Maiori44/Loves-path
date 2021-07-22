@@ -29,6 +29,35 @@ function CheckArgument(n, funcname, arg, ctype)
   end
 end
 
+function GetDirectionalQuads(image)
+  local quads = {}
+  local imagewidth = image:getWidth()
+  local imageheight = image:getHeight()
+  quads[1] = love.graphics.newQuad(1, 1, 32, 32, imagewidth, imageheight)
+  quads[2] = love.graphics.newQuad(35, 1, 32, 32, imagewidth, imageheight)
+  quads[3] = love.graphics.newQuad(1, 35, 32, 32, imagewidth, imageheight)
+  quads[4] = love.graphics.newQuad(35, 35, 32, 32, imagewidth, imageheight)
+  quads[5] = love.graphics.newQuad(1, 69, 32, 32, imagewidth, imageheight)
+  quads[6] = love.graphics.newQuad(35, 69, 32, 32, imagewidth, imageheight)
+  quads[7] = love.graphics.newQuad(1, 103, 32, 32, imagewidth, imageheight)
+  quads[8] = love.graphics.newQuad(35, 103, 32, 32, imagewidth, imageheight)
+  return quads
+end
+
+function GetQuads(neededquads, image)
+  local quads = {}
+  local imagewidth = image:getWidth()
+  local imageheight = image:getHeight()
+  for i = 0,neededquads-1 do
+    table.insert(quads, love.graphics.newQuad(1+(34*i), 1, 32, 32, imagewidth, imageheight))
+  end
+  return quads
+end
+
+function GetExtraQuad(image)
+  return {love.graphics.newQuad(69, 1, 32, 32, image:getWidth(), image:getHeight())}
+end
+
 require "maps"
 require "objects"
 require "menu"
@@ -36,6 +65,7 @@ require "player"
 utf8 = require "utf8"
 local sound = require "music"
 local particles = require "particles"
+local coins = require "coins"
 
 io.stdout:setvbuf("no")
 
@@ -104,6 +134,7 @@ function love.load(args)
 end
 
 function love.update(dt)
+  coins.hudtimer = math.max(coins.hudtimer-1, 0)
   if customEnv then customEnv.leveltime = leveltime end
   if #sound.list >= 10 then sound.collectGarbage() end
   if #particles.list >= 20 then particles.collectGarbage() end
@@ -283,35 +314,6 @@ local function DrawMenu()
   end
 end
 
-function GetDirectionalQuads(image)
-  local quads = {}
-  local imagewidth = image:getWidth()
-  local imageheight = image:getHeight()
-  quads[1] = love.graphics.newQuad(1, 1, 32, 32, imagewidth, imageheight)
-  quads[2] = love.graphics.newQuad(35, 1, 32, 32, imagewidth, imageheight)
-  quads[3] = love.graphics.newQuad(1, 35, 32, 32, imagewidth, imageheight)
-  quads[4] = love.graphics.newQuad(35, 35, 32, 32, imagewidth, imageheight)
-  quads[5] = love.graphics.newQuad(1, 69, 32, 32, imagewidth, imageheight)
-  quads[6] = love.graphics.newQuad(35, 69, 32, 32, imagewidth, imageheight)
-  quads[7] = love.graphics.newQuad(1, 103, 32, 32, imagewidth, imageheight)
-  quads[8] = love.graphics.newQuad(35, 103, 32, 32, imagewidth, imageheight)
-  return quads
-end
-
-function GetQuads(neededquads, image)
-  local quads = {}
-  local imagewidth = image:getWidth()
-  local imageheight = image:getHeight()
-  for i = 0,neededquads-1 do
-    table.insert(quads, love.graphics.newQuad(1+(34*i), 1, 32, 32, imagewidth, imageheight))
-  end
-  return quads
-end
-
-function GetExtraQuad(image)
-  return {love.graphics.newQuad(69, 1, 32, 32, image:getWidth(), image:getHeight())}
-end
-
 local snowsprite = love.graphics.newImage("Sprites/Chapter 2/snowball.png")
 local snowmansprite = love.graphics.newImage("Sprites/Chapter 2/snowman.png")
 
@@ -424,6 +426,18 @@ local tileDescriptions = {
   [TILE_CUSTOM3] = "You're not supposed to see this message"
 }
 
+local credits =
+"-Coding-\n"..
+"Felix44\n\n"..
+"-Sprites-\n"..
+"Shadow|Pazzo\n"..
+"MAKYUNI\n\n"..
+"-Music-\n"..
+"MAKYUNI\n\n"..
+"-Maps-\n"..
+"Felix44\n"..
+"Fele88"
+
 local drawModes = {
   ingame = function()
     DrawTilemap()
@@ -439,6 +453,22 @@ local drawModes = {
     if not player then
       love.graphics.printf("Press [R] to retry", 0, 20, screenwidth, "center")
     end
+    if coins.hudtimer > 0 then
+      love.graphics.setColor(1, 1, 1, ((math.min(math.max(coins.hudtimer, 0), 60)%160)/60))
+      love.graphics.draw(coins.sprite, coins.quads[math.floor((leveltime%(#coins*10))/10)+1], 10, screenheight-50)
+      local coinstotal = 0
+      local coinsgot = 0
+      for k, coin in pairs(coins) do
+        if type(k) == "number" then
+          coinstotal = coinstotal+1
+          if coin.got then
+            coinsgot = coinsgot+1
+          end
+        end
+      end
+      love.graphics.print(coinsgot.."/"..coinstotal, 50, screenheight-40)
+      love.graphics.setColor(1, 1, 1, 1)
+    end
   end,
   title = DrawMenu,
   pause = function()
@@ -449,18 +479,6 @@ local drawModes = {
   end,
   settings = DrawMenu,
   credits = function()
-    local n = "\n"
-    local credits =
-    "-Coding-"..n..
-    "Felix44"..n..n..
-    "-Sprites-"..n..
-    "Shadow|Pazzo"..n..
-    "MAKYUNI"..n..n..
-    "-Music-"..n..
-    "MAKYUNI"..n..n..
-    "-Maps-"..n..
-    "Felix44"..n..
-    "Fele88"
     love.graphics.printf(credits, 0, 120, screenwidth, "center")
     DrawMenu()
   end,

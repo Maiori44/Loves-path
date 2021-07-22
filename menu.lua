@@ -19,10 +19,10 @@ local function GetAllMaps()
   end
   local possiblemaps = love.filesystem.getDirectoryItems((love.filesystem.isFused() and "Source/Maps") or "Maps")
   for k, mapname in ipairs(possiblemaps) do
-    if mapname:sub(mapname:len()-3) == ".map" and (mapname:match("%d+%d") or mapname:match("%d")) then
+    if mapname:sub(mapname:len()-3) == ".map" and mapname:match("%d+%d") then
       menu["select level"][mapn] = {name = tostring(mapn), func = function()
         LoadMap(mapname)
-        gamemap = tonumber(mapname:match("%d+%d")) or tonumber(mapname:match("%d"))
+        gamemap = tonumber(mapname:match("%d+%d"))
         frames = 0
         seconds = 0
         minutes = 0
@@ -67,9 +67,14 @@ local function ResetData()
   menu.settings[5].value = 1
   menu.settings[6].value = 1
   --menu.settings[7].value = 1
-  lastmap = 1
   for i = 1,#menu.settings-2 do
     menu.settings[i].valuename = valuesnames[menu.settings[i].value]
+  end
+  lastmap = 1
+  for k, v in pairs(coins) do
+    if type(k) == "number" then
+      coins[k].got = false
+    end
   end
   SaveSettings()
   SaveData()
@@ -294,6 +299,13 @@ function LoadData()
     love.window.showMessageBox("Error while loading saved data!", errormsg, "warning")
     lastmap = 1
   end
+  pcall(function()
+    repeat
+      local mapnum = savefile:read(1):byte()
+      local coingot = savefile:read(1):byte()
+      if coins[mapnum] and coingot then coins[mapnum].got = (coingot == 1 and true) or false end
+    until not mapnum or not coingot
+  end)
 end
 
 function LoadSettings()

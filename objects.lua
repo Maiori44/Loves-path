@@ -280,7 +280,7 @@ AddObjectType("player", {
   sound.reset()
   sound.playSound("win.wav")
   end,
-  coin = function(_, obstmo) coins[gamemap].got = true EraseObject(obstmo) end,
+  coin = function(_, obstmo) coins.hudtimer = 160 coins[gamemap].got = true EraseObject(obstmo) end,
   key = PushObject,
   enemy = RemoveObject,
   bullet = RemoveObject,
