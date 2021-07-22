@@ -493,7 +493,7 @@ local drawModes = {
     local xlen = math.floor((mapwidth*32*scale)/mapwidth)*mapwidth
     local ylen = math.floor((mapheight*32*scale)/mapheight)*mapheight
     love.graphics.rectangle("line", x, y, xlen, ylen)
-    love.graphics.print(mouse.mode, 10, screenheight-20)
+    love.graphics.print(mouse.mode..((mouse.mode == "editing" and " x:"..mouse.x.." y:"..mouse.y) or ""), 10, screenheight-20)
     if wheelmoved > 0 and mouse.mode == "editing" then
       love.graphics.setColor(1, 1, 1, ((math.min(math.max(wheelmoved, 0), 60)%120)/60))
       local tilesetx = screenwidth/15
