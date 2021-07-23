@@ -316,9 +316,10 @@ local function DrawMenu()
       if menu[gamestate][i].name == "back" then
         love.graphics.printf("back", 0, 470, screenwidth, "center")
       else
-        love.graphics.print(menu[gamestate][i].name, x, ly)
+        local n = menu[gamestate][i].name
+        love.graphics.print(n, x, ly)
         if coins[i-1] then
-          love.graphics.draw(hudcoin, hudcoinquads[((coins[i-1].got and "got") or "notgot")], x, ly-5)
+          love.graphics.draw(hudcoin, hudcoinquads[((coins[i-1].got and "got") or "notgot")], x+font:getWidth(n), ly)
         end
       end
     end

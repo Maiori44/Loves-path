@@ -337,7 +337,7 @@ AddObjectType("bullet", {
   [TILE_SLIME] = true,
   [TILE_CHASM1] = true,
   [TILE_CHASM2] = true,
-  bullet = true,
+  bullet = function(mo, obstmo) RemoveObject(mo) RemoveObject(obstmo) end,
 }, RemoveStandingObject)
 
 ---CHAPTER 2
