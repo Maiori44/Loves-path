@@ -7,7 +7,7 @@ local coins = {
   [4] = {x = 13, y = 9, got = false},
   [5] = {x = 18, y = 5, got = false},
   [8] = {x = 1, y = 1, got = false},
-  [10] = {x = 3, y = 5, got = false}
+  [11] = {x = 13, y = 13, got = false}
 }
 
 return coins
