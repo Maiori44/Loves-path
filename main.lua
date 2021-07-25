@@ -1,4 +1,4 @@
-VERSION = "Version 47 ALPHA 1.3"
+VERSION = "Version 48 ALPHA 1.3"
 
 local SetColor = love.graphics.setColor
 
@@ -625,6 +625,12 @@ function debug.collectInfo()
     sound.musicname.."\n"..
     sound.music:tell().."/"..sound.music:getDuration().."\n"
   end
+  --[[debuginfo = debuginfo.."\nCoins:".."\n"
+  for k, coin in pairs(coins) do
+    if type(k) == "number" then
+      debuginfo = debuginfo..k..": "..tostring(coin.got).."\n"
+    end
+  end]]
   local scale = 0.7
   local i = 0
   for w in debuginfo:gmatch("\n") do

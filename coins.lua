@@ -10,4 +10,12 @@ local coins = {
   [11] = {x = 13, y = 13, got = false}
 }
 
+function coins.reset()
+  for k, v in pairs(coins) do
+    if type(k) == "number" then
+      coins[k] = nil
+    end
+  end
+end
+
 return coins

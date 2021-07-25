@@ -1,4 +1,5 @@
 local sound = require "music"
+local coins = require "coins"
 
 local path = "Custom"
 if love.filesystem.isFused() then
@@ -94,14 +95,15 @@ function SearchCustom()
       UpdateFrame = nil,
       leveltime = nil,
       
-      --SOUND TEST LIBRARY--
+      --SOUND LIBRARY--
+      PlaySound = sound.playSound,
       AddSoundTestEntry = function(name, subtitle, creator, filename, required)
         CheckArgument(1, "AddSoundTestEntry", name, "string")
         CheckArgument(4, "AddSoundTestEntry", filename, "string")
         table.insert(sound.soundtest,
         {name = name, subtitle = subtitle or "", creator = creator or "", filename = filename, require = tonumber(required)})
       end,
-      ResetSoundTestEntries = function()
+      ResetSoundTest = function()
         sound.soundtest = {{name = "Love's path", subtitle = "Main menu", creator = "MAKYUNI", filename = "menu.ogg"}}
       end,
       
@@ -157,6 +159,13 @@ function SearchCustom()
       TILE_CUSTOM3 = 48,
       tilemap = tilemap,
       CheckMap = CheckMap,
+      ResetCoins = coins.reset,
+      AddCustomCoin = function(map, x, y)
+        CheckArgument(1, "AddCustomCoin", map, "number")
+        CheckArgument(2, "AddCustomCoin", x, "number")
+        CheckArgument(3, "AddCustomCoin", y, "number")
+        coins[map] = {x = x, y = y, got = false}
+      end,
       MapLoad = nil,
       
       --SPRITES LIBRARY--
