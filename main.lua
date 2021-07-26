@@ -1,4 +1,4 @@
-VERSION = "Version 48 ALPHA 1.3"
+VERSION = "Version 49 ALPHA 1.3"
 
 local SetColor = love.graphics.setColor
 
@@ -235,9 +235,10 @@ local function DrawTilemap()
     end
   end
   for k, particle in pairs(particles.list) do
-    local x = (centerx+particle.x*math.floor(width*scale))+(16*scale)
-    local y = (centery+particle.y*math.floor(height*scale))+(16*scale)
-    love.graphics.draw(particle.particle, x, y, 0, scale)
+    print(k)
+    local x = (k > 40 and screenwidth+10) or (centerx+particle.x*math.floor(width*scale))+(16*scale)
+    local y = (k > 40 and -10) or (centery+particle.y*math.floor(height*scale))+(16*scale)
+    love.graphics.draw(particle.particle, x, y, 0, (k > 40 and 1) or scale)
   end
   for k, mo in pairs(objects) do
     local x = centerx+mo.x*math.floor(width*scale)
@@ -371,6 +372,7 @@ tilesets = {
   },
   ["frost.png"] = { --CHAPTER 2
     vanilla = true,
+    snow = true,
     description = {
       [TILE_CUSTOM1] = "SNOWBALL".."\nA Snowball will spawn in this tile", 
       [TILE_CUSTOM2] = "STICKS WALL"..wallDesc.."\nIf a Snowball rams this wall it will collapse",

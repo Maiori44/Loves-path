@@ -160,6 +160,9 @@ function LoadMap(mapname)
     customEnv.MapLoad(gamemap, tilesetname)
   end
   particles.reset()
+  if tilesets[tilesetname].snow then
+    particles.spawnSnow()
+  end
 end
 
 function CheckMap(...)

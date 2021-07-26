@@ -1,19 +1,5 @@
 local particles = {list = {}}
 
---[[function particles.setMain(particlename)
-  if particlename == "" or not love.filesystem.getInfo("Sprites/Particles/"..particlename, "file") then
-    particles.main = nil
-    return
-  end
-  particles.main = love.graphics.newParticleSystem(love.graphics.newImage("Sprites/Particles/"..particlename), 60)
-  particles.main:setParticleLifetime(7, 10)
-  particles.main:setEmissionRate(5)
-  particles.main:setSizeVariation(1)
-  particles.main:setLinearAcceleration(20, 20, 80, 80)
-  particles.main:setSpin(1, 5)
-  particles.main:setColors(1, 1, 1, 1, 1, 1, 1, 0)
-end]]
-
 local path = "Sprites/Particles/"
 
 function particles.spawnSmoke(x, y)
@@ -72,6 +58,17 @@ function particles.spawnStars(x, y)
       break
     end
   end
+end
+
+function particles.spawnSnow()
+  particles.list[41] = {}
+  particles.list[41].particle = love.graphics.newParticleSystem(love.graphics.newImage("Sprites/Particles/snow.png"), 60)
+  particles.list[41].particle:setParticleLifetime(15, 25)
+  particles.list[41].particle:setEmissionRate(3)
+  particles.list[41].particle:setSizeVariation(1, 0.5)
+  particles.list[41].particle:setLinearAcceleration(-20, 0, -30, 100)
+  --particles.list[41].particle:setSpin(1, 5)
+  --particles.list[41].particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
 end
 
 function particles.update(dt)
