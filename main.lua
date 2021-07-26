@@ -235,7 +235,6 @@ local function DrawTilemap()
     end
   end
   for k, particle in pairs(particles.list) do
-    print(k)
     local x = (k > 40 and screenwidth+10) or (centerx+particle.x*math.floor(width*scale))+(16*scale)
     local y = (k > 40 and -10) or (centery+particle.y*math.floor(height*scale))+(16*scale)
     love.graphics.draw(particle.particle, x, y, 0, (k > 40 and 1) or scale)
