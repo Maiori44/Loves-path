@@ -1,4 +1,4 @@
-VERSION = "Version 49 ALPHA 1.3"
+VERSION = "Version 50 ALPHA 1.3"
 
 local SetColor = love.graphics.setColor
 
