@@ -160,8 +160,10 @@ function LoadMap(mapname)
     customEnv.MapLoad(gamemap, tilesetname)
   end
   particles.reset()
-  if tilesets[tilesetname].snow then
+  if tilesets[tilesetname].snow and not particles.list[41] then
     particles.spawnSnow()
+  elseif not tilesets[tilesetname].snow then
+    particles.reset(41)
   end
 end
 

@@ -62,13 +62,12 @@ end
 
 function particles.spawnSnow()
   particles.list[41] = {}
-  particles.list[41].particle = love.graphics.newParticleSystem(love.graphics.newImage("Sprites/Particles/snow.png"), 60)
+  particles.list[41].particle = love.graphics.newParticleSystem(love.graphics.newImage("Sprites/Particles/snow.png"), 100)
   particles.list[41].particle:setParticleLifetime(15, 25)
-  particles.list[41].particle:setEmissionRate(3)
+  particles.list[41].particle:setEmissionArea("normal", screenwidth+20, 0)
+  particles.list[41].particle:setEmissionRate(5)
   particles.list[41].particle:setSizeVariation(1, 0.5)
-  particles.list[41].particle:setLinearAcceleration(-20, 0, -30, 100)
-  --particles.list[41].particle:setSpin(1, 5)
-  --particles.list[41].particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
+  particles.list[41].particle:setLinearAcceleration(-30, 0, 30, 30)
 end
 
 function particles.update(dt)
@@ -88,9 +87,15 @@ function particles.collectGarbage()
   collectgarbage()
 end
 
-function particles.reset()
-  for k, v in pairs(particles.list) do
-    v.particle:reset()
+function particles.reset(num)
+  if not num then
+    for key = 1,40 do
+      local particle = particles.list[key]
+      if particle then particle.particle:reset() end
+    end
+  else
+    local particle = particles.list[num]
+    if particle then particle.particle:reset() end
   end
   particles.collectGarbage()
 end
