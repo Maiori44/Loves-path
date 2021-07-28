@@ -1,4 +1,4 @@
-VERSION = "Version 51 ALPHA 1.3"
+VERSION = "Version 52 ALPHA 1.3"
 
 local SetColor = love.graphics.setColor
 
@@ -235,7 +235,8 @@ local quadDrawingMethods = {
 }
 
 local function DrawTilemap()
-  if tilesets[tilesetname].glitch and gamestate == "ingame" and (math.ceil(os.clock()*1000)%4500 < 200) then
+  if tilesets[tilesetname].glitch and gamestate == "ingame" and menu.settings[7].value == 1
+  and (math.ceil(os.clock()*1000)%4500 < 200) then
     love.graphics.setShader(shader)
     sound.music:seek(math.max(sound.music:tell()-love.timer.getDelta(), 0))
   end
@@ -330,7 +331,7 @@ local function DrawMenu()
     end
     if menu[gamestate][i].value and menu[gamestate][i].valuename then 
       rectangle = screenwidth-screenwidth/8
-      love.graphics.printf(menu[gamestate][i].valuename, 0, y, screenwidth+screenwidth/8, "center")
+      love.graphics.printf(menu[gamestate][i].valuename, 0, y, screenwidth+screenwidth/5, "center")
     end
     if gamestate ~= "select level" then
       local name = menu[gamestate][i].name
@@ -391,6 +392,7 @@ local spikeDesc = "\nObjects in this tile will be destroyed"
 tilesets = {
   ["forest.png"] = { --CHAPTER 1
     vanilla = true,
+    glitch = true,
     description = {
       [TILE_CUSTOM1] = "UNUSED"..floorDesc, 
       [TILE_CUSTOM2] = "UNUSED"..floorDesc,

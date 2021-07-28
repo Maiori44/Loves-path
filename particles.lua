@@ -3,6 +3,7 @@ local particles = {list = {}}
 local path = "Sprites/Particles/"
 
 function particles.spawnSmoke(x, y)
+  if menu.settings[6].value == 0 then return end
   for i = 1,40 do
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
@@ -17,6 +18,7 @@ function particles.spawnSmoke(x, y)
 end
 
 function particles.spawnShards(x, y, mult)
+  if menu.settings[6].value == 0 then return end
   for i = 1,40 do
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
@@ -32,6 +34,7 @@ function particles.spawnShards(x, y, mult)
 end
 
 function particles.spawnWarning(x, y, speed)
+  if menu.settings[6].value == 0 then return end
   for i = 1,40 do
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
@@ -46,6 +49,7 @@ function particles.spawnWarning(x, y, speed)
 end
 
 function particles.spawnStars(x, y)
+  if menu.settings[6].value == 0 then return end
   for i = 1,40 do
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
@@ -61,6 +65,7 @@ function particles.spawnStars(x, y)
 end
 
 function particles.spawnSnow()
+  if menu.settings[6].value == 0 then return end
   particles.list[41] = {}
   particles.list[41].particle = love.graphics.newParticleSystem(love.graphics.newImage("Sprites/Particles/snow.png"), 100)
   particles.list[41].particle:setParticleLifetime(15, 25)

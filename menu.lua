@@ -66,7 +66,8 @@ local function ResetData()
   menu.settings[4].value = 1
   menu.settings[5].value = 1
   menu.settings[6].value = 1
-  --menu.settings[7].value = 1
+  menu.settings[7].value = 1
+  menu.settings[8].value = 1
   for i = 1,#menu.settings-2 do
     menu.settings[i].valuename = valuesnames[menu.settings[i].value]
   end
@@ -132,8 +133,9 @@ menu = {
       sound.setMusic("menu.ogg")
     end},
     {name = "Sounds", value = 1, valuename = "on", func = ToggleValue},
+    {name = "Particles", value = 1, valuename = "on", func = ToggleValue},
+    {name = "Flashing stuff", value = 1, valuename = "on", func = ToggleValue},
     {name = "Cutscenes", value = 1, valuename = "on", func = ToggleValue},
-    --{name = "Logs", value = 1, valuename = "on", func = ToggleValue},
     {name = "Erase Data", func = function()
       if menu.settings[#menu.settings-1].name == "Erase Data" then
         menu.settings[#menu.settings-1].name = "Are you sure?"
