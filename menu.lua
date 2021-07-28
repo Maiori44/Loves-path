@@ -206,7 +206,7 @@ menu = {
         local mapinfo = menu["create map"]
         SaveMap("Maps/map"..GetMapNum(mapinfo[1].int)..".map", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].string.."\n", mapinfo[5].int.."\n", mapinfo[6].int.."\n", true)
         gamemap = tonumber(mapinfo[1].int)
-        LoadEditorMap("map"..gamemap..".map")
+        LoadEditorMap("map"..GetMapNum(gamemap)..".map")
         leveltime = 0
         frametime = 0
         gamestate = "editing"
@@ -227,7 +227,7 @@ menu = {
     {name = "Save", func = function()
       local mapinfo = menu["map settings"]
       SaveMap("Maps/map"..GetMapNum(gamemap)..".map", mapinfo[1].string.."\n", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
-      LoadEditorMap("map"..gamemap..".map")
+      LoadEditorMap("map"..GetMapNum(gamemap)..".map")
       menu["map settings"][6].name = "Map saved!"
     end},
     {name = "Resume editing", func = function() gamestate = "editing" end},

@@ -236,5 +236,6 @@ function LoadEditorMap(mapname)
   mouse.mode = "editing"
   love.window.requestAttention()
   particles.reset()
+  particles.reset(41)
   return true
 end

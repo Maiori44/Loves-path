@@ -135,7 +135,31 @@ function love.load(args)
   --particles.setMain("leaf.png")
 end
 
+local shader = love.graphics.newShader([[
+//https://github.com/steincodes/godot-shader-tutorials/blob/master/Shaders/displace.shader
+//godot shader converted by Flamendless
+
+extern Image tex_displace;
+extern float dis_amount = 0.1;
+extern float dis_size = 0.1;
+extern float abb_amount_x = 0.1;
+extern float abb_amount_y = 0.1;
+extern float max_a = 0.5;
+extern number random;
+
+vec4 effect(vec4 color, Image texture, vec2 uv, vec2 screen_coords)
+{
+    vec4 disp = Texel(tex_displace, uv * dis_size);
+    vec2 new_uv = uv + disp.xy * dis_amount + random;
+    color.r = Texel(texture, new_uv - vec2(abb_amount_x, abb_amount_y)).r;
+    color.g = Texel(texture, new_uv).g;
+    color.b = Texel(texture, new_uv + vec2(abb_amount_x, abb_amount_y)).b;
+    color.a = Texel(texture, new_uv).a * max_a;
+    return color;
+}]])
+
 function love.update(dt)
+  shader:send("random", love.math.random()-0.5)
   coins.hudtimer = math.max(coins.hudtimer-1, 0)
   if customEnv then customEnv.leveltime = leveltime end
   if #sound.list >= 10 then sound.collectGarbage() end
@@ -211,6 +235,10 @@ local quadDrawingMethods = {
 }
 
 local function DrawTilemap()
+  if tilesets[tilesetname].glitch and gamestate == "ingame" and (math.ceil(os.clock()*1000)%4500 < 200) then
+    love.graphics.setShader(shader)
+    sound.music:seek(math.max(sound.music:tell()-love.timer.getDelta(), 0))
+  end
   local centerx = GetStartX()
   local centery = GetStartY()
   if tilesets[tilesetname].dark then
@@ -236,16 +264,23 @@ local function DrawTilemap()
       end 
     end
   end
-  for k, particle in pairs(particles.list) do
-    local x = (k > 40 and -10) or (centerx+particle.x*math.floor(width*scale))+(16*scale)
-    local y = (k > 40 and -10) or (centery+particle.y*math.floor(height*scale))+(16*scale)
-    love.graphics.draw(particle.particle, x, y, 0, (k > 40 and 1) or scale)
+  for k = 1,40 do
+    local particle = particles.list[k]
+    if particle then
+      local x = (centerx+particle.x*math.floor(width*scale))+(16*scale)
+      local y = (centery+particle.y*math.floor(height*scale))+(16*scale)
+      love.graphics.draw(particle.particle, x, y, 0, scale)--(k > 40 and 1) or scale)
+    end
   end
   for k, mo in pairs(objects) do
     local x = centerx+mo.x*math.floor(width*scale)
     local y = centery+mo.y*math.floor(height*scale)
     if not quadDrawingMethods[mo.quadtype] then error('object "'..mo.type..'"('..k..') has an invalid quad type!') end
     quadDrawingMethods[mo.quadtype](mo, x, y)
+  end
+  local snow = particles.list[41]
+  if snow then
+    love.graphics.draw(snow.particle, -10, -10)
   end
   if gamestate ~= "pause" and gamestate ~= "map settings" then
     love.graphics.setColor(1, 1, 1, (180%(math.min(math.max(leveltime, 120), 180))/60))
@@ -260,6 +295,7 @@ local function DrawTilemap()
     wheelmoved = wheelmoved-1
     love.graphics.setColor(1, 1, 1, 1)
   end
+  love.graphics.setShader()
 end
 
 local hudcoin = love.graphics.newImage("Sprites/hudcoin.png")
