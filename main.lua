@@ -1,4 +1,4 @@
-VERSION = "Version 50 ALPHA 1.3"
+VERSION = "Version 51 ALPHA 1.3"
 
 local SetColor = love.graphics.setColor
 
@@ -213,7 +213,9 @@ local quadDrawingMethods = {
 local function DrawTilemap()
   local centerx = GetStartX()
   local centery = GetStartY()
-  --love.graphics.setColor(0, 1, 1, 1)
+  if tilesets[tilesetname].dark then
+    love.graphics.setColor(0.3, 0.3, 0.3, 1)
+  end
   for i,row in ipairs(tilemap) do
     for j,tile in ipairs(row) do
       if tile ~= 0 then

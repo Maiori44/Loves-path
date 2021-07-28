@@ -31,12 +31,12 @@ function particles.spawnShards(x, y, mult)
   end
 end
 
-function particles.spawnWarning(x, y)
+function particles.spawnWarning(x, y, speed)
   for i = 1,40 do
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
       particles.list[i].particle = love.graphics.newParticleSystem(love.graphics.newImage(path.."warning.png"), 1)
-      particles.list[i].particle:setParticleLifetime(1)
+      particles.list[i].particle:setParticleLifetime(speed or 1)
       particles.list[i].particle:setSizes(1, 1.5)
       particles.list[i].particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
       particles.list[i].particle:emit(1)
