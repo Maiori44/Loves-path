@@ -37,7 +37,7 @@ end
 
 function RemoveObject(mo)
   objects[mo.key] = nil
-  if mo.type == "player" then particles.spawnShards(player.x, player.y, 1) player = nil
+  if mo.type == "player" then particles.spawnShards(player.x, player.y, 1) player = nil flash = 1
   else particles.spawnShards(mo.x, mo.y, 0.5) end
   sound.playSound("boom.wav")
 end

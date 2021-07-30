@@ -1,4 +1,4 @@
-VERSION = "Version 52 ALPHA 1.3"
+VERSION = "Version 53 ALPHA 1.3"
 
 local SetColor = love.graphics.setColor
 
@@ -115,6 +115,7 @@ function love.load(args)
   gamemap = 0
   lastmap = 1
   scale = 1
+  flash = 0
   screenwidth = love.graphics.getWidth()
   screenheight = love.graphics.getHeight()
   quads = {}
@@ -175,6 +176,7 @@ function love.update(dt)
       minutes, seconds = DoTime(minutes, seconds)
       hours, minutes = DoTime(hours, minutes)
       frametime = frametime-1/60
+      flash = math.max(flash-0.01, 0)
       if customEnv and customEnv.UpdateFrame and type(customEnv.UpdateFrame) == "function" then
         customEnv.UpdateFrame(frames, seconds, minutes, hours)
       end
@@ -392,7 +394,6 @@ local spikeDesc = "\nObjects in this tile will be destroyed"
 tilesets = {
   ["forest.png"] = { --CHAPTER 1
     vanilla = true,
-    glitch = true,
     description = {
       [TILE_CUSTOM1] = "UNUSED"..floorDesc, 
       [TILE_CUSTOM2] = "UNUSED"..floorDesc,
@@ -524,6 +525,11 @@ local drawModes = {
     if coins.hudtimer > 0 then
       love.graphics.setColor(1, 1, 1, ((math.min(math.max(coins.hudtimer, 0), 60)%160)/60))
       DrawCoinHud(leveltime)
+      love.graphics.setColor(1, 1, 1, 1)
+    end
+    if menu.settings[7].value == 1 and flash > 0 then
+      love.graphics.setColor(1, 1, 1, flash)
+      love.graphics.rectangle("fill", 0, 0, screenwidth, screenheight)
       love.graphics.setColor(1, 1, 1, 1)
     end
   end,
