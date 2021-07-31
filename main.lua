@@ -1,4 +1,4 @@
-VERSION = "Version 53 ALPHA 1.3"
+VERSION = "Version 54 ALPHA 1.3"
 
 local SetColor = love.graphics.setColor
 
@@ -176,7 +176,7 @@ function love.update(dt)
       minutes, seconds = DoTime(minutes, seconds)
       hours, minutes = DoTime(hours, minutes)
       frametime = frametime-1/60
-      flash = math.max(flash-0.01, 0)
+      flash = math.max(flash-0.02, 0)
       if customEnv and customEnv.UpdateFrame and type(customEnv.UpdateFrame) == "function" then
         customEnv.UpdateFrame(frames, seconds, minutes, hours)
       end
