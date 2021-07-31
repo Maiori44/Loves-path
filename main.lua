@@ -116,6 +116,7 @@ function love.load(args)
   lastmap = 1
   scale = 1
   flash = 0
+  darkness = 0
   screenwidth = love.graphics.getWidth()
   screenheight = love.graphics.getHeight()
   quads = {}
@@ -136,7 +137,7 @@ function love.load(args)
   --particles.setMain("leaf.png")
 end
 
-local shader = love.graphics.newShader([[
+local glitchshader = love.graphics.newShader([[
 //https://github.com/steincodes/godot-shader-tutorials/blob/master/Shaders/displace.shader
 //godot shader converted by Flamendless
 
@@ -159,14 +160,28 @@ vec4 effect(vec4 color, Image texture, vec2 uv, vec2 screen_coords)
     return color;
 }]])
 
+local blackshader = love.graphics.newShader([[
+extern number darkness;
+
+vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
+  vec4 pixel = Texel(texture, texture_coords );//This is the current pixel color
+  number average = (pixel.r+pixel.b+pixel.g)/darkness;
+  pixel.r = min(average, pixel.r);
+  pixel.g = min(average, pixel.g);
+  pixel.b = min(average, pixel.b);
+  return pixel;
+}
+]])
+
 function love.update(dt)
-  shader:send("random", love.math.random()-0.5)
+  glitchshader:send("random", love.math.random()-0.5)
+  blackshader:send("darkness", darkness)
   coins.hudtimer = math.max(coins.hudtimer-1, 0)
   if customEnv then customEnv.leveltime = leveltime end
   if #sound.list >= 10 then sound.collectGarbage() end
   if #particles.list >= 20 then particles.collectGarbage() end
   if gamestate == "ingame" then
-    --if particles.main then particles.main:update(dt) end
+    if not player then darkness = math.min(darkness+0.2, 70) print(darkness) end
     particles.update(dt)
     frametime = frametime+dt
     while frametime > 1/60 do
@@ -237,10 +252,15 @@ local quadDrawingMethods = {
 }
 
 local function DrawTilemap()
+  local shaders = {}
   if tilesets[tilesetname].glitch and gamestate == "ingame" and menu.settings[7].value == 1
   and (math.ceil(os.clock()*1000)%4500 < 200) then
-    love.graphics.setShader(shader)
+    table.insert(shaders, glitchshader)
     sound.music:seek(math.max(sound.music:tell()-love.timer.getDelta(), 0))
+  end
+  if not player then table.insert(shaders, blackshader) end
+  if #shaders > 0 then
+    love.graphics.setShader(unpack(shaders))
   end
   local centerx = GetStartX()
   local centery = GetStartY()
@@ -290,15 +310,20 @@ local function DrawTilemap()
   else
     love.graphics.setColor(1, 1, 1, 0)
   end
+  if #shaders == 2 or shaders[1] == glitchshader then
+    love.graphics.setShader(glitchshader)
+  else
+    love.graphics.setShader()
+  end
   love.graphics.printf(gamemapname, 0, 50, screenwidth/2, "center", 0, 2, 2)
   love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setShader()
   if wheelmoved > 0 and mouse.mode == "camera" then
     love.graphics.setColor(1, 1, 1, ((math.min(math.max(wheelmoved, 0), 60)%120)/60))
     love.graphics.printf("scale: "..scale, 0, screenheight-20, screenwidth, "center")
     wheelmoved = wheelmoved-1
     love.graphics.setColor(1, 1, 1, 1)
   end
-  love.graphics.setShader()
 end
 
 local hudcoin = love.graphics.newImage("Sprites/hudcoin.png")
@@ -630,7 +655,8 @@ function debug.collectInfo()
   debuginfo = debuginfo.."camerax: "..tostring(mouse.camerax).."\n"
   debuginfo = debuginfo.."cameray: "..tostring(mouse.cameray).."\n"
   if gamestate == "ingame" or gamestate == "pause" then
-    debuginfo = debuginfo.."\nLeveltime: "..leveltime.."\nFrametime: "..frametime.."\nMap width: "..mapwidth.."\n"..
+    debuginfo = debuginfo.."\nLeveltime: "..leveltime.."\nFrametime: "..frametime.."\nFlash: "..flash..
+    "\nDarkness: "..darkness.."\nMap width: "..mapwidth.."\n"..
     "Map height: "..mapheight.."\n".."Tileset: "..tilesetname.."\n"
     if #objects > 0 then
       debuginfo = debuginfo.."\nObjects:".."\n"

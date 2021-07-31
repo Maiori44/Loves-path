@@ -151,6 +151,7 @@ function LoadMap(mapname)
   leveltime = 0
   frametime = 0
   flash = 1
+  darkness = 0
   gamestate = "ingame"
   mouse.camerax = 0
   mouse.cameray = 0
