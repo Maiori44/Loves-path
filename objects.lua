@@ -37,7 +37,7 @@ end
 
 function RemoveObject(mo)
   objects[mo.key] = nil
-  if mo.type == "player" then particles.spawnShards(player.x, player.y, 1) player = nil flash = 1
+  if mo.type == "player" then particles.spawnShards(player.x, player.y, 1) player = nil
   else particles.spawnShards(mo.x, mo.y, 0.5) end
   sound.playSound("boom.wav")
 end
@@ -93,8 +93,12 @@ local function DestroyBridge(mo, momx, momy)
   if tilemap[mo.y+1][mo.x] and tilemap[mo.y+1][mo.x] == TILE_CHASM2 then
     tilemap[mo.y+1][mo.x] = TILE_EMPTY
   end
-  if tilemap[mo.y-1][mo.x] and (tilemap[mo.y-1][mo.x] == TILE_FLOOR1 or tilemap[mo.y-1][mo.x] == TILE_FLOOR2 or tilemap[mo.y-1][mo.x] == TILE_FLOOR3) then
+  local uppertile = tilemap[mo.y-1][mo.x]
+  if uppertile and uppertile ~= TILE_EMPTY and uppertile ~= TILE_BRIDGE and uppertile ~= TILE_CRACKEDBRIDGE
+  and uppertile ~= TILE_ and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
     tilemap[mo.y][mo.x] = TILE_CHASM1
+  elseif uppertile and (uppertile == TILE_BRIDGE or uppertile == TILE_CRACKEDBRIDGE) then
+    tilemap[mo.y][mo.x] = TILE_CHASM2
   end
 end
 

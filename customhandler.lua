@@ -77,6 +77,8 @@ function SearchCustom()
       print = function(text, title) love.window.showMessageBox(tostring(title), tostring(text), "info") end,
       error = error,
       type = type,
+      ipairs = ipairs,
+      pairs = pairs,
       SetCustomSaveFile = function(filename)
         CheckArgument(1, "SetCustomSaveFile", filename, "string")
         local finalname = ""
