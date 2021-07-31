@@ -181,7 +181,7 @@ function love.update(dt)
   if #sound.list >= 10 then sound.collectGarbage() end
   if #particles.list >= 20 then particles.collectGarbage() end
   if gamestate == "ingame" then
-    if not player then darkness = math.min(darkness+0.2, 70) print(darkness) end
+    if not player then darkness = math.min(darkness+0.2, 70) end
     particles.update(dt)
     frametime = frametime+dt
     while frametime > 1/60 do
