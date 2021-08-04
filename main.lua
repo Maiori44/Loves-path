@@ -1,4 +1,4 @@
-VERSION = "Version 54 ALPHA 1.3"
+VERSION = "Version 55 ALPHA 1.4"
 
 local SetColor = love.graphics.setColor
 
@@ -164,12 +164,12 @@ local blackshader = love.graphics.newShader([[
 extern number darkness;
 
 vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
-  vec4 pixel = Texel(texture, texture_coords );//This is the current pixel color
+  vec4 pixel = Texel(texture, texture_coords );
   number average = (pixel.r+pixel.b+pixel.g)/darkness;
   pixel.r = min(average, pixel.r);
   pixel.g = min(average, pixel.g);
   pixel.b = min(average, pixel.b);
-  return pixel;
+  return pixel * color;
 }
 ]])
 

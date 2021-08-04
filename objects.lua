@@ -35,11 +35,13 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction)
   return objects[#objects]
 end
 
-function RemoveObject(mo)
+function RemoveObject(mo, soundname)
   objects[mo.key] = nil
+  soundname = (type(soundname) == "string" and soundname) or nil
+  soundname = (not soundname and ((mo == player and "heartbreak"..love.math.random(1, 2)..".wav") or "boom.wav")) or soundname
   if mo.type == "player" then particles.spawnShards(player.x, player.y, 1) darkness = 0 player = nil
   else particles.spawnShards(mo.x, mo.y, 0.5) end
-  sound.playSound("boom.wav")
+  sound.playSound(soundname)
 end
 
 function RemoveMovingObject(mo, momx, momy)
@@ -52,7 +54,7 @@ end
 function RemoveStandingObject(mo, momx, momy)
   momx = momx or mo.momx
   momy = momy or mo.momy
-  if momx == 0 and momy == 0 then RemoveObject(mo) end
+  if momx == 0 and momy == 0 then RemoveObject(mo, "bullet.wav") end
 end
 
 function RemoveCollidedObject(_, obstmo)
