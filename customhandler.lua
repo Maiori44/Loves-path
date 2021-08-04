@@ -217,7 +217,7 @@ function SearchCustom()
       wallDesc = "\nMost objects can't walk in this tile",
       floorDesc = "\nObjects can walk in this tile",
       spikeDesc = "\nObjects in this tile will be destroyed",
-      AddCustomTileset = function(tilesetname, description, collision, tile)
+      AddCustomTileset = function(tilesetname, description, collision, tile, flags)
         CheckArgument(1, "AddCustomTileset", tilesetname, "string")
         if tilesets[tilesetname] then error('tileset "'..tilesetname..'" arleady exists!') end
         tilesets[tilesetname] = {
@@ -225,6 +225,9 @@ function SearchCustom()
           collision = setmetatable(collision or {}, {__index = function() return true end}),
           tile = setmetatable(tile or {}, {__index = function() return nil end})
         }
+        for k, v in pairs(flags or {}) do
+          tilesets[tilesetname].k = v
+        end
       end,
     }
     setfenv(CustomInfo, setmetatable({}, {

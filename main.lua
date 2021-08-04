@@ -134,7 +134,6 @@ function love.load(args)
     io.stdout:setvbuf("no")
   end]]
   sound.setMusic("menu.ogg")
-  --particles.setMain("leaf.png")
 end
 
 local glitchshader = love.graphics.newShader([[
