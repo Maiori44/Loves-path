@@ -54,7 +54,7 @@ end
 function RemoveStandingObject(mo, momx, momy)
   momx = momx or mo.momx
   momy = momy or mo.momy
-  if momx == 0 and momy == 0 then RemoveObject(mo, "bullet.wav") end
+  if momx == 0 and momy == 0 then RemoveObject(mo) end
 end
 
 function RemoveCollidedObject(_, obstmo)
@@ -205,6 +205,7 @@ end
 function FireShot(mo, sprite, quads, type)
   local bullet = SpawnObject(sprite, mo.x, mo.y, type or "bullet", quads, nil, mo.direction)
   DashObject(bullet)
+  sound.playSound("bullet.wav")
   return bullet
 end
 
