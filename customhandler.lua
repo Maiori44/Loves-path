@@ -225,8 +225,10 @@ function SearchCustom()
           collision = setmetatable(collision or {}, {__index = function() return true end}),
           tile = setmetatable(tile or {}, {__index = function() return nil end})
         }
-        for k, v in pairs(flags or {}) do
-          tilesets[tilesetname].k = v
+        if flags then
+          for k, v in pairs(flags) do
+            tilesets[tilesetname].k = v
+          end
         end
       end,
     }

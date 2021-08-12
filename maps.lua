@@ -101,34 +101,6 @@ function LoadMap(mapname)
     love.window.showMessageBox("Failed to load "..mapname.."!", "The map is corrupted.", "error")
     return "error"
   end
-  local playerx, playery
-  tilemap = {}
-  for y = 1,mapheight do
-    tilemap[y] = {}
-    for x = 1,mapwidth do
-      tile = tonumber(file:read(2))
-      tilemap[y][x] = tile or TILE_EMPTY
-      if tile == TILE_START then
-        playerx = x
-        playery = y
-      elseif tile == TILE_KEY then
-        SpawnObject(keysprite, x, y, "key")
-        tilemap[y][x] = TILE_FLOOR1
-      elseif tile == TILE_ENEMY then
-        SpawnObject(enemysprite, x, y, "enemy", GetDirectionalQuads(enemysprite))
-        tilemap[y][x] = TILE_FLOOR1
-      elseif (tile == TILE_CUSTOM1 or tile == TILE_CUSTOM2 or tile == TILE_CUSTOM3)
-      and type(tilesets[tilesetname].tile[tile]) == "function" then
-        tilesets[tilesetname].tile[tile](x, y)
-      end
-    end
-  end
-  file:close()
-  local loadedmap = tonumber(mapname:match("%d+%d"))
-  if coins[loadedmap] and not coins[loadedmap].got then
-    SpawnObject(coins.sprite, coins[loadedmap].x, coins[loadedmap].y, "coin", coins.quads, "default")
-  end
-  if customEnv then customEnv.tilemap = tilemap end
   if oldtileset ~= tilesetname then
     enemysprite = love.graphics.newImage(path.."Enemies/"..tilesetname)
     tileset = love.graphics.newImage(path.."Tiles/"..tilesetname)
@@ -144,6 +116,34 @@ function LoadMap(mapname)
       end
     end
   end
+  local playerx, playery
+  tilemap = {}
+  for y = 1,mapheight do
+    tilemap[y] = {}
+    for x = 1,mapwidth do
+      tile = tonumber(file:read(2))
+      tilemap[y][x] = tile or TILE_EMPTY
+      if tile == TILE_START then
+        playerx = x
+        playery = y
+      elseif tile == TILE_KEY then
+        SpawnObject(keysprite, x, y, "key")
+        tilemap[y][x] = TILE_FLOOR1
+      elseif tile == TILE_ENEMY then
+        SpawnObject(enemysprite, x, y, "enemy", GetDirectionalQuads(enemysprite), tilesets[tilesetname].enemyquadtype or "directions")
+        tilemap[y][x] = TILE_FLOOR1
+      elseif (tile == TILE_CUSTOM1 or tile == TILE_CUSTOM2 or tile == TILE_CUSTOM3)
+      and type(tilesets[tilesetname].tile[tile]) == "function" then
+        tilesets[tilesetname].tile[tile](x, y)
+      end
+    end
+  end
+  file:close()
+  local loadedmap = tonumber(mapname:match("%d+%d"))
+  if coins[loadedmap] and not coins[loadedmap].got then
+    SpawnObject(coins.sprite, coins[loadedmap].x, coins[loadedmap].y, "coin", coins.quads, "default")
+  end
+  if customEnv then customEnv.tilemap = tilemap end
   if playerx and playery then
     player = SpawnObject(playersprite, playerx, playery, "player")
     if customEnv then customEnv.player = player end

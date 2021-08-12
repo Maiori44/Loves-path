@@ -1,4 +1,4 @@
-VERSION = "Version 57 ALPHA 1.4"
+VERSION = "Version 58 ALPHA 1.4"
 
 local SetColor = love.graphics.setColor
 
@@ -240,8 +240,11 @@ local quadDrawingMethods = {
     love.graphics.draw(mo.sprite, mo.quads[math.floor((leveltime%20)/10)+mo.direction], x, y, 0, scale)
   end,
   movement = function(mo, x, y)
+    love.graphics.draw(mo.sprite, mo.quads[mo.direction+(((mo.momx == 0 and mo.momy == 0) and 0) or 1)], x, y, 0, scale)
+  end,
+  position = function(mo, x, y)
     local movingaxis = mo[mo.lastaxis or "x"]
-      love.graphics.draw(mo.sprite, mo.quads[(movingaxis%#mo.quads)+1], x, y, 0, scale)
+    love.graphics.draw(mo.sprite, mo.quads[(movingaxis%#mo.quads)+1], x, y, 0, scale)
   end,
   default = function(mo, x, y)
     love.graphics.draw(mo.sprite, mo.quads[math.floor((leveltime%(#mo.quads*10))/10)+1], x, y, 0, scale)
@@ -435,6 +438,7 @@ tilesets = {
   ["frost.png"] = { --CHAPTER 2
     vanilla = true,
     snow = true,
+    enemyquadtype = "movement",
     description = {
       [TILE_CUSTOM1] = "SNOWBALL".."\nA Snowball will spawn in this tile", 
       [TILE_CUSTOM2] = "STICKS WALL"..wallDesc.."\nIf a Snowball rams this wall it will collapse",
@@ -452,7 +456,7 @@ tilesets = {
     },
     tile = {
       [TILE_CUSTOM1] = function(x, y)
-        SpawnObject(snowsprite, x, y, "snowball", GetQuads(4, snowsprite), "movement")
+        SpawnObject(snowsprite, x, y, "snowball", GetQuads(4, snowsprite), "position")
         tilemap[y][x] = TILE_FLOOR3
       end,
       [TILE_CUSTOM2] = nil,
