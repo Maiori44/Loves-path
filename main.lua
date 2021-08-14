@@ -1,4 +1,7 @@
-VERSION = "Version 59 ALPHA 1.4"
+VERSION = "Version 60 ALPHA 1.4"
+
+PARTICLE_SNOW = 41
+PARTICLE_HELP = 42
 
 local SetColor = love.graphics.setColor
 
@@ -292,7 +295,7 @@ local function DrawTilemap()
     if particle then
       local x = (centerx+particle.x*math.floor(width*scale))+(16*scale)
       local y = (centery+particle.y*math.floor(height*scale))+(16*scale)
-      love.graphics.draw(particle.particle, x, y, 0, scale)--(k > 40 and 1) or scale)
+      love.graphics.draw(particle.particle, x, y, 0, scale)
     end
   end
   for k, mo in pairs(objects) do
@@ -301,9 +304,15 @@ local function DrawTilemap()
     if not quadDrawingMethods[mo.quadtype] then error('object "'..mo.type..'"('..k..') has an invalid quad type!') end
     quadDrawingMethods[mo.quadtype](mo, x, y)
   end
-  local snow = particles.list[41]
+  local snow = particles.list[PARTICLE_SNOW]
   if snow then
     love.graphics.draw(snow.particle, -10, -10)
+  end
+  local help = particles.list[PARTICLE_HELP]
+  if help then
+    local x = (centerx+help.x*math.floor(width*scale))+(16*scale)
+    local y = (centery+help.y*math.floor(height*scale))+(16*scale)
+    love.graphics.draw(help.particle, x, y, 0, scale)
   end
   if gamestate ~= "pause" and gamestate ~= "map settings" then
     love.graphics.setColor(1, 1, 1, (180%(math.min(math.max(leveltime, 120), 180))/60))

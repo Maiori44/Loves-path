@@ -66,13 +66,23 @@ end
 
 function particles.spawnSnow()
   if menu.settings[6].value == 0 then return end
-  particles.list[41] = {}
-  particles.list[41].particle = love.graphics.newParticleSystem(love.graphics.newImage("Sprites/Particles/snow.png"), 100)
-  particles.list[41].particle:setParticleLifetime(15, 25)
-  particles.list[41].particle:setEmissionArea("normal", screenwidth+20, 0)
-  particles.list[41].particle:setEmissionRate(5)
-  particles.list[41].particle:setSizeVariation(1, 0.5)
-  particles.list[41].particle:setLinearAcceleration(-30, 0, 30, 30)
+  particles.list[PARTICLE_SNOW] = {}
+  particles.list[PARTICLE_SNOW].particle = love.graphics.newParticleSystem(love.graphics.newImage("Sprites/Particles/snow.png"), 100)
+  particles.list[PARTICLE_SNOW].particle:setParticleLifetime(15, 25)
+  particles.list[PARTICLE_SNOW].particle:setEmissionArea("normal", screenwidth+20, 0)
+  particles.list[PARTICLE_SNOW].particle:setEmissionRate(5)
+  particles.list[PARTICLE_SNOW].particle:setSizeVariation(1, 0.5)
+  particles.list[PARTICLE_SNOW].particle:setLinearAcceleration(-30, 0, 30, 30)
+end
+
+function particles.spawnHelp(x, y)
+  if menu.settings[6].value == 0 then return end
+  particles.list[PARTICLE_HELP] = {x = x, y = y}
+  particles.list[PARTICLE_HELP].particle = love.graphics.newParticleSystem(love.graphics.newImage(path.."circle.png"), 1)
+  particles.list[PARTICLE_HELP].particle:setParticleLifetime(1.5)
+  particles.list[PARTICLE_HELP].particle:setSizes(0.1, 5)
+  particles.list[PARTICLE_HELP].particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
+  particles.list[PARTICLE_HELP].particle:emit(1)
 end
 
 function particles.update(dt)
