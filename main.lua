@@ -85,7 +85,11 @@ local function GetUnit(val)
 end
 
 function GetScale(num)
-  return math.floor((19/num)*10)/10
+  return math.floor((18/num)*10)/10
+end
+
+local function GetScaleByScreen()
+  return screenheight/600
 end
 
 local function DoTime(timetodo, timetoreset)
@@ -96,15 +100,14 @@ local function DoTime(timetodo, timetoreset)
 end
 
 function GetStartX()
-  return ((screenwidth-(mapwidth+2)*scale*32)/2)+mouse.camerax
+  return ((screenwidth-(mapwidth+2)*((love.window.getFullscreen() and scale * GetScaleByScreen()) or scale)*32)/2)+mouse.camerax
 end
 
 function GetStartY()
-  return ((screenheight-((mapheight < 20 and mapheight) or mapheight+2)*scale*32)/2)+mouse.cameray
+  return ((screenheight-((mapheight < 20 and mapheight) or mapheight+2)*((love.window.getFullscreen() and scale * GetScaleByScreen()) or scale)*32)/2)+mouse.cameray
 end
 
 function love.load(args)
-  love.window.setVSync(-1)
   if args[1] == "-debug" then
     debugmode = {["Game info"] = true}
   end
@@ -270,6 +273,8 @@ local function DrawTilemap()
   if tilesets[tilesetname].dark then
     love.graphics.setColor(0.3, 0.3, 0.3, 1)
   end
+  local oldscale = scale
+  scale = (love.window.getFullscreen() and scale * GetScaleByScreen()) or scale
   for i,row in ipairs(tilemap) do
     for j,tile in ipairs(row) do
       if tile ~= 0 then
@@ -314,6 +319,7 @@ local function DrawTilemap()
     local y = (centery+help.y*math.floor(height*scale))+(16*scale)
     love.graphics.draw(help.particle, x, y, 0, scale)
   end
+  scale = oldscale
   if gamestate ~= "pause" and gamestate ~= "map settings" then
     love.graphics.setColor(1, 1, 1, (180%(math.min(math.max(leveltime, 120), 180))/60))
   else
@@ -478,6 +484,8 @@ tilesets = {
 }
 require "customhandler"
 SearchCustom()
+
+--if not customEnv then print("amogus") end
 
 local tileDescriptions = {
   [TILE_WALL1] = "WALL 1"..wallDesc,
