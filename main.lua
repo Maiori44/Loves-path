@@ -1,4 +1,4 @@
-VERSION = "Version 60 ALPHA 1.4"
+VERSION = "Version 61 ALPHA 1.4"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -532,14 +532,14 @@ local tileDescriptions = {
 
 local credits =
 "-Coding-\n"..
-"Felix44\n\n"..
-"-Sprites-\n"..
-"Shadow|Pazzo\n"..
+"Felice \"Felix44\" D'Angelo\n\n"..
+"-Sprites & Art-\n"..
+"Ester Blasone\n"..
 "MAKYUNI\n\n"..
 "-Music-\n"..
 "MAKYUNI\n\n"..
 "-Maps-\n"..
-"Felix44\n"..
+"Felice \"Felix44\" D'Angelo\n"..
 "Fele88"
 
 local drawModes = {
