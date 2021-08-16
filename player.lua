@@ -62,7 +62,7 @@ function love.keypressed(key)
       gamestate = "pause"
       pointer = 1
       sound.reset()
-    elseif key == "e" then
+    elseif key == "space" then
       if not player then return end
       particles.spawnHelp(player.x, player.y)
     end

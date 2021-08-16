@@ -1,4 +1,4 @@
-VERSION = "Version 63 ALPHA 1.4"
+VERSION = "Version 64 ALPHA 1.4"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -554,7 +554,7 @@ local drawModes = {
   ingame = function()
     DrawTilemap()
     if not customEnv and gamemap == 0 then
-      love.graphics.print("CONTROLS:\nWASD/ARROWS: Move\nSPACE: Show position\nESC: Pause", math.min((leveltime*1.5)-100, 10), 100)
+      love.graphics.print("CONTROLS:\nWASD/ARROWS: Move\nR: Reset map\nSPACE: Show position\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nESC: Pause", math.min((leveltime*1.5)-100, 10), 100)
     end
     if menu.settings[3].value == 1 then
       local tseconds = (seconds < 10 and "0"..seconds) or tostring(seconds)
@@ -595,6 +595,13 @@ local drawModes = {
   ["select map"] = DrawMenu,
   editing = function()
     DrawTilemap()
+    local controls = "CONTROLS:"
+    if mouse.mode == "editing" then
+      controls = controls.."\nLEFT CLICK: Place tile\nRIGHT CLICK: Delete tile\nMIDDLE CLICK: Select tile\nMOUSE WHEEL: Change tile\nTAB: Change mode\nESC: Map settings"
+    else
+      controls = controls.."\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nTAB: Change mode\nESC: Map settings"
+    end
+    love.graphics.print(controls, screenwidth-math.min(leveltime*2, 300 + ((mouse.mode == "editing" and 0) or 50)), 10)
     local centerx = GetStartX()
     local centery = GetStartY()
     local x = centerx+32*scale
