@@ -1,4 +1,4 @@
-VERSION = "Version 61 ALPHA 1.4"
+VERSION = "Version 63 ALPHA 1.4"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -317,7 +317,7 @@ local function DrawTilemap()
   if help then
     local x = (centerx+help.x*math.floor(width*scale))+(16*scale)
     local y = (centery+help.y*math.floor(height*scale))+(16*scale)
-    love.graphics.draw(help.particle, x, y, 0, scale)
+    love.graphics.draw(help.particle, x, y, 0, scal4e)
   end
   scale = oldscale
   if gamestate ~= "pause" and gamestate ~= "map settings" then
@@ -553,6 +553,9 @@ local credits =
 local drawModes = {
   ingame = function()
     DrawTilemap()
+    if not customEnv and gamemap == 0 then
+      love.graphics.print("CONTROLS:\nWASD/ARROWS: Move\nSPACE: Show position\nESC: Pause", math.min((leveltime*1.5)-100, 10), 100)
+    end
     if menu.settings[3].value == 1 then
       local tseconds = (seconds < 10 and "0"..seconds) or tostring(seconds)
       local tminutes = (minutes < 10 and "0"..minutes) or tostring(minutes)
@@ -672,7 +675,7 @@ function debug.collectInfo()
   debuginfo = debuginfo.."y: "..tostring(mouse.y).."\n"
   debuginfo = debuginfo.."camerax: "..tostring(mouse.camerax).."\n"
   debuginfo = debuginfo.."cameray: "..tostring(mouse.cameray).."\n"
-  if gamestate == "ingame" or gamestate == "pause" then
+  if gamestate == "ingame" or gamestate == "pause" or gamestate == "editing" then
     debuginfo = debuginfo.."\nLeveltime: "..leveltime.."\nFrametime: "..frametime.."\nFlash: "..flash..
     "\nDarkness: "..darkness.."\nMap width: "..mapwidth.."\n"..
     "Map height: "..mapheight.."\n".."Tileset: "..tilesetname.."\n"

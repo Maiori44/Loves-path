@@ -72,6 +72,8 @@ TILE_CUSTOM3 = 48
 
 lastmap = 1
 
+mapspath = "Maps"
+
 tilemap = {}
 
 local playersprite = love.graphics.newImage("Sprites/player.png")
@@ -84,7 +86,7 @@ end
 
 function LoadMap(mapname)
   objects = {}
-  local file = io.open("Maps/"..mapname, "r")
+  local file = io.open(mapspath.."/"..mapname, "r")
   if not file then
     love.window.showMessageBox("Failed to load "..mapname.."!", "Map not found.", "error")
     return "error"
@@ -196,7 +198,7 @@ function CheckMap(...)
 end
 
 function LoadEditorMap(mapname)
-  local file = io.open("Maps/"..mapname, "r+")
+  local file = io.open(mapspath.."/"..mapname, "r+")
   if not file then return false end
   local oldtileset = tilesetname
   gamemapname = file:read("*l")

@@ -160,6 +160,22 @@ function SearchCustom()
       TILE_CUSTOM2 = 47,
       TILE_CUSTOM3 = 48,
       tilemap = tilemap,
+      SetCustomMapFolder = function(foldername)
+        CheckArgument(1, "SetCustomMapFolder", foldername, "string")
+        local finalname = ""
+        for w in foldername:gmatch(".") do
+          if w ~= ":" and w ~= "/" and w ~= "\\" then
+            finalname = finalname..w
+          end
+        end
+        if not love.filesystem.getInfo("Custom/"..finalname, "directory") then
+          error('Could not find a folder named "'..finalname..'" inside the Custom folder')
+        end
+        mapspath = "Custom/"..finalname
+        GetAllMaps()
+      end,
+      UpdateFrame = nil,
+      leveltime = nil,
       CheckMap = CheckMap,
       ResetCoins = coins.reset,
       AddCustomCoin = function(map, x, y)

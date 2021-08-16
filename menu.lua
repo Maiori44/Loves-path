@@ -11,13 +11,13 @@ local function ToggleValue()
   setting.valuename = valuesnames[setting.value]
 end
 
-local function GetAllMaps()
+function GetAllMaps()
   menu["select level"] = {}
   local mapn = 1
   if love.filesystem.isFused() then
     love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
   end
-  local possiblemaps = love.filesystem.getDirectoryItems((love.filesystem.isFused() and "Source/Maps") or "Maps")
+  local possiblemaps = love.filesystem.getDirectoryItems((love.filesystem.isFused() and "Source/" + mapspath) or mapspath)
   for k, mapname in ipairs(possiblemaps) do
     if mapname:sub(mapname:len()-3) == ".map" and mapname:match("%d+%d") then
       menu["select level"][mapn] = {name = tostring(mapn), func = function()
@@ -186,6 +186,11 @@ menu = {
       menu["create map"][7].name = "Create map"
       pointer = 1
     end},
+    {name = "Documentation", func = function()
+      if not love.system.openURL("file://"..love.filesystem.getSourceBaseDirectory().."/readme.txt") then
+        love.window.showMessageBox("Error while opening file!", "Could not find \"readme.txt\" in your folder\nreinstall the game to get another copy", "error")
+      end
+    end},
     {name = "Back", func = function() gamestate = "title" pointer = 1 end},
   },
   ["create map"] = {
@@ -200,13 +205,13 @@ menu = {
         menu["create map"][7].name = "Invalid Map num!"
         return
       end
-      local check = io.open("Maps/map"..GetMapNum(menu["create map"][1].int)..".map")
+      local check = io.open(mapspath.."/map"..GetMapNum(menu["create map"][1].int)..".map")
       if check then
         check:close()
         menu["create map"][7].name = "Map "..tostring(tonumber(menu["create map"][1].int)).." arleady exists!"
       else
         local mapinfo = menu["create map"]
-        SaveMap("Maps/map"..GetMapNum(mapinfo[1].int)..".map", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].string.."\n", mapinfo[5].int.."\n", mapinfo[6].int.."\n", true)
+        SaveMap(mapspath.."/map"..GetMapNum(mapinfo[1].int)..".map", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].string.."\n", mapinfo[5].int.."\n", mapinfo[6].int.."\n", true)
         gamemap = tonumber(mapinfo[1].int)
         LoadEditorMap("map"..GetMapNum(gamemap)..".map")
         leveltime = 0
@@ -228,7 +233,7 @@ menu = {
     {name = "Map height: ", int = ""},
     {name = "Save", func = function()
       local mapinfo = menu["map settings"]
-      SaveMap("Maps/map"..GetMapNum(gamemap)..".map", mapinfo[1].string.."\n", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
+      SaveMap(mapspath.."/map"..GetMapNum(gamemap)..".map", mapinfo[1].string.."\n", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
       LoadEditorMap("map"..GetMapNum(gamemap)..".map")
       menu["map settings"][6].name = "Map saved!"
     end},
