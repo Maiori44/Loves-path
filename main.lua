@@ -787,32 +787,3 @@ function love.quit()
   SaveSettings()
   SaveData()
 end
-
---[[function love.errorhandler(msg)
-  local stack = debug.traceback():gsub("\t", "")
-  local errormsg = "An error accoured that forced the game to close\n\n"..msg.."\n\n"..stack
-  love.window.showMessageBox("An error accoured!", errormsg, "error")
-  local errorfile = io.open("Crash log "..os.date():gsub("/", "-"):gsub(":", "-")..".txt", "w+")
-  errorfile:write("Crash log\nAccoured on: "..os.date().."\nGame version: "..VERSION.."\n\n"..msg.."\n\n"..stack.."\n\n"..
-  (debug.collectInfo() and debug.collectInfo()) or "")
-  errorfile:close()
-end]]
---[[function love.load()
-	local img = love.graphics.newImage("Sprites/Particles/leaf.png")
-
-	psystem = love.graphics.newParticleSystem(img, 60)
-	psystem:setParticleLifetime(7, 10)
-	psystem:setEmissionRate(5)
-	psystem:setSizeVariation(1)
-	psystem:setLinearAcceleration(20, 20, 80, 80)
-  psystem:setSpin(1, 5)
-	psystem:setColors(1, 1, 1, 1, 1, 1, 1, 0)
-end
-
-function love.draw()
-	love.graphics.draw(psystem, -20, -20)
-end
-
-function love.update(dt)
-	psystem:update(dt)
-end]]
