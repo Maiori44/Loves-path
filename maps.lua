@@ -224,6 +224,7 @@ function LoadEditorMap(mapname)
   file:close()
   objects = {}
   if oldtileset ~= tilesetname then
+    enemysprite = love.graphics.newImage(path.."Enemies/"..tilesetname)
     tileset = love.graphics.newImage(path.."Tiles/"..tilesetname)
     local image_width = tileset:getWidth()
     local image_height = tileset:getHeight()
