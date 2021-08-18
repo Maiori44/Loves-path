@@ -81,6 +81,14 @@ local function ResetData()
   SaveData()
 end
 
+local function WarnPlayer()
+  if mapspath == "Maps" then
+    local button = love.window.showMessageBox("Notice!", "Modifying the vanilla maps (especially if you didn't finish the story) is probably not a good idea\nI recommend reading the documentation to create a custom map pack first\nwill you still proceed to the level editor?", {"Continue", "Go back"})
+    if button == 1 then return false end
+    return true
+  end
+end
+
 menu = {
   title = {
     {name = "Start Game", func = function() 
@@ -146,7 +154,7 @@ menu = {
     end},
     {name = "Back", func = function()
       menu.settings[#menu.settings-1].name = "Erase Data"
-      SaveSettings() 
+      SaveSettings()
       gamestate = "title"
       pointer = 1
     end}
@@ -157,6 +165,7 @@ menu = {
   ["select level"] = {},
   ["select map"] = {
     {name = "Load map: ", int = "", func = function()
+      if WarnPlayer() then return end
       if menu["select map"][1].int ~= "" then
         gamemap = tonumber(menu["select map"][1].int)
       end
@@ -178,6 +187,7 @@ menu = {
       end
     end},
     {name = "Create Map", func = function() 
+      if WarnPlayer() then return end
       gamestate = "create map"
       local mapnum = menu["create map"][1].int
       local ptilesetname = menu["create map"][3].string
