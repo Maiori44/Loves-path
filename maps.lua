@@ -239,6 +239,8 @@ function LoadEditorMap(mapname)
     end
   end
   wheelmoved = 0
+  flash = 1
+  darkness = 0
   mouse.mode = "editing"
   love.window.requestAttention()
   particles.reset()
