@@ -82,7 +82,7 @@ local function ResetData()
 end
 
 local function WarnPlayer()
-  if mapspath == "Maps" then
+  if mapspath == "Maps" and not debugmode then
     local button = love.window.showMessageBox("Notice!", "Modifying the vanilla maps (especially if you didn't finish the story) is probably not a good idea\nI recommend reading the documentation to create a custom map pack first\nwill you still proceed to the level editor?", {"Continue", "Go back"})
     if button == 1 then return false end
     return true
