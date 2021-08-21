@@ -176,14 +176,8 @@ vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords 
 }
 ]])
 
-function love.update(dt)
-  glitchshader:send("random", love.math.random()-0.5)
-  blackshader:send("darkness", darkness)
-  coins.hudtimer = math.max(coins.hudtimer-1, 0)
-  if customEnv then customEnv.leveltime = leveltime end
-  if #sound.list >= 10 then sound.collectGarbage() end
-  if #particles.list >= 20 then particles.collectGarbage() end
-  if gamestate == "ingame" then
+local updateModes = {
+  ingame = function(dt)
     if not player then darkness = math.min(darkness+0.2, 70) end
     particles.update(dt)
     frametime = frametime+dt
@@ -221,10 +215,24 @@ function love.update(dt)
         CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON)
       end
     end
-  elseif gamestate == "editing" then
+  end,
+  editing = function()
     leveltime = leveltime+1
     mouse.think()
+  end,
+  ["sound test"] = function()
+    if sound.music and not love.mouse.isDown(1) and not sound.music:isPlaying() then sound.music:play() end
   end
+}
+
+function love.update(dt)
+  glitchshader:send("random", love.math.random()-0.5)
+  blackshader:send("darkness", darkness)
+  coins.hudtimer = math.max(coins.hudtimer-1, 0)
+  if customEnv then customEnv.leveltime = leveltime end
+  if #sound.list >= 10 then sound.collectGarbage() end
+  if #particles.list >= 20 then particles.collectGarbage() end
+  if updateModes[gamestate] then updateModes[gamestate](dt) end
 end
 
 local tileAnimations = {
