@@ -20,14 +20,17 @@ function GetAllMaps()
   local possiblemaps = love.filesystem.getDirectoryItems((love.filesystem.isFused() and "Source/" + mapspath) or mapspath)
   for k, mapname in ipairs(possiblemaps) do
     if mapname:sub(mapname:len()-3) == ".map" and mapname:match("%d+%d") then
-      menu["select level"][mapn] = {name = tostring(mapn), func = function()
-        LoadMap(mapname)
-        gamemap = tonumber(mapname:match("%d+%d"))
-        frames = 0
-        seconds = 0
-        minutes = 0
-        hours = 0
-      end}
+      menu["select level"][mapn] = {
+        name = tostring(mapn),
+        func = function()
+          LoadMap(mapname)
+          gamemap = tonumber(mapname:match("%d+%d"))
+          frames = 0
+          seconds = 0
+          minutes = 0
+          hours = 0
+        end
+      }
       mapn = mapn+1
     end
   end
@@ -81,10 +84,13 @@ local function ResetData()
   SaveData()
 end
 
+local warned = false
+
 local function WarnPlayer()
+  if warned then return false end
   if mapspath == "Maps" and not debugmode then
     local button = love.window.showMessageBox("Notice!", "Modifying the vanilla maps (especially if you didn't finish the story) is probably not a good idea\nI recommend reading the documentation to create a custom map pack first\nwill you still proceed to the level editor?", {"Continue", "Go back"})
-    if button == 1 then return false end
+    if button == 1 then warned = true return false end
     return true
   end
 end
@@ -165,7 +171,7 @@ menu = {
   ["select level"] = {},
   ["level editor"] = {
     {name = "Load map: ", int = "", func = function()
-      if menu["level editor"][1].name:sub(1, 8) == "Load map" and  WarnPlayer() then return end
+      if menu["level editor"][1].name:sub(1, 8) == "Load map" and menu["level editor"][1].int:len() > 0 and WarnPlayer() then return end
       if menu["level editor"][1].int ~= "" then
         gamemap = tonumber(menu["level editor"][1].int)
       end
@@ -268,6 +274,7 @@ GetAllMaps()
 
 function SaveSettings()
   local file = io.open("settings.cfg", "w+b")
+  file:write(string.char((warned and 1) or 0))
   for i = 1,#menu.settings-2 do
     file:write(string.char(menu.settings[i].value))
   end
@@ -283,6 +290,7 @@ local function DataCheck(val)
 end
 
 savefile = "save.dat"
+
 function SaveData()
   local file = io.open(savefile, "w+b")
   file:write(string.char(math.min(lastmap, 255)))
@@ -332,6 +340,7 @@ function LoadSettings()
     SaveSettings()
     return
   end
+  warned = numtobool[string.byte(file:read(1))] or false
   for i = 1,#menu.settings-2 do
     local oldvalue = menu.settings[i].value
     menu.settings[i].value = DataCheck(string.byte(file:read(1) or menu.settings[i].value))
