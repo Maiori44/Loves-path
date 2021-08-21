@@ -592,7 +592,7 @@ local drawModes = {
     DrawMenu()
   end,
   ["select level"] = function() DrawMenu() love.graphics.setColor(1, 1, 1, 1) DrawCoinHud(os.clock()*50) end,
-  ["select map"] = DrawMenu,
+  ["level editor"] = DrawMenu,
   editing = function()
     DrawTilemap()
     local controls = "CONTROLS:"

@@ -99,7 +99,7 @@ function love.keypressed(key)
     if pointer < 1 or pointer > #menu["select level"] or pointer > max then
       pointer = #menu["select level"]
     end
-  elseif (gamestate == "map settings" or gamestate == "create map" or gamestate == "select map")
+  elseif (gamestate == "map settings" or gamestate == "create map" or gamestate == "level editor")
   and key == "backspace" then
     local setting = menu[gamestate][pointer]
     if setting.int and utf8.len(setting.int) > 0 then
@@ -138,7 +138,7 @@ function love.keypressed(key)
 end
 
 function love.textinput(text)
-  if gamestate == "map settings" or gamestate == "create map" or gamestate == "select map" then
+  if gamestate == "map settings" or gamestate == "create map" or gamestate == "level editor" then
     local setting = menu[gamestate][pointer]
     if setting.int and tonumber(text) and setting.int:len() < 2 then
       setting.int = setting.int..text

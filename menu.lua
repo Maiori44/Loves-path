@@ -105,10 +105,10 @@ menu = {
       end
     end},
     {name = "Level Editor", func = function()
-      gamestate = "select map"
+      gamestate = "level editor"
       pointer = 1
-      menu["select map"][1].name = "Load map: "
-      menu["select map"][1].int = ""
+      menu["level editor"][1].name = "Load map: "
+      menu["level editor"][1].int = ""
     end},
     {name = "Sound test", func = function()
       gamestate = "sound test"
@@ -163,19 +163,19 @@ menu = {
     {name = "Back", func = function() gamestate = "title" pointer = 1 end}
   },
   ["select level"] = {},
-  ["select map"] = {
+  ["level editor"] = {
     {name = "Load map: ", int = "", func = function()
       if WarnPlayer() then return end
-      if menu["select map"][1].int ~= "" then
-        gamemap = tonumber(menu["select map"][1].int)
+      if menu["level editor"][1].int ~= "" then
+        gamemap = tonumber(menu["level editor"][1].int)
       end
-      if menu["select map"][1].name:sub(1, 8) == "Load map" and menu["select map"][1].int:len() > 0
-      and not LoadEditorMap("map"..GetMapNum(menu["select map"][1].int)..".map") then
-        menu["select map"][1].name = "Map not found!"
-        menu["select map"][1].int = ""
-      elseif menu["select map"][1].name == "Map not found!" then
-        menu["select map"][1].name = "Load map: "
-      elseif menu["select map"][1].int ~= "" and mapwidth and mapheight and tilesetname ~= "" then
+      if menu["level editor"][1].name:sub(1, 8) == "Load map" and menu["level editor"][1].int:len() > 0
+      and not LoadEditorMap("map"..GetMapNum(menu["level editor"][1].int)..".map") then
+        menu["level editor"][1].name = "Map not found!"
+        menu["level editor"][1].int = ""
+      elseif menu["level editor"][1].name == "Map not found!" then
+        menu["level editor"][1].name = "Load map: "
+      elseif menu["level editor"][1].int ~= "" and mapwidth and mapheight and tilesetname ~= "" then
         objects = {}
         leveltime = 0
         frametime = 0
@@ -233,7 +233,7 @@ menu = {
         scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= 20 and mapwidth) or mapheight )) or 1
       end
     end},
-    {name = "Back", func = function() gamestate = "select map" pointer = 1 end}
+    {name = "Back", func = function() gamestate = "level editor" pointer = 1 end}
   },
   ["map settings"] = {
     {name = "Map name: ", string = ""},
