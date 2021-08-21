@@ -189,5 +189,6 @@ function love.mousemoved(x, y, dx, dy)
   and x >= screenwidth/2-150 and x <= (screenwidth/2)+150 and y >= 350 and y <= 370 then
     local duration = sound.music:getDuration()
     sound.music:seek(math.min(((x-((screenwidth/2)-150))/300)*duration, duration-1))
+    sound.music:pause()
   end
 end
