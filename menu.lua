@@ -165,7 +165,7 @@ menu = {
   ["select level"] = {},
   ["level editor"] = {
     {name = "Load map: ", int = "", func = function()
-      if WarnPlayer() then return end
+      if menu["level editor"][1].name:sub(1, 8) == "Load map" and  WarnPlayer() then return end
       if menu["level editor"][1].int ~= "" then
         gamemap = tonumber(menu["level editor"][1].int)
       end
