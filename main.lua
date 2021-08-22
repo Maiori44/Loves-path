@@ -188,6 +188,7 @@ local updateModes = {
       minutes, seconds = DoTime(minutes, seconds)
       hours, minutes = DoTime(hours, minutes)
       frametime = frametime-1/60
+      if debugmode and debugmode.Slowdown and leveltime % 60 ~= 0 then return end
       flash = math.max(flash-0.02, 0)
       if customEnv and customEnv.UpdateFrame and type(customEnv.UpdateFrame) == "function" then
         customEnv.UpdateFrame(frames, seconds, minutes, hours)
