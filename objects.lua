@@ -90,8 +90,7 @@ local function DestroyBridge(mo, momx, momy)
     tilemap[mo.y+1][mo.x] = TILE_EMPTY
   end
   local uppertile = tilemap[mo.y-1][mo.x]
-  if uppertile and uppertile ~= TILE_EMPTY and uppertile ~= TILE_BRIDGE and uppertile ~= TILE_CRACKEDBRIDGE
-  and uppertile ~= TILE_ and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
+  if uppertile and uppertile ~= TILE_EMPTY and uppertile ~= TILE_BRIDGE and uppertile ~= TILE_CRACKEDBRIDGE and uppertile ~= TILE_ and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
     tilemap[mo.y][mo.x] = TILE_CHASM1
   elseif uppertile and (uppertile == TILE_BRIDGE or uppertile == TILE_CRACKEDBRIDGE) then
     tilemap[mo.y][mo.x] = TILE_CHASM2
@@ -133,6 +132,8 @@ function SearchObject(x, y)
   end
 end
 
+local predicting = false
+
 function TryMove(mo, momx, momy)
   if not mo then return end
   momx = GetTrueMomentum(momx)
@@ -142,7 +143,7 @@ function TryMove(mo, momx, momy)
   collisions[mo.type][TILE_CUSTOM3] = tilesets[tilesetname].collision[TILE_CUSTOM3]
   if collisions[mo.type] and tilemap[mo.y+momy] and collisions[mo.type][tilemap[mo.y+momy][mo.x+momx]] then
     local obstmo = SearchObject(mo.x+momx, mo.y+momy)
-    if debugmode and debugmode["Noclip"] then obstmo = nil end
+    if (debugmode and debugmode["Noclip"]) or predicting then obstmo = nil end
     if obstmo then
       collisions[obstmo.type][TILE_CUSTOM1] = tilesets[tilesetname].collision[TILE_CUSTOM1]
       collisions[obstmo.type][TILE_CUSTOM2] = tilesets[tilesetname].collision[TILE_CUSTOM2]
@@ -171,14 +172,11 @@ function TryMove(mo, momx, momy)
   return false
 end
 
-local predicting = false
-
 function PredictMove(mo, momx, momy)
   if predicting then return false end
   predicting = true
   local oldx = mo.x
   local oldy = mo.y
-  print(momx, momy)
   local check = TryMove(mo, momx, momy)
   mo.x = oldx
   mo.y = oldy
