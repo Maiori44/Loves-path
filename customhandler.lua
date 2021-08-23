@@ -211,6 +211,7 @@ function SearchCustom()
       SlowPushObject = SlowPushObject,
       SearchObject = SearchObject,
       TryMove = TryMove,
+      PredictMove = PredictMove,
       DirectionMomentum = DirectionMomentum,
       MomentumDirection = MomentumDirection,
       GetDistance = GetDistance,

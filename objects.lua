@@ -158,7 +158,7 @@ function TryMove(mo, momx, momy)
     end
     mo.y = mo.y+momy
     mo.x = mo.x+momx
-    if type(collisions[mo.type][tilemap[mo.y][mo.x]]) == "function" then
+    if type(collisions[mo.type][tilemap[mo.y][mo.x]]) == "function" and not predicting then
       local check = collisions[mo.type][tilemap[mo.y][mo.x]](mo, momx, momy)
       if check == false and mo then
         mo.y = mo.y-momy
@@ -173,7 +173,7 @@ end
 
 local predicting = false
 
-local function PredictMove(mo, momx, momy)
+function PredictMove(mo, momx, momy)
   if predicting then return false end
   predicting = true
   local oldx = mo.x
