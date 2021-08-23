@@ -78,12 +78,6 @@ local function BlueSwitch(mo, momx, momy)
   sound.playSound("door.wav")
 end
 
-local function ThrustMovingObject(mo, momx, momy, thrustx, thrusty)
-  if momx == 0 and momy == 0 then return end
-  mo.momx = thrustx
-  mo.momy = thrusty
-end
-
 local function CrackBridge(mo)
   if momx == 0 and momy == 0 then return end
   tilemap[mo.y][mo.x] = TILE_CRACKEDBRIDGE
@@ -141,6 +135,8 @@ end
 
 function TryMove(mo, momx, momy)
   if not mo then return end
+  momx = GetTrueMomentum(momx)
+  momy = GetTrueMomentum(momy)
   collisions[mo.type][TILE_CUSTOM1] = tilesets[tilesetname].collision[TILE_CUSTOM1]
   collisions[mo.type][TILE_CUSTOM2] = tilesets[tilesetname].collision[TILE_CUSTOM2]
   collisions[mo.type][TILE_CUSTOM3] = tilesets[tilesetname].collision[TILE_CUSTOM3]
@@ -173,6 +169,28 @@ function TryMove(mo, momx, momy)
     return true
   end
   return false
+end
+
+local predicting = false
+
+local function PredictMove(mo, momx, momy)
+  if predicting then return false end
+  predicting = true
+  local oldx = mo.x
+  local oldy = mo.y
+  print(momx, momy)
+  local check = TryMove(mo, momx, momy)
+  mo.x = oldx
+  mo.y = oldy
+  predicting = false
+  return check
+end
+
+local function ThrustObject(mo, thrustx, thrusty)
+  if not PredictMove(mo, thrustx, thrusty) then return end
+  mo.momx = thrustx
+  mo.momy = thrusty
+  mo.lastaxis = (thrustx ~= 0 and "x") or "y"
 end
 
 local directionToMomentum = {
@@ -239,10 +257,10 @@ function AddObjectType(typename, collision, thinker)
       [TILE_BLUEWALLOFF] = true,
       [TILE_AFLOOR1] = true,
       [TILE_AFLOOR2] = true,
-      [TILE_RIGHTPUSHER1] = function(mo, momx, momy) ThrustMovingObject(mo, momx, momy, 1, 0) end,
-      [TILE_LEFTPUSHER1] = function(mo, momx, momy) ThrustMovingObject(mo, momx, momy, -1, 0) end,
-      [TILE_UPPUSHER1] = function(mo, momx, momy) ThrustMovingObject(mo, momx, momy, 0, -1) end,
-      [TILE_DOWNPUSHER1] = function(mo, momx, momy) ThrustMovingObject(mo, momx, momy, 0, 1) end,
+      [TILE_RIGHTPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 1, 0) return true end,
+      [TILE_LEFTPUSHER1] = function(mo, momx, momy) ThrustObject(mo, -1, 0) return true end,
+      [TILE_UPPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, -1) return true end,
+      [TILE_DOWNPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, 1) return true end,
       [TILE_SPIKEON] = RemoveObject,
       [TILE_SPIKEOFF] = true,
       [TILE_SPIKE] = RemoveObject,
@@ -325,7 +343,7 @@ AddObjectType("key", {
 })
 
 --ENEMY
-AddObjectType("enemy", {key = PushObject--[[, snowball = SlowPushObject]]}, function(mo)
+AddObjectType("enemy", {key = PushObject}, function(mo)
   if (leveltime%(61-math.floor(gamemap/2)) > 0) or not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
   FacePlayer(mo)
   DashObject(mo)
@@ -362,6 +380,10 @@ AddObjectType("snowball", {
   [TILE_WALL9] = RemoveObject,
   [TILE_REDWALLON] = RemoveObject,
   [TILE_BLUEWALLON] = RemoveObject,
+  [TILE_RIGHTPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0.95, 0) return true end,
+  [TILE_LEFTPUSHER1] = function(mo, momx, momy) ThrustObject(mo, -0.95, 0) return true end,
+  [TILE_UPPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, -0.95) return true end,
+  [TILE_DOWNPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, 0.95) return true end,
   player = PushObject,
   key = PushObject,
   enemy = RemoveCollidedObject,

@@ -107,6 +107,10 @@ function GetStartY()
   return ((screenheight-((mapheight < 20 and mapheight) or mapheight+2)*((love.window.getFullscreen() and scale * GetScaleByScreen()) or scale)*32)/2)+mouse.cameray
 end
 
+function GetTrueMomentum(mom)
+  return (mom > 0 and math.ceil(mom)) or math.floor(mom)
+end
+
 function love.load(args)
   if args[1] == "-debug" then
     debugmode = {["Game info"] = true}
@@ -201,8 +205,8 @@ local updateModes = {
             local movingmom = (mo.momx ~= 0 and mo.momx) or mo.momy
             movingmom = (movingmom > 0 and math.ceil(2/movingmom)) or math.floor(2/movingmom)
             if (leveltime%movingmom == 0) then
-              local momx = (mo.momx > 0 and math.ceil(mo.momx)) or math.floor(mo.momx)
-              local momy = (mo.momy > 0 and math.ceil(mo.momy)) or math.floor(mo.momy)
+              local momx = GetTrueMomentum(mo.momx)
+              local momy = GetTrueMomentum(mo.momy)
               if not TryMove(mo, momx, momy) then
                 mo.momx = 0
                 mo.momy = 0
@@ -695,12 +699,12 @@ function debug.collectInfo()
     debuginfo = debuginfo.."\nLeveltime: "..leveltime.."\nFrametime: "..frametime.."\nFlash: "..flash..
     "\nDarkness: "..darkness.."\nMap width: "..mapwidth.."\n"..
     "Map height: "..mapheight.."\n".."Tileset: "..tilesetname.."\n"
-    if #objects > 0 then
-      debuginfo = debuginfo.."\nObjects:".."\n"
-      for k, mo in pairs(objects) do
-        debuginfo = debuginfo..mo.type.." x:"..mo.x.."("..mo.momx..") y:"..mo.y.."("..mo.momy..") d:"..mo.direction.."("..mo.quadtype..") k:"..mo.key.."("..k..")\n"
-      end
+    local objectsinfo = "\nObjects:\n"
+    for k, mo in pairs(objects) do
+      objectsinfo = objectsinfo..mo.type.." x:"..mo.x.."("..mo.momx..") y:"..mo.y.."("..mo.momy..") d:"..mo.direction.."("..mo.quadtype..") k:"..mo.key.."("..k..")\n"
     end
+    if objectsinfo == "\nObjects:\n" then objectsinfo = "" end
+    debuginfo = debuginfo..objectsinfo
   end
   if #sound.list > 0 then
     local sounds = ""
@@ -764,7 +768,7 @@ function love.draw()
     love.graphics.print("FPS: "..tostring(love.timer.getFPS()), 10, 10)
   elseif debugmode and debugmode["Game info"] then
     local debuginfo, count, scale = debug.collectInfo()
-    if love.timer.getFPS() < 10 or count > 900 then
+    if love.timer.getFPS() < 10 or count > 999 then
       love.graphics.setColor(1, 0, 0, 1)
     else
       love.graphics.setColor(1, 1, 0, 1)
