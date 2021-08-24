@@ -342,7 +342,7 @@ AddObjectType("key", {
 
 --ENEMY
 AddObjectType("enemy", {key = PushObject}, function(mo)
-  if (leveltime%(61-math.floor(gamemap/2)) > 0) or not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
+  if (leveltime%100 > 0) or not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
   FacePlayer(mo)
   DashObject(mo)
   particles.spawnSmoke(mo.x, mo.y)
