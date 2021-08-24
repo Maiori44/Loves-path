@@ -32,8 +32,10 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags)
     type = type,
     key = #objects+1
   })
-  for k, v in pairs(flags) do
-    objects[#objects].k = v
+  if flags and type(flags) == "table" then
+    for k, v in pairs(flags) do
+      objects[#objects].k = v
+    end
   end
   return objects[#objects]
 end
