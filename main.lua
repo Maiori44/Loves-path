@@ -610,13 +610,15 @@ local drawModes = {
   ["level editor"] = DrawMenu,
   editing = function()
     DrawTilemap()
-    local controls = "CONTROLS:"
-    if mouse.mode == "editing" then
-      controls = controls.."\nLEFT CLICK: Place tile\nRIGHT CLICK: Delete tile\nMIDDLE CLICK: Select tile\nMOUSE WHEEL: Change tile\nTAB: Change mode\nESC: Map settings"
-    else
-      controls = controls.."\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nTAB: Change mode\nESC: Map settings"
+    if not hidecontrols then
+      local controls = "CONTROLS:"
+      if mouse.mode == "editing" then
+        controls = controls.."\nLEFT CLICK: Place tile\nRIGHT CLICK: Delete tile\nMIDDLE CLICK: Select tile\nMOUSE WHEEL: Change tile\nTAB: Change mode\nC: Hide controls\nESC: Map settings"
+      else
+        controls = controls.."\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nTAB: Change mode\nC: Hide controls\nESC: Map settings"
+      end
+      love.graphics.print(controls, screenwidth-math.min(leveltime*2, 300 + ((mouse.mode == "editing" and 0) or 50)), 10)
     end
-    love.graphics.print(controls, screenwidth-math.min(leveltime*2, 300 + ((mouse.mode == "editing" and 0) or 50)), 10)
     local centerx = GetStartX()
     local centery = GetStartY()
     local x = centerx+32*scale

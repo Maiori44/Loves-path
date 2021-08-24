@@ -3,6 +3,8 @@ local particles = require "particles"
 
 local rainbowSecret = {input = {}, needed = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}}
 
+hidecontrols = false
+
 function love.keypressed(key)
   if gamestate == "title" then
     table.insert(rainbowSecret.input, key)
@@ -41,7 +43,9 @@ function love.keypressed(key)
     mouse.mode = "camera"
     wheelmoved = 120
   elseif gamestate == "editing" then
-    if key == "escape" then
+    if key == "c" then
+      hidecontrols = not hidecontrols
+    elseif key == "escape" then
       gamestate = "map settings"
       pointer = 1
       menu["map settings"][1].string = gamemapname
@@ -156,6 +160,7 @@ function mouse.boundsCheck()
   end
   return false
 end
+
 function mouse.think()
   mouse.x = math.floor((love.mouse.getX()-GetStartX())/math.floor(width*scale))
   mouse.y = math.floor((love.mouse.getY()-GetStartY())/math.floor(height*scale))
