@@ -57,9 +57,8 @@ sound.soundtest = {
   {name = "Grassy Forest", subtitle = "Chapter 1 Act 1", creator = "MAKYUNI", filename = "forest1.ogg", require = 2},
   {name = "Haunted Woods", subtitle = "Chapter 1 Act 2", creator = "MAKYUNI", filename = "forest2.ogg", require = 6},
   {name = "Snowy Mountain", subtitle = "Chapter 2 Act 1", creator = "MAKYUNI", filename = "frost1.ogg", require = 11},
-  {name = "Tough Climb", subtitle = "Chapter 2 Act 2", creator = "MAKYUNI", filename = "frost2.ogg", require = 14},
-  {name = "Inside the mind", subtitle = "Chapter 5 test", creator = "Felix44", filename = "mind.ogg", require = 14},
-  --{name = "Song 12", subtitle = "just a test", creator = "Janne", filename = "factory.ogg"},
+  {name = "Tough Climb", subtitle = "Chapter 2 Act 2", creator = "MAKYUNI", filename = "frost2.ogg", require = 15},
+  {name = "Inside the mind", subtitle = "Chapter 5 test", creator = "Felix44", filename = "mind.ogg", require = 16},
 }
 
 return sound
