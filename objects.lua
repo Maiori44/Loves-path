@@ -17,8 +17,9 @@ objects = {}
 collisions = {}
 thinkers = {}
 
-function SpawnObject(sprite, x, y, type, quads, quadtype, direction)
+function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags)
   if not collisions[type] then error('object type "'..type..'" does not exist!') end
+  CheckArgument(8, "SpawnObject", flags, "table")
   table.insert(objects, {
     sprite = sprite,
     quads = quads,
@@ -32,6 +33,9 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction)
     type = type,
     key = #objects+1
   })
+  for k, v in pairs(flags) do
+    objects[#objects].k = v
+  end
   return objects[#objects]
 end
 
