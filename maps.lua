@@ -179,9 +179,9 @@ function CheckMap(...)
     dosmoke = true
     args[#args] = nil
   end
-  for y = 1,mapheight do
-    for x = 1,mapwidth do
-      for i = 1,#args,2 do
+  for y = 1, mapheight do
+    for x = 1, mapwidth do
+      for i = 1, #args, 2 do
         local tocheck = args[i]
         local change = args[i+1]
         if not tocheck or not args then break end
@@ -193,6 +193,14 @@ function CheckMap(...)
           break
         end
       end
+    end
+  end
+end
+
+function IterateMap(tile, func)
+  for y = 1, mapheight do
+    for x = 1, mapwidth do
+      if tilemap[y][x] == tile then func(x, y) end
     end
   end
 end

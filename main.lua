@@ -216,7 +216,9 @@ local updateModes = {
           end
         end
       end
-      if (leveltime%60) == 0 then
+      if ((leveltime+40)%60) == 0 then
+        IterateMap(TILE_SPIKEOFF, function(x, y) particles.spawnWarning(x, y, 0.4) end)
+      elseif (leveltime%60) == 0 then
         CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON)
       end
     end

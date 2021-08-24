@@ -177,6 +177,7 @@ function SearchCustom()
       UpdateFrame = nil,
       leveltime = nil,
       CheckMap = CheckMap,
+      IterateMap = IterateMap,
       ResetCoins = coins.reset,
       AddCustomCoin = function(map, x, y)
         CheckArgument(1, "AddCustomCoin", map, "number")
