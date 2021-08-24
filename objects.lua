@@ -19,7 +19,6 @@ thinkers = {}
 
 function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags)
   if not collisions[type] then error('object type "'..type..'" does not exist!') end
-  CheckArgument(8, "SpawnObject", flags, "table")
   table.insert(objects, {
     sprite = sprite,
     quads = quads,
