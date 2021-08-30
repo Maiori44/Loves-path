@@ -356,6 +356,8 @@ end)
 --BULLET
 AddObjectType("bullet", {
   [TILE_EMPTY] = true,
+  [TILE_REDSWITCH] = true,
+  [TILE_BLUESWITCH] = true,
   [TILE_RIGHTPUSHER1] = true,
   [TILE_LEFTPUSHER1] = true,
   [TILE_UPPUSHER1] = true,
