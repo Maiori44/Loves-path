@@ -1,4 +1,4 @@
-VERSION = "Version 66 ALPHA 1.4"
+VERSION = "Version 67 ALPHA 1.4"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -219,7 +219,9 @@ local updateModes = {
       if ((leveltime+40)%60) == 0 then
         IterateMap(TILE_SPIKEOFF, function(x, y) particles.spawnWarning(x, y, 0.4) end)
       elseif (leveltime%60) == 0 then
-        CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON)
+        if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
+          sound.playSound("spikes.wav")
+        end
       end
     end
   end,

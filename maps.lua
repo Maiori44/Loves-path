@@ -179,6 +179,7 @@ function CheckMap(...)
     dosmoke = true
     args[#args] = nil
   end
+  local replaced = false
   for y = 1, mapheight do
     for x = 1, mapwidth do
       for i = 1, #args, 2 do
@@ -187,6 +188,7 @@ function CheckMap(...)
         if not tocheck or not args then break end
         if tilemap[y][x] == tocheck then
           tilemap[y][x] = change
+          replaced = true
           if dosmoke then
             particles.spawnSmoke(x, y)
           end
@@ -195,6 +197,7 @@ function CheckMap(...)
       end
     end
   end
+  return replaced
 end
 
 function IterateMap(tile, func)
