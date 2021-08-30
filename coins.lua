@@ -9,6 +9,7 @@ local coins = {
   [9] = {x = 1, y = 1, got = false},
   [11] = {x = 13, y = 13, got = false},
   [13] = {x = 18, y = 16, got = false},
+  [14] = {x = 10, y = 13, got = false},
 }
 
 function coins.reset()
