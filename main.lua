@@ -1,4 +1,4 @@
-VERSION = "Version 68 ALPHA 1.4"
+VERSION = "Version 69 ALPHA 1.4"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -620,11 +620,14 @@ local drawModes = {
     end
     local centerx = GetStartX()
     local centery = GetStartY()
+    local oldscale = scale
+    scale = (love.window.getFullscreen() and scale * GetScaleByScreen()) or scale
     local x = centerx+32*scale
     local y = centery+32*scale
-    local xlen = math.floor((mapwidth*32*scale)/mapwidth)*mapwidth
-    local ylen = math.floor((mapheight*32*scale)/mapheight)*mapheight
+    local xlen = (math.floor((mapwidth*32*scale)/mapwidth) * mapwidth)
+    local ylen = (math.floor((mapheight*32*scale)/mapheight) * mapheight)
     love.graphics.rectangle("line", x, y, xlen, ylen)
+    scale = oldscale
     love.graphics.print(mouse.mode..((mouse.mode == "editing" and " x:"..mouse.x.." y:"..mouse.y) or ""), 10, screenheight-20)
     if wheelmoved > 0 and mouse.mode == "editing" then
       love.graphics.setColor(1, 1, 1, ((math.min(math.max(wheelmoved, 0), 60)%120)/60))
@@ -653,11 +656,16 @@ local drawModes = {
   ["map settings"] = function()
     love.graphics.setColor(1, 1, 1, 0.5)
     DrawTilemap()
-    local x = GetStartX()+32*scale
-    local y = GetStartY()+32*scale
+    local centerx = GetStartX()
+    local centery = GetStartY()
+    local oldscale = scale
+    scale = (love.window.getFullscreen() and scale * GetScaleByScreen()) or scale
+    local x = centerx + 32 * scale
+    local y = centery + 32 * scale
     local xlen = math.floor((mapwidth*32*scale)/mapwidth)*mapwidth
     local ylen = math.floor((mapheight*32*scale)/mapheight)*mapheight
     love.graphics.rectangle("line", x, y, xlen, ylen)
+    scale = oldscale
     love.graphics.setColor(1, 1, 1, 1)
     DrawMenu()
   end,
