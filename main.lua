@@ -129,9 +129,6 @@ function love.load(args)
   darkness = 0
   screenwidth = love.graphics.getWidth()
   screenheight = love.graphics.getHeight()
-  quads = {}
-  width = 0
-  height = 0
   tileset = 0
   wheelmoved = 0
   player = nil
@@ -297,8 +294,8 @@ local function DrawTilemap()
       if tile ~= 0 then
         local animationtime = tileAnimations[tile] or 1
         local animationframe = math.floor((leveltime%animationtime)/10)
-        local x = centerx+j*math.floor(width*scale)
-        local y = centery+i*math.floor(height*scale)
+        local x = centerx+j*math.floor(32*scale)
+        local y = centery+i*math.floor(32*scale)
         if quads[tile+animationframe] then
           if debugmode and debugmode["Map info"] then
             love.graphics.print(tile+animationframe, x, y, 0, scale)
@@ -315,14 +312,14 @@ local function DrawTilemap()
   for k = 1,40 do
     local particle = particles.list[k]
     if particle then
-      local x = (centerx+particle.x*math.floor(width*scale))+(16*scale)
-      local y = (centery+particle.y*math.floor(height*scale))+(16*scale)
+      local x = (centerx+particle.x*math.floor(32*scale))+(16*scale)
+      local y = (centery+particle.y*math.floor(32*scale))+(16*scale)
       love.graphics.draw(particle.particle, x, y, 0, scale)
     end
   end
   for k, mo in pairs(objects) do
-    local x = centerx+mo.x*math.floor(width*scale)
-    local y = centery+mo.y*math.floor(height*scale)
+    local x = centerx+mo.x*math.floor(32*scale)
+    local y = centery+mo.y*math.floor(32*scale)
     if not quadDrawingMethods[mo.quadtype] then error('object "'..mo.type..'"('..k..') has an invalid quad type!') end
     quadDrawingMethods[mo.quadtype](mo, x, y)
   end
@@ -332,8 +329,8 @@ local function DrawTilemap()
   end
   local help = particles.list[PARTICLE_HELP]
   if help then
-    local x = (centerx+help.x*math.floor(width*scale))+(16*scale)
-    local y = (centery+help.y*math.floor(height*scale))+(16*scale)
+    local x = (centerx+help.x*math.floor(32*scale))+(16*scale)
+    local y = (centery+help.y*math.floor(32*scale))+(16*scale)
     love.graphics.draw(help.particle, x, y, 0, scal4e)
   end
   scale = oldscale
@@ -648,8 +645,8 @@ local drawModes = {
     end
     if mouse.mode == "editing" and mouse.boundsCheck() then
       love.graphics.setColor(1, 1, 1, 0.5)
-      local x = centerx+mouse.x*math.floor(width*scale)
-      local y = centery+mouse.y*math.floor(height*scale)
+      local x = centerx+mouse.x*math.floor(32*scale)
+      local y = centery+mouse.y*math.floor(32*scale)
       love.graphics.draw(tileset, quads[mouse.tile], x, y, 0, scale)
     end
   end,

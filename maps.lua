@@ -76,6 +76,14 @@ mapspath = "Maps"
 
 tilemap = {}
 
+quads = {}
+for i=0,15 do
+  for j=0,2 do
+    local quad = love.graphics.newQuad(1+j*(32+2), 1+i*(32+2), 32, 32, 102, 544)
+    table.insert(quads, quad)
+  end
+end
+
 local playersprite = love.graphics.newImage("Sprites/player.png")
 local keysprite = love.graphics.newImage("Sprites/key.png")
 local enemysprite = love.graphics.newImage("Sprites/Enemies/forest.png")
@@ -106,17 +114,6 @@ function LoadMap(mapname)
   if oldtileset ~= tilesetname then
     enemysprite = love.graphics.newImage(path.."Enemies/"..tilesetname)
     tileset = love.graphics.newImage(path.."Tiles/"..tilesetname)
-    local image_width = tileset:getWidth()
-    local image_height = tileset:getHeight()
-    width = (image_width / 3) - 2
-    height = (image_height / 16) - 2
-    quads = {}
-    for i=0,15 do
-      for j=0,2 do
-        local quad = love.graphics.newQuad(1+j*(width+2), 1+i*(height+2), width, height, image_width, image_height)
-        table.insert(quads, quad)
-      end
-    end
   end
   local playerx, playery
   tilemap = {}
@@ -237,17 +234,6 @@ function LoadEditorMap(mapname)
   if oldtileset ~= tilesetname then
     enemysprite = love.graphics.newImage(path.."Enemies/"..tilesetname)
     tileset = love.graphics.newImage(path.."Tiles/"..tilesetname)
-    local image_width = tileset:getWidth()
-    local image_height = tileset:getHeight()
-    width = (image_width / 3) - 2
-    height = (image_height / 16) - 2
-    quads = {}
-    for i=0,15 do
-      for j=0,2 do
-        local quad = love.graphics.newQuad(1+j*(width+2), 1+i*(height+2), width, height, image_width, image_height)
-        table.insert(quads, quad)
-      end
-    end
   end
   wheelmoved = 0
   flash = 1
