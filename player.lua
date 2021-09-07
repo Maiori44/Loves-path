@@ -162,8 +162,13 @@ function mouse.boundsCheck()
 end
 
 function mouse.think()
-  mouse.x = math.floor((love.mouse.getX()-GetStartX())/math.floor(32*scale))
-  mouse.y = math.floor((love.mouse.getY()-GetStartY())/math.floor(32*scale))
+  if (love.window.getFullscreen()) then
+    mouse.x = math.floor((love.mouse.getX() - GetStartX()) / math.floor(32 * scale * GetScaleByScreen()))
+    mouse.y = math.floor((love.mouse.getY() - GetStartY()) / math.floor(32 * scale * GetScaleByScreen()))
+  else
+    mouse.x = math.floor((love.mouse.getX() - GetStartX()) / math.floor(32 * scale))
+    mouse.y = math.floor((love.mouse.getY() - GetStartY()) / math.floor(32 * scale))
+  end
   if mouse.mode == "editing" and mouse.boundsCheck() then
     if love.mouse.isDown(1) then
       tilemap[mouse.y][mouse.x] = mouse.tile

@@ -1,4 +1,4 @@
-VERSION = "Version 69 ALPHA 1.4"
+VERSION = "Version 70 ALPHA 1.5"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -88,7 +88,7 @@ function GetScale(num)
   return math.floor((18/num)*10)/10
 end
 
-local function GetScaleByScreen()
+function GetScaleByScreen()
   return screenheight/600
 end
 
@@ -648,9 +648,12 @@ local drawModes = {
     end
     if mouse.mode == "editing" and mouse.boundsCheck() then
       love.graphics.setColor(1, 1, 1, 0.5)
+      local oldscale = scale
+      scale = (love.window.getFullscreen() and scale * GetScaleByScreen()) or scale
       local x = centerx+mouse.x*math.floor(32*scale)
       local y = centery+mouse.y*math.floor(32*scale)
       love.graphics.draw(tileset, quads[mouse.tile], x, y, 0, scale)
+      scale = oldscale
     end
   end,
   ["map settings"] = function()
@@ -698,18 +701,27 @@ function debug.collectInfo()
   local count = collectgarbage("count")
   local debuginfo = "FPS: "..tostring(love.timer.getFPS()).."\nMemory: "..count.."\n"..
   "Gamemap: "..gamemap.."\n".."Lastmap: "..lastmap.."\n".."Gamestate: "..gamestate.."\n\n"
-  debuginfo = debuginfo.."Mouse:\n"
-  debuginfo = debuginfo.."tile: "..tostring(mouse.tile).."\n"
-  debuginfo = debuginfo.."mode: "..tostring(mouse.mode).."\n"
-  debuginfo = debuginfo.."scale: "..tostring(scale).."\n"
-  debuginfo = debuginfo.."x: "..tostring(mouse.x).."\n"
-  debuginfo = debuginfo.."y: "..tostring(mouse.y).."\n"
-  debuginfo = debuginfo.."camerax: "..tostring(mouse.camerax).."\n"
-  debuginfo = debuginfo.."cameray: "..tostring(mouse.cameray).."\n"
+  debuginfo = debuginfo.."Mouse:\n"..
+  "tile: "..tostring(mouse.tile).."\n"..
+  "mode: "..tostring(mouse.mode).."\n"..
+  "scale: "..tostring(scale).."\n"..
+  "fullscreen scale: "..tostring(GetScaleByScreen()).."\n"..
+  "X: "..tostring(mouse.x).."\n"..
+  "Y: "..tostring(mouse.y).."\n"..
+  "camera X: "..tostring(mouse.camerax).."\n"..
+  "camera Y: "..tostring(mouse.cameray)..
+  "\nScreen X: "..tostring(love.mouse.getX())..
+  "\nScreen Y: "..tostring(love.mouse.getY()).."\n"
   if gamestate == "ingame" or gamestate == "pause" or gamestate == "editing" then
-    debuginfo = debuginfo.."\nLeveltime: "..leveltime.."\nFrametime: "..frametime.."\nFlash: "..flash..
-    "\nDarkness: "..darkness.."\nMap width: "..mapwidth.."\n"..
-    "Map height: "..mapheight.."\n".."Tileset: "..tilesetname.."\n"
+    debuginfo = debuginfo.."\n\nMap:\nLeveltime: "..leveltime..
+    "\nFrametime: "..frametime..
+    "\nFlash: "..flash..
+    "\nDarkness: "..darkness..
+    "\nMap width: "..mapwidth..
+    "\nMap height: "..mapheight..
+    "\nTileset: "..tilesetname..
+    "\nStart X: "..GetStartX()..
+    "\nStart Y: "..GetStartY().."\n"
     local objectsinfo = "\nObjects:\n"
     for k, mo in pairs(objects) do
       objectsinfo = objectsinfo..mo.type.." x:"..mo.x.."("..mo.momx..") y:"..mo.y.."("..mo.momy..") d:"..mo.direction.."("..mo.quadtype..") k:"..mo.key.."("..k..")\n"
