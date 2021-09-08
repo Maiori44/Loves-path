@@ -189,7 +189,7 @@ menu = {
         mouse.tile = TILE_WALL1
         mouse.camerax = 0
         mouse.cameray = 0
-        scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= 20 and mapwidth) or mapheight )) or 1
+        scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
       end
     end},
     {name = "Create Map", func = function() 
@@ -236,7 +236,7 @@ menu = {
         mouse.tile = TILE_WALL1
         mouse.camerax = 0
         mouse.cameray = 0
-        scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= 20 and mapwidth) or mapheight )) or 1
+        scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
       end
     end},
     {name = "Back", func = function() gamestate = "level editor" pointer = 1 end}

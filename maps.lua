@@ -155,7 +155,7 @@ function LoadMap(mapname)
   mouse.camerax = 0
   mouse.cameray = 0
   mouse.mode = "camera"
-  scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= 20 and mapwidth) or mapheight )) or 1
+  scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
   love.window.requestAttention()
   if customEnv and customEnv.MapLoad and type(customEnv.MapLoad) == "function" then
     customEnv.MapLoad(gamemap, tilesetname)
