@@ -713,7 +713,7 @@ function debug.collectInfo()
   "\nScreen X: "..tostring(love.mouse.getX())..
   "\nScreen Y: "..tostring(love.mouse.getY()).."\n"
   if gamestate == "ingame" or gamestate == "pause" or gamestate == "editing" then
-    debuginfo = debuginfo.."\n\nMap:\nLeveltime: "..leveltime..
+    debuginfo = debuginfo.."\nMap:\nLeveltime: "..leveltime..
     "\nFrametime: "..frametime..
     "\nFlash: "..flash..
     "\nDarkness: "..darkness..
@@ -728,6 +728,13 @@ function debug.collectInfo()
     end
     if objectsinfo == "\nObjects:\n" then objectsinfo = "" end
     debuginfo = debuginfo..objectsinfo
+    if #voids > 0 then
+      debuginfo = debuginfo.."Empty keys: "
+      for k, v in ipairs(voids) do
+        debuginfo = debuginfo..v.." "
+      end
+      debuginfo = debuginfo.."\n"
+    end
   end
   if #sound.list > 0 then
     local sounds = ""
