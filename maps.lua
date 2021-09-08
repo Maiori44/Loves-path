@@ -94,6 +94,7 @@ end
 
 function LoadMap(mapname)
   objects = {}
+  voids = {}
   local file = io.open(mapspath.."/"..mapname, "r")
   if not file then
     love.window.showMessageBox("Failed to load "..mapname.."!", "Map not found.", "error")
@@ -231,6 +232,7 @@ function LoadEditorMap(mapname)
   end
   file:close()
   objects = {}
+  voids = {}
   if oldtileset ~= tilesetname then
     enemysprite = love.graphics.newImage(path.."Enemies/"..tilesetname)
     tileset = love.graphics.newImage(path.."Tiles/"..tilesetname)

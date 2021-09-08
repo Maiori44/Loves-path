@@ -183,6 +183,7 @@ menu = {
         menu["level editor"][1].name = "Load map: "
       elseif menu["level editor"][1].int ~= "" and mapwidth and mapheight and tilesetname ~= "" then
         objects = {}
+        voids = {}
         leveltime = 0
         frametime = 0
         gamestate = "editing"

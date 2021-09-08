@@ -14,12 +14,13 @@ DIR_UP = 5
 DIR_DOWN = 7
 
 objects = {}
+voids = {}
 collisions = {}
 thinkers = {}
 
 function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags)
   if not collisions[type] then error('object type "'..type..'" does not exist!') end
-  table.insert(objects, {
+  local newobject = {
     sprite = sprite,
     quads = quads,
     quadtype = (quadtype and quadtype) or (not quads and "none") or (#quads == 1 and "single")
@@ -30,18 +31,21 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags)
     momy = 0,
     direction = direction or DIR_LEFT,
     type = type,
-    key = #objects+1
-  })
+  }
   if flags and type(flags) == "table" then
     for k, v in pairs(flags) do
-      objects[#objects].k = v
+      newobject.k = v
     end
   end
-  return objects[#objects]
+  local key = (#voids > 0 and table.remove(voids) or #objects + 1)
+  newobject.key = key
+  objects[key] = newobject
+  return newobject
 end
 
 function RemoveObject(mo, soundname)
   objects[mo.key] = nil
+  table.insert(voids, mo.key)
   soundname = (type(soundname) == "string" and soundname) or nil
   soundname = (not soundname and ((mo == player and "heartbreak"..love.math.random(1, 2)..".wav") or "boom.wav")) or soundname
   if mo.type == "player" then particles.spawnShards(player.x, player.y, 1) darkness = 0 player = nil
