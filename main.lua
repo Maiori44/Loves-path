@@ -1,4 +1,4 @@
-VERSION = "Version 71 ALPHA 1.5"
+VERSION = "Version 72 ALPHA 1.5"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -773,7 +773,7 @@ function debug.collectInfo()
   for w in debuginfo:gmatch("\n") do
     i = i+1
   end
-  if i > 38 then scale = 0.5 end
+  if i > 38 and not love.window.getFullscreen() then scale = 0.5 end
   return debuginfo, count, scale
 end
 
