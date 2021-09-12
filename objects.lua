@@ -137,7 +137,7 @@ end
 
 function SearchObject(x, y)
   for k, mo in pairs(objects) do
-    if mo.type ~= "player" and mo.x == x and mo.y == y then return mo end
+    if mo.x == x and mo.y == y then return mo end
   end
 end
 
@@ -350,7 +350,7 @@ AddObjectType("key", {
 })
 
 --ENEMY
-AddObjectType("enemy", {key = PushObject}, function(mo)
+AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject}, function(mo)
   if (leveltime%100 > 0) or not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
   FacePlayer(mo)
   DashObject(mo)
@@ -371,6 +371,7 @@ AddObjectType("bullet", {
   [TILE_SLIME] = true,
   [TILE_CHASM1] = true,
   [TILE_CHASM2] = true,
+  player = RemoveCollidedObject,
   bullet = function(mo, obstmo) RemoveObject(mo) RemoveObject(obstmo) end,
 }, RemoveStandingObject)
 
