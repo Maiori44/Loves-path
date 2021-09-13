@@ -14,9 +14,6 @@ end
 function GetAllMaps()
   menu["select level"] = {}
   local mapn = 1
-  if love.filesystem.isFused() then
-    love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
-  end
   local possiblemaps = love.filesystem.getDirectoryItems((love.filesystem.isFused() and "Source/"..mapspath) or mapspath)
   for k, mapname in ipairs(possiblemaps) do
     if mapname:sub(mapname:len()-3) == ".map" and mapname:match("%d+%d") then

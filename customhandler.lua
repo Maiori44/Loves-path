@@ -1,11 +1,7 @@
 local sound = require "music"
 local coins = require "coins"
 
-local path = "Custom"
-if love.filesystem.isFused() then
-  love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
-  path = "Source/Custom"
-end
+local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
 
 local readOnlyValues = {
   VERSION = "constant",

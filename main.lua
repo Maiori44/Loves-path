@@ -1,7 +1,11 @@
-VERSION = "Version 73 ALPHA 1.5"
+VERSION = "Version 75 ALPHA 1.5"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
+
+if love.filesystem.isFused() then
+  love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
+end
 
 local SetColor = love.graphics.setColor
 
@@ -135,11 +139,6 @@ function love.load(args)
   gamemapname = ""
   musicname = ""
   pcall(LoadSettings)
-  --[[if menu.settings[7].value == 1 then
-    local console = io.open("log "..os.date()..".txt", "w+")
-    io.output(console)
-    io.stdout:setvbuf("no")
-  end]]
   sound.setMusic("menu.ogg")
 end
 

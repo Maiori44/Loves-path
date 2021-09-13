@@ -88,10 +88,6 @@ local playersprite = love.graphics.newImage("Sprites/player.png")
 local keysprite = love.graphics.newImage("Sprites/key.png")
 local enemysprite = love.graphics.newImage("Sprites/Enemies/forest.png")
 
-if love.filesystem.isFused() then
-  love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
-end
-
 local function GetTilesetPath()
   if tilesetname == "" then tilesetname = "forest.png" end
   local testpath = path
