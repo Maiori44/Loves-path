@@ -260,3 +260,38 @@ function SearchCustom()
     if not ok then love.window.showMessageBox("Error while loading custom.lua!", errormsg2, "error") return end
   end
 end
+
+function GetTilesetPath()
+  if tilesetname == "" then tilesetname = "forest.png" end
+  local testpath = path
+  print(tilesetname, tilesets[tilesetname])
+  if tilesets[tilesetname] and type(tilesets[tilesetname]) == "table" then
+    testpath = (tilesets[tilesetname].vanilla and "Sprites") or path
+  else
+    if tilesetname == "forest.png" then
+      error("the default tileset is missing.\n"..
+      "If you did not alter the source code in any way, contact me!")
+    end
+    local errorname = "Error while loading tileset!"
+    local errormsg = 'the tileset "'..tilesetname..'" was not found\n'.."the default tileset will be used instead."
+    love.window.showMessageBox(errorname, errormsg, "error")
+    tilesetname = "forest.png"
+    return GetTilesetPath()
+  end
+  if love.filesystem.getInfo(testpath, "directory")
+  and love.filesystem.getInfo(testpath.."/Tiles/"..tilesetname)
+  and love.filesystem.getInfo(testpath.."/Enemies/"..tilesetname) then
+    return testpath.."/"
+  else
+    if tilesetname == "forest.png" then
+      error("The default tileset is broken.\n"..
+      "Undo any modifications done to it or reinstall the .exe")
+    end
+    local errorname = "Error while loading tileset!"
+    local errormsg = 'The tileset "'..tilesetname..'" has missing sprites\n'..
+    "the default tileset will be used instead."
+    love.window.showMessageBox(errorname, errormsg, "error")
+    tilesetname = "forest.png"
+    return GetTilesetPath()
+  end
+end

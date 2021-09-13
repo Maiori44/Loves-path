@@ -72,7 +72,7 @@ TILE_CUSTOM3 = 48
 
 lastmap = 1
 
-mapspath = "Maps"
+--mapspath = "Maps"
 
 tilemap = {}
 
@@ -88,57 +88,33 @@ local playersprite = love.graphics.newImage("Sprites/player.png")
 local keysprite = love.graphics.newImage("Sprites/key.png")
 local enemysprite = love.graphics.newImage("Sprites/Enemies/forest.png")
 
-local function GetTilesetPath()
-  if tilesetname == "" then tilesetname = "forest.png" end
-  local testpath = path
-  if tilesets[tilesetname] and type(tilesets[tilesetname]) == "table" then
-    testpath = (tilesets[tilesetname].vanilla and "Sprites") or path
-  else
-    if tilesetname == "forest.png" then
-      error("the default tileset is missing.\n"..
-      "If you did not alter the source code in any way, contact me!")
-    end
-    local errorname = "Error while loading tileset!"
-    local errormsg = 'the tileset "'..tilesetname..'" was not found\n'..
-    "the default tileset will be used instead."
-    love.window.showMessageBox(errorname, errormsg, "error")
-    tilesetname = "forest.png"
-    return GetTilesetPath()
-  end
-  if love.filesystem.getInfo(testpath, "directory")
-  and love.filesystem.getInfo(testpath.."/Tiles/"..tilesetname)
-  and love.filesystem.getInfo(testpath.."/Enemies/"..tilesetname) then
-    return testpath.."/"
-  else
-    if tilesetname == "forest.png" then
-      error("The default tileset is broken.\n"..
-      "Undo any modifications done to it or reinstall the .exe")
-    end
-    local errorname = "Error while loading tileset!"
-    local errormsg = 'The tileset "'..tilesetname..'" has missing sprites\n'..
-    "the default tileset will be used instead."
-    love.window.showMessageBox(errorname, errormsg, "error")
-    tilesetname = "forest.png"
-    return GetTilesetPath()
-  end
+local function GetMapFile(mapname) --despite the name, this returns a string
+  return love.filesystem.read("Maps/"..mapname) or love.filesystem.read(((love.filesystem.isFused() and "Source/") or "").."Custom/Maps/"..mapname)
 end
+
+--[[
+  s = "sussy\nlol"
+iterator = string.gmatch(s,'[^\r\n]+') use .. to read 2 characters
+print(iterator(), iterator())
+]]
 
 function LoadMap(mapname)
   objects = {}
   voids = {}
-  local file = io.open(mapspath.."/"..mapname, "r")
+  local file = GetMapFile(mapname)
   if not file then
     love.window.showMessageBox("Failed to load "..mapname.."!", "Map not found.", "error")
     return "error"
   end
   local oldtileset = tilesetname
-  gamemapname = file:read("*l")
-  tilesetname = file:read("*l")
+  local ReadLine = string.gmatch(file, "[^\r\n]+")
+  gamemapname = readline(file)
+  tilesetname = readline(file)
   local path = GetTilesetPath()
-  local musicname = file:read("*l")
+  local musicname = readline(file)
   sound.setMusic(musicname)
-  mapwidth = tonumber(file:read("*l"))
-  mapheight = tonumber(file:read("*l"))
+  mapwidth = tonumber(readline(file))
+  mapheight = tonumber(readline(file))
   if not mapwidth or not mapheight or tilesetname == "" then
     love.window.showMessageBox("Failed to load "..mapname.."!", "The map is corrupted.", "error")
     return "error"
