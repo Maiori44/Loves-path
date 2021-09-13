@@ -164,6 +164,11 @@ function TryMove(mo, momx, momy)
       else
         check = true
       end
+      if check == true then
+        mo.y = mo.y+momy
+        mo.x = mo.x+momx
+        return true
+      end
       if check ~= nil then return check end
     end
     mo.y = mo.y+momy
@@ -395,6 +400,7 @@ AddObjectType("snowball", {
   [TILE_UPPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, -0.95) return true end,
   [TILE_DOWNPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, 0.95) return true end,
   player = PushObject,
+  coin = true,
   key = PushObject,
   enemy = RemoveCollidedObject,
   snowball = SlowPushObject,
