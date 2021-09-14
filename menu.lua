@@ -40,6 +40,10 @@ end
 
 local function SaveMap(map, mapname, tilesetname, musicname, width, height, reset)
   local file = io.open(map, "w+")
+  if not file then
+    love.window.showMessageBox("Failed to create "..mapname.."!", "Check if the Map folder exists in your mod folder", "error")
+    return false
+  end
   file:write(mapname)
   file:write(tilesetname)
   file:write(musicname)
@@ -52,6 +56,7 @@ local function SaveMap(map, mapname, tilesetname, musicname, width, height, rese
   end
   file:close()
   GetAllMaps()
+  return true
 end
 
 local function ResetData()
@@ -239,7 +244,7 @@ menu = {
         menu["create map"][7].name = "Map "..tostring(tonumber(menu["create map"][1].int)).." arleady exists!"
       else
         local mapinfo = menu["create map"]
-        SaveMap(mapspath.."/map"..GetMapNum(mapinfo[1].int)..".map", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].string.."\n", mapinfo[5].int.."\n", mapinfo[6].int.."\n", true)
+        if not SaveMap(mapspath.."/map"..GetMapNum(mapinfo[1].int)..".map", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].string.."\n", mapinfo[5].int.."\n", mapinfo[6].int.."\n", true) then return end
         gamemap = tonumber(mapinfo[1].int)
         LoadEditorMap("map"..GetMapNum(gamemap)..".map")
         leveltime = 0
