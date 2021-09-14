@@ -9,10 +9,16 @@ end
 
 function sound.setMusic(filename)
   local filepath = "Music/"..filename
-  if menu.settings[4].value == 0 or filename == ""
-  or not pcall(love.audio.newSource, filepath, "stream") then
+  if menu.settings[4].value == 0 or filename == "" then
     sound.stopMusic()
     return
+  end
+  if not pcall(love.audio.newSource, filepath, "stream") then
+    filepath = mapspath:sub(1, -7).."/Music/"..filename
+    if not pcall(love.audio.newSource, filepath, "stream") then
+      sound.stopMusic()
+      return
+    end
   end
   if sound.musicname == filename then return end
   sound.musicname = filename
