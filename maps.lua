@@ -72,7 +72,7 @@ TILE_CUSTOM3 = 48
 
 lastmap = 1
 
---mapspath = "Maps"
+mapspath = "Maps/"
 
 tilemap = {}
 
@@ -88,33 +88,27 @@ local playersprite = love.graphics.newImage("Sprites/player.png")
 local keysprite = love.graphics.newImage("Sprites/key.png")
 local enemysprite = love.graphics.newImage("Sprites/Enemies/forest.png")
 
-local function GetMapFile(mapname) --despite the name, this returns a string
-  return love.filesystem.read("Maps/"..mapname) or love.filesystem.read(((love.filesystem.isFused() and "Source/") or "").."Custom/Maps/"..mapname)
+local function GetMapData(mapname)
+  return love.filesystem.read(mapspath..mapname)
 end
-
---[[
-  s = "sussy\nlol"
-iterator = string.gmatch(s,'[^\r\n]+') use .. to read 2 characters
-print(iterator(), iterator())
-]]
 
 function LoadMap(mapname)
   objects = {}
   voids = {}
-  local file = GetMapFile(mapname)
-  if not file then
+  local mapdata = GetMapData(mapname)
+  if not mapdata then
     love.window.showMessageBox("Failed to load "..mapname.."!", "Map not found.", "error")
     return "error"
   end
   local oldtileset = tilesetname
-  local ReadLine = string.gmatch(file, "[^\r\n]+")
-  gamemapname = readline(file)
-  tilesetname = readline(file)
+  local ReadLine = string.gmatch(mapdata, "[^\r\n]+")
+  gamemapname = ReadLine()
+  tilesetname = ReadLine()
   local path = GetTilesetPath()
-  local musicname = readline(file)
+  local musicname = ReadLine()
   sound.setMusic(musicname)
-  mapwidth = tonumber(readline(file))
-  mapheight = tonumber(readline(file))
+  mapwidth = tonumber(ReadLine())
+  mapheight = tonumber(ReadLine())
   if not mapwidth or not mapheight or tilesetname == "" then
     love.window.showMessageBox("Failed to load "..mapname.."!", "The map is corrupted.", "error")
     return "error"
@@ -125,10 +119,11 @@ function LoadMap(mapname)
   end
   local playerx, playery
   tilemap = {}
+  local ReadTile = string.gmatch(ReadLine(), "..")
   for y = 1,mapheight do
     tilemap[y] = {}
     for x = 1,mapwidth do
-      tile = tonumber(file:read(2))
+      tile = tonumber(ReadTile() or 0)
       tilemap[y][x] = tile or TILE_EMPTY
       if tile == TILE_START then
         playerx = x
@@ -145,7 +140,6 @@ function LoadMap(mapname)
       end
     end
   end
-  file:close()
   local loadedmap = tonumber(mapname:match("%d+%d"))
   if coins[loadedmap] and not coins[loadedmap].got then
     SpawnObject(coins.sprite, coins[loadedmap].x, coins[loadedmap].y, "coin", coins.quads, "default")
@@ -214,30 +208,31 @@ function IterateMap(tile, func)
 end
 
 function LoadEditorMap(mapname)
-  local file = io.open(mapspath.."/"..mapname, "r+")
-  if not file then return false end
+  local mapdata = GetMapData(mapname)
+  if not mapdata then return false end
   local oldtileset = tilesetname
-  gamemapname = file:read("*l")
-  tilesetname = file:read("*l")
+  local ReadLine = string.gmatch(mapdata, "[^\r\n]+")
+  gamemapname = ReadLine()
+  tilesetname = ReadLine()
   local path = GetTilesetPath()
-  local musicname = file:read("*l")
+  local musicname = ReadLine()
   sound.setMusic(musicname)
-  mapwidth = tonumber(file:read("*l"))
-  mapheight = tonumber(file:read("*l"))
+  mapwidth = tonumber(ReadLine())
+  mapheight = tonumber(ReadLine())
   if not mapwidth or not mapheight or tilesetname == "" then
     love.window.showMessageBox("Failed to load "..mapname.."!", "The map is corrupted.", "error")
     love.event.quit(0)
     return false
   end
   tilemap = {}
+  local ReadTile = string.gmatch(ReadLine(), "..")
   for y = 1,mapheight do
     tilemap[y] = {}
     for x = 1,mapwidth do
-      tile = tonumber(file:read(2))
+      tile = tonumber(ReadTile() or 0)
       tilemap[y][x] = tile or TILE_EMPTY
     end
   end
-  file:close()
   objects = {}
   voids = {}
   if oldtileset ~= tilesetname then

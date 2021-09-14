@@ -1,4 +1,4 @@
-VERSION = "Version 75 ALPHA 1.5"
+VERSION = "Version 76 ALPHA 1.5"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -67,6 +67,7 @@ function GetExtraQuad(image)
   return {love.graphics.newQuad(69, 1, 32, 32, image:getWidth(), image:getHeight())}
 end
 
+require "customhandler"
 require "maps"
 require "objects"
 require "menu"
@@ -495,8 +496,6 @@ tilesets = {
     }
   },
 }
-require "customhandler"
-SearchCustom()
 
 --if not customEnv then print("amogus") end
 
@@ -693,6 +692,15 @@ local drawModes = {
     end
     love.graphics.setColor(1, 1, 1, 1)
     DrawMenu()
+  end,
+  ["select mod"] = function()
+    DrawMenu()
+    if (#menu["select mod"] - 1) == 0 then
+      love.graphics.setColor(1, 0, 0, 1)
+    else
+      love.graphics.setColor(1, 1, 0, 1)
+    end
+    love.graphics.printf((#menu["select mod"] - 1).." mods found", 0, 90, screenwidth, "center")
   end,
 }
 

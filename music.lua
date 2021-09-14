@@ -7,10 +7,8 @@ function sound.stopMusic()
   sound.music = nil
 end
 
-local musicpath = (love.filesystem.isFused() and "Source/Music/") or "Music/"
-
 function sound.setMusic(filename)
-  local filepath = musicpath..filename
+  local filepath = "Music/"..filename
   if menu.settings[4].value == 0 or filename == ""
   or not pcall(love.audio.newSource, filepath, "stream") then
     sound.stopMusic()

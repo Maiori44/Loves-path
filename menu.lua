@@ -14,7 +14,7 @@ end
 function GetAllMaps()
   menu["select level"] = {}
   local mapn = 1
-  local possiblemaps = love.filesystem.getDirectoryItems((love.filesystem.isFused() and "Source/Maps") or "Maps")
+  local possiblemaps = love.filesystem.getDirectoryItems(mapspath:sub(1, -2))
   for k, mapname in ipairs(possiblemaps) do
     if mapname:sub(mapname:len()-3) == ".map" and mapname:match("%d+%d") then
       menu["select level"][mapn] = {
@@ -81,15 +81,12 @@ local function ResetData()
   SaveData()
 end
 
-local warned = false
-
 local function WarnPlayer()
-  if warned then return false end
-  if mapspath == "Maps" and not debugmode then
-    local button = love.window.showMessageBox("Notice!", "Modifying the vanilla maps (especially if you didn't finish the story) is probably not a good idea\nI recommend reading the documentation to create a custom map pack first\nwill you still proceed to the level editor?", {"Continue", "Go back"})
-    if button == 1 then warned = true return false end
+  if mapspath == "Maps/" and not debugmode then
+    love.window.showMessageBox("You can't edit the vanilla maps!", "You need to create a mod if you want to create and edit your own maps\npress the documentation button to read more about it", "warning")
     return true
   end
+  return false
 end
 
 menu = {
@@ -121,6 +118,23 @@ menu = {
       menu["sound test"][1].name = "< Love's path >"
     end},
     {name = "Settings", func = function() gamestate = "settings" pointer = 1 end},
+    {name = "Modifications", func = function()
+      menu["select mod"] = {}
+      local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
+      for k, filename in ipairs(love.filesystem.getDirectoryItems(path)) do
+        if love.filesystem.getInfo(path.."/"..filename, "directory") then
+          table.insert(menu["select mod"], {name = filename, func = function()
+            SearchCustom(filename)
+            gamestate = "title"
+            pointer = 1
+            table.remove(menu.title, 5)
+          end})
+        end
+      end
+      table.insert(menu["select mod"], {name = "back", func = function() gamestate = "title" pointer = 1 end})
+      gamestate = "select mod"
+      pointer = 1
+    end},
     {name = "Credits", func = function() gamestate = "credits" pointer = 1 end},
     {name = "Quit", func = function() love.event.quit(0) end}
   },
@@ -272,7 +286,6 @@ GetAllMaps()
 
 function SaveSettings()
   local file = io.open("settings.cfg", "w+b")
-  file:write(string.char((warned and 1) or 0))
   for i = 1,#menu.settings-2 do
     file:write(string.char(menu.settings[i].value))
   end
@@ -338,7 +351,6 @@ function LoadSettings()
     SaveSettings()
     return
   end
-  warned = numtobool[string.byte(file:read(1))] or false
   for i = 1,#menu.settings-2 do
     local oldvalue = menu.settings[i].value
     menu.settings[i].value = DataCheck(string.byte(file:read(1) or menu.settings[i].value))

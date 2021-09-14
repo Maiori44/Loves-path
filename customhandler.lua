@@ -1,7 +1,7 @@
 local sound = require "music"
 local coins = require "coins"
 
-local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
+local path = (love.filesystem.isFused() and "Source/Custom/") or "Custom/"
 
 local readOnlyValues = {
   VERSION = "constant",
@@ -62,8 +62,15 @@ local readOnlyValues = {
   tilemap = "pointer",
 }
 
-function SearchCustom()
+function SearchCustom(modname)
+  path = path..modname
   if love.filesystem.getInfo(path, "directory") then
+    coins.reset()
+    lastmap = 1
+    mapspath = path.."/Maps/"
+    GetAllMaps()
+    savefile = modname..".dat"
+    LoadData()
     local ok, CustomInfo = pcall(love.filesystem.load, path.."/custom.lua")
     if not CustomInfo then return end
     if not ok then love.window.showMessageBox("Failed to load custom.lua!", CustomInfo, "error") return end
@@ -75,21 +82,6 @@ function SearchCustom()
       type = type,
       ipairs = ipairs,
       pairs = pairs,
-      SetCustomSaveFile = function(filename)
-        CheckArgument(1, "SetCustomSaveFile", filename, "string")
-        local finalname = ""
-        for w in filename:gmatch(".") do
-          if w ~= ":" and w ~= "/" and w ~= "\\" then
-            finalname = finalname..w
-          end
-        end
-        local endname = finalname:sub(finalname:len()-3)
-        if endname ~= ".dat" then
-          finalname = finalname..".dat"
-        end
-        savefile = finalname
-        LoadData()
-      end,
       UpdateFrame = nil,
       leveltime = nil,
       
@@ -156,30 +148,16 @@ function SearchCustom()
       TILE_CUSTOM2 = 47,
       TILE_CUSTOM3 = 48,
       tilemap = tilemap,
-      SetCustomMapFolder = function(foldername)
-        CheckArgument(1, "SetCustomMapFolder", foldername, "string")
-        local finalname = ""
-        for w in foldername:gmatch(".") do
-          if w ~= ":" and w ~= "/" and w ~= "\\" then
-            finalname = finalname..w
-          end
-        end
-        if not love.filesystem.getInfo("Custom/"..finalname, "directory") then
-          error('Could not find a folder named "'..finalname..'" inside the Custom folder')
-        end
-        mapspath = "Custom/"..finalname
-        GetAllMaps()
-      end,
       UpdateFrame = nil,
       leveltime = nil,
       CheckMap = CheckMap,
       IterateMap = IterateMap,
-      ResetCoins = coins.reset,
       AddCustomCoin = function(map, x, y)
         CheckArgument(1, "AddCustomCoin", map, "number")
         CheckArgument(2, "AddCustomCoin", x, "number")
         CheckArgument(3, "AddCustomCoin", y, "number")
         coins[map] = {x = x, y = y, got = false}
+        LoadData()
       end,
       MapLoad = nil,
       
@@ -264,7 +242,6 @@ end
 function GetTilesetPath()
   if tilesetname == "" then tilesetname = "forest.png" end
   local testpath = path
-  print(tilesetname, tilesets[tilesetname])
   if tilesets[tilesetname] and type(tilesets[tilesetname]) == "table" then
     testpath = (tilesets[tilesetname].vanilla and "Sprites") or path
   else
