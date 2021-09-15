@@ -495,6 +495,24 @@ tilesets = {
       end,
     }
   },
+  ["castle.png"] = { --CHAPTER 3
+    vanilla = true,
+    description = {
+      [TILE_CUSTOM1] = "+15\nAdds 15 seconds to timer",
+      [TILE_CUSTOM2] = "BOX\nWill spawn a box in this tile",
+      [TILE_CUSTOM3] = "BOX CONTAINER THING\nIf all of these tiles are covered by boxes the level will be completed"
+    },
+    collision = {
+      [TILE_CUSTOM1] = true,
+      [TILE_CUSTOM2] = true,
+      [TILE_CUSTOM3] = true
+    },
+    tile = {
+      [TILE_CUSTOM1] = nil,
+      [TILE_CUSTOM2] = nil,
+      [TILE_CUSTOM3] = nil
+      }
+  },
 }
 
 --if not customEnv then print("amogus") end
