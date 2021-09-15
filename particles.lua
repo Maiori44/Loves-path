@@ -64,6 +64,24 @@ function particles.spawnStars(x, y)
   end
 end
 
+function particles.spawnBridgeShards(x, y, amount)
+  if menu.settings[6].value == 0 then return end
+  for i = 1,40 do
+    if not particles.list[i] then
+      particles.list[i] = {x = x, y = y}
+      particles.list[i].particle = love.graphics.newParticleSystem(love.graphics.newImage(path.."bridge.png"), amount)
+      particles.list[i].particle:setParticleLifetime(0.5, 1.3)
+      particles.list[i].particle:setLinearAcceleration(0, 30, 0, 40)
+      particles.list[i].particle:setSpin(-3, 3)
+      particles.list[i].particle:setColors(tilesets[tilesetname].bridgeshardcolor or {1, 1, 1, 1}, {0, 0, 0, 0})
+      particles.list[i].particle:setEmissionArea("normal", 4, 4)
+      particles.list[i].particle:setSizes(0.5)
+      particles.list[i].particle:emit(amount)
+      break
+    end
+  end
+end
+
 function particles.spawnSnow()
   if menu.settings[6].value == 0 then return end
   particles.list[PARTICLE_SNOW] = {}

@@ -1,4 +1,4 @@
-VERSION = "Version 76 ALPHA 1.5"
+VERSION = "Version 77 ALPHA 1.5"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -448,6 +448,7 @@ local spikeDesc = "\nObjects in this tile will be destroyed"
 tilesets = {
   ["forest.png"] = { --CHAPTER 1
     vanilla = true,
+    bridgeshardcolor = {0.7, 0.4, 0.1},
     description = {
       [TILE_CUSTOM1] = "UNUSED"..floorDesc, 
       [TILE_CUSTOM2] = "UNUSED"..floorDesc,
@@ -468,6 +469,7 @@ tilesets = {
     vanilla = true,
     snow = true,
     enemyquadtype = "movement",
+    bridgeshardcolor = {0.7, 0.7, 0.7},
     description = {
       [TILE_CUSTOM1] = "SNOWBALL".."\nA Snowball will spawn in this tile", 
       [TILE_CUSTOM2] = "STICKS WALL"..wallDesc.."\nIf a Snowball rams this wall it will collapse",

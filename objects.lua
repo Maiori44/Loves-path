@@ -95,10 +95,16 @@ end
 local function DestroyBridge(mo, momx, momy)
   if momx == 0 and momy == 0 then return end
   tilemap[mo.y][mo.x] = TILE_EMPTY
-  if tilemap[mo.y+1][mo.x] and tilemap[mo.y+1][mo.x] == TILE_CHASM2 then
-    tilemap[mo.y+1][mo.x] = TILE_EMPTY
+  if tilemap[mo.y + 1][mo.x] then
+    if tilemap[mo.y + 1][mo.x] == TILE_CHASM2 then
+      tilemap[mo.y + 1][mo.x] = TILE_EMPTY
+      particles.spawnBridgeShards(mo.x, mo.y, 6)
+      particles.spawnBridgeShards(mo.x, mo.y + 1, 6)
+    else
+      particles.spawnBridgeShards(mo.x, mo.y, 12)
+    end
   end
-  local uppertile = tilemap[mo.y-1][mo.x]
+  local uppertile = tilemap[mo.y - 1][mo.x]
   if uppertile and uppertile ~= TILE_EMPTY and uppertile ~= TILE_BRIDGE and uppertile ~= TILE_CRACKEDBRIDGE and uppertile ~= TILE_ and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
     tilemap[mo.y][mo.x] = TILE_CHASM1
   elseif uppertile and (uppertile == TILE_BRIDGE or uppertile == TILE_CRACKEDBRIDGE) then
