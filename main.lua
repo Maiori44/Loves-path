@@ -143,39 +143,8 @@ function love.load(args)
   sound.setMusic("menu.ogg")
 end
 
-local glitchshader = love.graphics.newShader([[
-//https://github.com/steincodes/godot-shader-tutorials/blob/master/Shaders/displace.shader
-//godot shader converted by Flamendless
-
-extern Image tex_displace;
-extern float dis_amount = 0.1;
-extern float dis_size = 0.1;
-extern float abb_amount_x = 0.1;
-extern float abb_amount_y = 0.1;
-extern float max_a = 0.5;
-extern number random;
-
-vec4 effect(vec4 color, Image texture, vec2 uv, vec2 screen_coords)
-{
-    vec4 disp = Texel(tex_displace, uv * dis_size);
-    vec2 new_uv = uv + disp.xy * dis_amount + random;
-    color.r = Texel(texture, new_uv - vec2(abb_amount_x, abb_amount_y)).r;
-    color.g = Texel(texture, new_uv).g;
-    color.b = Texel(texture, new_uv + vec2(abb_amount_x, abb_amount_y)).b;
-    color.a = Texel(texture, new_uv).a * max_a;
-    return color;
-}]])
-
-local blackshader = love.graphics.newShader([[
-extern number darkness;
-
-vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
-  vec4 pixel = Texel(texture, texture_coords );
-  number average = (pixel.r+pixel.b+pixel.g)/darkness;
-  pixel.rgb = min(pixel.rgb, average);
-  return pixel * color;
-}
-]])
+local glitchshader = love.graphics.newShader(({love.filesystem.read("Shaders/glitch.glsl")})[1])
+local deathshader = love.graphics.newShader(({love.filesystem.read("Shaders/death.glsl")})[1])
 
 local updateModes = {
   ingame = function(dt)
@@ -233,7 +202,7 @@ local updateModes = {
 
 function love.update(dt)
   glitchshader:send("random", love.math.random()-0.5)
-  blackshader:send("darkness", darkness)
+  deathshader:send("darkness", darkness)
   coins.hudtimer = math.max(coins.hudtimer-1, 0)
   if customEnv then customEnv.leveltime = leveltime end
   if #sound.list >= 10 then sound.collectGarbage() end
@@ -278,7 +247,7 @@ local function DrawTilemap()
     table.insert(shaders, glitchshader)
     sound.music:seek(math.max(sound.music:tell()-love.timer.getDelta(), 0))
   end
-  if not player then table.insert(shaders, blackshader) end
+  if not player then table.insert(shaders, deathshader) end
   if #shaders > 0 then
     love.graphics.setShader(unpack(shaders))
   end
