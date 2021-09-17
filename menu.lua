@@ -44,13 +44,16 @@ local function SaveMap(map, mapname, tilesetname, musicname, width, height, rese
     love.window.showMessageBox("Failed to create "..mapname.."!", "Check if the Map folder exists in your mod folder", "error")
     return false
   end
-  file:write(mapname)
-  file:write(tilesetname)
-  file:write(musicname)
-  file:write((width ~= "\n") and ((tonumber(width:sub(1, width:len()-1)) > 35) and "35\n" or width) or "10\n")
-  file:write((height ~= "\n") and ((tonumber(height:sub(1, height:len()-1)) > 35) and "35\n" or height) or "10\n")
-  for i,row in ipairs(tilemap) do
-    for j,tile in ipairs(row) do
+  file:write((#mapname == 1 and "unnamed\n") or mapname)
+  file:write((#tilesetname == 1 and "forest.png\n") or tilesetname)
+  file:write((#musicname == 1 and "none\n") or musicname)
+  local awidth = (width ~= "\n") and ((tonumber(width:sub(1, width:len()-1)) > 35) and "35\n" or width) or "10\n"
+  file:write(awidth)
+  local aheight = (height ~= "\n") and ((tonumber(height:sub(1, height:len()-1)) > 35) and "35\n" or height) or "10\n"
+  file:write(aheight)
+  for y = 1, tonumber(aheight) do
+    for x = 1, tonumber(awidth) do
+      local tile = (tilemap[y] and tilemap[y][x]) or 0
       file:write((reset and "00") or ((tile < 10 and "0"..tile) or tostring(tile)))
     end
   end
@@ -238,9 +241,7 @@ menu = {
         menu["create map"][7].name = "Invalid Map num!"
         return
       end
-      local check = io.open(mapspath.."/map"..GetMapNum(menu["create map"][1].int)..".map")
-      if check then
-        check:close()
+      if love.filesystem.getInfo(mapspath.."map"..GetMapNum(menu["create map"][1].int)..".map", "file") then
         menu["create map"][7].name = "Map "..tostring(tonumber(menu["create map"][1].int)).." arleady exists!"
       else
         local mapinfo = menu["create map"]
