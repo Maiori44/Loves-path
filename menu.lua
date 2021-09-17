@@ -126,7 +126,7 @@ menu = {
       menu["sound test"][1].name = "< Love's path >"
     end},
     {name = "Settings", func = function() gamestate = "settings" pointer = 1 end},
-    {name = "Modifications", func = function()
+    {name = "Addons", func = function()
       menu["select mod"] = {}
       local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
       for k, filename in ipairs(love.filesystem.getDirectoryItems(path)) do
