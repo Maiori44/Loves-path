@@ -158,7 +158,7 @@ function TryMove(mo, momx, momy)
   collisions[mo.type][TILE_CUSTOM3] = tilesets[tilesetname].collision[TILE_CUSTOM3]
   if collisions[mo.type] and tilemap[mo.y+momy] and collisions[mo.type][tilemap[mo.y+momy][mo.x+momx]] then
     local obstmo = SearchObject(mo.x+momx, mo.y+momy)
-    if (debugmode and debugmode["Noclip"]) or predicting then obstmo = nil end
+    if (debugmode and debugmode["Noclip"]) or predicting or obstmo == mo then obstmo = nil end
     if obstmo then
       collisions[obstmo.type][TILE_CUSTOM1] = tilesets[tilesetname].collision[TILE_CUSTOM1]
       collisions[obstmo.type][TILE_CUSTOM2] = tilesets[tilesetname].collision[TILE_CUSTOM2]
