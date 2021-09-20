@@ -230,6 +230,10 @@ function MomentumDirection(checkx, checky)
   end
 end
 
+function GetTrueMomentum(mom)
+  return (mom > 0 and math.ceil(mom)) or math.floor(mom)
+end
+
 function GetDistance(mo1, mo2)
   return mo1.x-mo2.x, mo1.y-mo2.y
 end

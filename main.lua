@@ -112,10 +112,6 @@ function GetStartY()
   return ((screenheight-((mapheight < 20 and mapheight) or mapheight+2)*((love.window.getFullscreen() and scale * GetScaleByScreen()) or scale)*32)/2)+mouse.cameray
 end
 
-function GetTrueMomentum(mom)
-  return (mom > 0 and math.ceil(mom)) or math.floor(mom)
-end
-
 function love.load(args)
   if args[1] == "-debug" then
     debugmode = {["Game info"] = true}
