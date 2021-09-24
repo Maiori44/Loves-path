@@ -77,7 +77,9 @@ function SearchCustom(modname)
     customEnv = {
       --MISCELLANEOUS LIBRARY--
       VERSION = VERSION,
-      print = function(text, title) love.window.showMessageBox(tostring(title), tostring(text), "info") end,
+      print = function(title, text)
+        messagebox.setMessage(tostring(title), tostring(text))
+      end,
       error = error,
       type = type,
       ipairs = ipairs,
@@ -251,7 +253,7 @@ function GetTilesetPath()
     end
     local errorname = "Error while loading tileset!"
     local errormsg = 'the tileset "'..tilesetname..'" was not found\n'.."the default tileset will be used instead."
-    love.window.showMessageBox(errorname, errormsg, "error")
+    messagebox.setMessage(errorname, errormsg, true)
     tilesetname = "forest.png"
     return GetTilesetPath()
   end
@@ -267,7 +269,7 @@ function GetTilesetPath()
     local errorname = "Error while loading tileset!"
     local errormsg = 'The tileset "'..tilesetname..'" has missing sprites\n'..
     "the default tileset will be used instead."
-    love.window.showMessageBox(errorname, errormsg, "error")
+    messagebox.setMessage(errorname, errormsg, true)
     tilesetname = "forest.png"
     return GetTilesetPath()
   end

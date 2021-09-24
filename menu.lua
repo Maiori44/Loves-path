@@ -41,7 +41,7 @@ end
 local function SaveMap(map, mapname, tilesetname, musicname, width, height, reset)
   local file = io.open(map, "w+")
   if not file then
-    love.window.showMessageBox("Failed to create "..mapname.."!", "Check if the Map folder exists in your mod folder", "error")
+    messagebox.setMessage("Failed to save map!", "Check if the Map folder exists in your mod folder", true)
     return false
   end
   file:write((#mapname == 1 and "unnamed\n") or mapname)
@@ -91,7 +91,7 @@ end
 
 local function WarnPlayer()
   if mapspath == "Maps/" and not debugmode then
-    love.window.showMessageBox("You can't edit the vanilla maps!", "You need to create a mod if you want to create and edit your own maps\npress the documentation button to read more about it", "warning")
+    messagebox.setMessage("You can't edit the vanilla maps!", "You need to create a mod for that,\nif you want to create and edit your own maps\npress the documentation button")
     return true
   end
   return false
@@ -190,26 +190,23 @@ menu = {
   ["select level"] = {},
   ["level editor"] = {
     {name = "Load map: ", int = "", func = function()
-      if menu["level editor"][1].name:sub(1, 8) == "Load map" and menu["level editor"][1].int:len() > 0 and WarnPlayer() then return end
+      if WarnPlayer() then return end
       if menu["level editor"][1].int ~= "" then
         gamemap = tonumber(menu["level editor"][1].int)
-      end
-      if menu["level editor"][1].name:sub(1, 8) == "Load map" and menu["level editor"][1].int:len() > 0
-      and not LoadEditorMap("map"..GetMapNum(menu["level editor"][1].int)..".map") then
-        menu["level editor"][1].name = "Map not found!"
-        menu["level editor"][1].int = ""
-      elseif menu["level editor"][1].name == "Map not found!" then
-        menu["level editor"][1].name = "Load map: "
-      elseif menu["level editor"][1].int ~= "" and mapwidth and mapheight and tilesetname ~= "" then
-        objects = {}
-        voids = {}
-        leveltime = 0
-        frametime = 0
-        gamestate = "editing"
-        mouse.tile = TILE_WALL1
-        mouse.camerax = 0
-        mouse.cameray = 0
-        scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
+        if LoadEditorMap("map"..GetMapNum(gamemap)..".map") then
+          objects = {}
+          voids = {}
+          leveltime = 0
+          frametime = 0
+          gamestate = "editing"
+          mouse.tile = TILE_WALL1
+          mouse.camerax = 0
+          mouse.cameray = 0
+          scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
+        else
+          messagebox.setMessage("Map not found!")
+          menu["level editor"][1].int = ""
+        end
       end
     end},
     {name = "Create Map", func = function() 
@@ -224,7 +221,7 @@ menu = {
     end},
     {name = "Documentation", func = function()
       if not love.system.openURL("file://"..love.filesystem.getSourceBaseDirectory().."/readme.txt") then
-        love.window.showMessageBox("Error while opening file!", "Could not find \"readme.txt\" in your folder\nreinstall the game to get another copy", "error")
+        messagebox.setMessage("Documentation not found!", "Could not find \"readme.txt\" in your folder\nreinstall the game to get another copy", true)
       end
     end},
     {name = "Back", func = function() gamestate = "title" pointer = 1 end},

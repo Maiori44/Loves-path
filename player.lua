@@ -6,6 +6,11 @@ local rainbowSecret = {input = {}, needed = {"up", "up", "down", "down", "left",
 hidecontrols = false
 
 function love.keypressed(key)
+  if messagebox.show then
+    messagebox.show = false
+    messagebox.error = false
+    return
+  end
   if gamestate == "title" then
     table.insert(rainbowSecret.input, key)
     if rainbowSecret.input[#rainbowSecret.input] ~= rainbowSecret.needed[#rainbowSecret.input] then

@@ -316,9 +316,11 @@ AddObjectType("player", {
   local errorcheck = LoadMap("map"..GetMapNum(gamemap)..".map")
   if errorcheck and errorcheck == "error" then
     gamemap = gamemap-1
+    messagebox.setMessage("Failed to load next map!", "The current map was reloaded instead", true)
     local errorcheck2 = LoadMap("map"..GetMapNum(gamemap)..".map")
     if errorcheck2 and errorcheck2 == "error" then
       local finalcheck = LoadMap("map00.map")
+      messagebox.setMessage("Failed to load next or current map!", "as a last ditch effor map00.map was loaded\nsomething must really be broken...", true)
       if finalcheck and finalcheck == "error" then
         error("Could not find a map to load\nthe Maps folder may be corrupted, reinstall the game and replace it.")
       end

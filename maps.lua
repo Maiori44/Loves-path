@@ -97,7 +97,7 @@ function LoadMap(mapname)
   voids = {}
   local mapdata = GetMapData(mapname)
   if not mapdata then
-    love.window.showMessageBox("Failed to load "..mapname.."!", "Map not found.", "error")
+    messagebox.setMessage("Failed to load "..mapname.."!", "Map not found.", true)
     return "error"
   end
   local oldtileset = tilesetname
@@ -110,7 +110,7 @@ function LoadMap(mapname)
   mapwidth = tonumber(ReadLine())
   mapheight = tonumber(ReadLine())
   if not mapwidth or not mapheight or tilesetname == "" then
-    love.window.showMessageBox("Failed to load "..mapname.."!", "The map is corrupted.", "error")
+    messagebox.setMessage("Failed to load "..mapname.."!", "The map is corrupted.", true)
     return "error"
   end
   if oldtileset ~= tilesetname then
@@ -220,7 +220,7 @@ function LoadEditorMap(mapname)
   mapwidth = tonumber(ReadLine())
   mapheight = tonumber(ReadLine())
   if not mapwidth or not mapheight or tilesetname == "" then
-    love.window.showMessageBox("Failed to load "..mapname.."!", "The map is corrupted.", "error")
+    messagebox.setMessage("Failed to load "..mapname.."!", "The map is corrupted.", true)
     love.event.quit(0)
     return false
   end

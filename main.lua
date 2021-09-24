@@ -1,4 +1,4 @@
-VERSION = "Version 78 ALPHA 1.5"
+VERSION = "Version 79 ALPHA 1.5"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -67,6 +67,30 @@ function GetExtraQuad(image)
   return {love.graphics.newQuad(69, 1, 32, 32, image:getWidth(), image:getHeight())}
 end
 
+local font
+
+messagebox = {
+  title = "",
+  contents = "",
+  show = false,
+  error = false,
+  width = 0,
+  height = 0,
+  setMessage = function(title, contents, error)
+    messagebox.show = true
+    messagebox.title = title
+    messagebox.contents = contents or ""
+    messagebox.width = math.max(math.max(font:getWidth(messagebox.title) * 1.5, font:getWidth(string.gmatch(messagebox.contents, "[^\r\n]+")() or "")), 260)
+    messagebox.height = 85
+    for w in messagebox.contents:gmatch("\n") do
+      messagebox.height = messagebox.height + 20
+    end
+    if error or (contents and type(contents) == "boolean") then
+      messagebox.error = true
+    end
+  end
+}
+
 require "customhandler"
 require "maps"
 require "objects"
@@ -79,7 +103,6 @@ local coins = require "coins"
 
 io.stdout:setvbuf("no")
 
-local font
 local titlescreen = love.graphics.newImage("Sprites/title1.png")
 local titleglow = love.graphics.newImage("Sprites/title2.png")
 local errortile = love.graphics.newImage("Sprites/error.png")
@@ -815,6 +838,21 @@ function love.draw()
     love.graphics.setColor(1, 1, 1, 1)
   end
   love.graphics.printf(VERSION, 0, screenheight-20, screenwidth, "right")
+  if messagebox.show then
+    love.graphics.setColor(0, 0, 0, 0.5)
+    love.graphics.rectangle("fill", 0, 0, screenwidth, screenheight)
+    local increase = math.abs(math.sin(os.clock()) / 5)
+    local width = ((screenwidth / 2) - (messagebox.width / 2)) - 10
+    local height = (screenheight / 2) - (messagebox.height / 2)
+    love.graphics.setColor(0.7 + increase, 0, (messagebox.error and 0) or 0.5 + increase, 1)
+    love.graphics.rectangle("fill", width, height, messagebox.width + 20, messagebox.height + 20)
+    love.graphics.setColor(0.9 + increase, 0, (messagebox.error and 0) or 0.7 + increase, 1)
+    love.graphics.rectangle("line", width, height, messagebox.width + 20, messagebox.height + 20)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.printf(messagebox.title, 0, height + 10, screenwidth / 1.5, "center", 0, 1.5)
+    love.graphics.printf(messagebox.contents, 0, height + 50, screenwidth, "center")
+    love.graphics.printf("(press any button to close this)", 0, height + messagebox.height, screenwidth / 0.7, "center", 0, 0.7)
+  end
 end
 
 function love.quit()
