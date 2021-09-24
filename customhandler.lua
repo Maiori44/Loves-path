@@ -82,6 +82,8 @@ function SearchCustom(modname)
       end,
       error = error,
       type = type,
+      tostring = tostring,
+      tonumber = tonumber,
       ipairs = ipairs,
       pairs = pairs,
       UpdateFrame = nil,
