@@ -80,7 +80,12 @@ messagebox = {
     messagebox.show = true
     messagebox.title = title
     messagebox.contents = contents or ""
-    messagebox.width = math.max(math.max(font:getWidth(messagebox.title) * 1.5, font:getWidth(string.gmatch(messagebox.contents, "[^\r\n]+")() or "")), 260)
+    local linewidth = 0
+    for line in string.gmatch(messagebox.contents, "[^\r\n]+") do
+      local clinewidth = font:getWidth(line)
+      linewidth = (clinewidth > linewidth and clinewidth) or linewidth
+    end
+    messagebox.width = math.max(math.max(font:getWidth(messagebox.title) * 1.5, linewidth), 260)
     messagebox.height = 85
     for w in messagebox.contents:gmatch("\n") do
       messagebox.height = messagebox.height + 20
