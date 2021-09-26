@@ -704,6 +704,13 @@ local drawModes = {
       love.graphics.circle("line", ((screenwidth/2)-150)+(sound.music:tell()/sound.music:getDuration())*300, 360, 5)
     end
     love.graphics.setColor(1, 1, 1, 1)
+    local gotmusic = 0
+    local totmusic = 0
+    for k, music in ipairs(sound.soundtest) do
+      totmusic = totmusic + 1
+      gotmusic = (lastmap >= (music.require or 0) and gotmusic + 1) or gotmusic
+    end
+    love.graphics.print("Unlocked music: "..gotmusic.."/"..totmusic, 10, screenheight - 20)
     DrawMenu()
   end,
   ["select mod"] = function()
