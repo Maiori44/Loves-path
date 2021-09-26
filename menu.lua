@@ -91,7 +91,7 @@ end
 
 local function WarnPlayer()
   if mapspath == "Maps/" and not debugmode then
-    messagebox.setMessage("You can't edit the vanilla maps!", "You need to create a mod for that,\nif you want to create and edit your own maps\npress the documentation button")
+    messagebox.setMessage("You can't edit the vanilla maps!", "You need to create a mod for that,\nif you want to create and edit your own maps\nselect the documentation button")
     return true
   end
   return false
@@ -172,7 +172,7 @@ menu = {
     {name = "Erase Data", func = function()
       if menu.settings[#menu.settings-1].name == "Erase Data" then
         menu.settings[#menu.settings-1].name = "Are you sure?"
-        messagebox.setMessage("Are you sure?", "This option will erase the save file and settings file\nyou will lose all your progress\nif you're sure you want to do this, select the option again")
+        messagebox.setMessage("Are you sure?", "This button will erase the save file and settings file\nyou will lose all your progress\nif you're sure you want to do this, select the button again")
       elseif menu.settings[#menu.settings-1].name == "Are you sure?" then
         ResetData()
         menu.settings[#menu.settings-1].name = "Data erased"
@@ -205,7 +205,7 @@ menu = {
           mouse.cameray = 0
           scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
         else
-          messagebox.setMessage("Map not found!")
+          messagebox.setMessage("Map not found!", "If you want to create a new map\nselect the \"Create Map\" button instead")
           menu["level editor"][1].int = ""
         end
       end
