@@ -66,6 +66,7 @@ function SearchCustom(modname)
   path = path..modname
   if love.filesystem.getInfo(path, "directory") then
     coins.reset()
+    sound.soundtest = {{name = "Love's path", subtitle = "Main menu", creator = "MAKYUNI", filename = "menu.ogg"}}
     lastmap = 1
     mapspath = path.."/Maps/"
     GetAllMaps()
@@ -96,9 +97,6 @@ function SearchCustom(modname)
         CheckArgument(4, "AddSoundTestEntry", filename, "string")
         table.insert(sound.soundtest,
         {name = name, subtitle = subtitle or "", creator = creator or "", filename = filename, require = tonumber(required)})
-      end,
-      ResetSoundTest = function()
-        sound.soundtest = {{name = "Love's path", subtitle = "Main menu", creator = "MAKYUNI", filename = "menu.ogg"}}
       end,
       
       --MAP LIBRARY--
