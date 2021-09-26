@@ -235,11 +235,12 @@ menu = {
     {name = "Map height: ", int = ""},
     {name = "Create map", func = function()
       if menu["create map"][1].int == "" then
-        menu["create map"][7].name = "Invalid Map num!"
+        messagebox.setMessage("Invalid map number!", "you need to set the map number to...a number")
         return
       end
       if love.filesystem.getInfo(mapspath.."map"..GetMapNum(menu["create map"][1].int)..".map", "file") then
-        menu["create map"][7].name = "Map "..tostring(tonumber(menu["create map"][1].int)).." arleady exists!"
+        local mapnum = tostring(tonumber(menu["create map"][1].int))
+        messagebox.setMessage("Map "..mapnum.." already exists!", "You can load it from the \"load map:\" button\nby setting the map to load to \""..mapnum.."\"")
       else
         local mapinfo = menu["create map"]
         if not SaveMap(mapspath.."/map"..GetMapNum(mapinfo[1].int)..".map", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].string.."\n", mapinfo[5].int.."\n", mapinfo[6].int.."\n", true) then return end
