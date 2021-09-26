@@ -172,6 +172,7 @@ menu = {
     {name = "Erase Data", func = function()
       if menu.settings[#menu.settings-1].name == "Erase Data" then
         menu.settings[#menu.settings-1].name = "Are you sure?"
+        messagebox.setMessage("Are you sure?", "This option will erase the save file and settings file\nyou will lose all your progress\nif you're sure you want to do this, select the option again")
       elseif menu.settings[#menu.settings-1].name == "Are you sure?" then
         ResetData()
         menu.settings[#menu.settings-1].name = "Data erased"
