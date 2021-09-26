@@ -263,7 +263,7 @@ end
 
 function AddObjectType(typename, collision, thinker)
   CheckArgument(1, "AddObjectType", typename, "string")
-  if collisions[typename] then error('object type "'..typename..'" arleady exists!') end
+  if collisions[typename] then error('object type "'..typename..'" already exists!') end
   collisions[typename] = setmetatable(collision or {}, {
     __index = {
       [TILE_EMPTY] = RemoveMovingObject,
