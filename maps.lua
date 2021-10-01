@@ -93,6 +93,7 @@ local function GetMapData(mapname)
 end
 
 function LoadMap(mapname)
+  timer = 0
   objects = {}
   voids = {}
   local mapdata = GetMapData(mapname)

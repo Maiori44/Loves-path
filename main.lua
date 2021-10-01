@@ -154,6 +154,7 @@ function love.load(args)
   gamemap = 0
   lastmap = 1
   scale = 1
+  timer = 0
   flash = 0
   darkness = 0
   screenwidth = love.graphics.getWidth()
@@ -184,8 +185,12 @@ local updateModes = {
       frametime = frametime-1/60
       if debugmode and debugmode.Slowdown and leveltime % 60 ~= 0 then return end
       flash = math.max(flash-0.02, 0)
-      if customEnv and customEnv.UpdateFrame and type(customEnv.UpdateFrame) == "function" then
-        customEnv.UpdateFrame(frames, seconds, minutes, hours)
+      if customEnv then
+        customEnv.leveltime = leveltime
+        customEnv.timer = timer
+        if customEnv.UpdateFrame then
+          customEnv.UpdateFrame(frames, seconds, minutes, hours)
+        end
       end
       TryMove(player, 0, 0)
       if (leveltime%2) == 0 then
@@ -212,11 +217,21 @@ local updateModes = {
         if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
           sound.playSound("spikes.wav")
         end
+        if timer > 0 then
+          timer = timer - 1
+          if timer <= 0 then
+            RemoveObject(player)
+          end
+        end
       end
     end
   end,
-  editing = function()
-    leveltime = leveltime+1
+  editing = function(dt)
+    frametime = frametime+dt
+    while frametime > 1/60 do
+      leveltime = leveltime+1
+      frametime = frametime-1/60
+    end
     mouse.think()
   end,
   ["sound test"] = function()
@@ -593,6 +608,9 @@ local drawModes = {
     if not player then
       love.graphics.printf("Press [R] to retry", 0, 20, screenwidth, "center")
     end
+    if timer > 0 then
+      love.graphics.printf("Hurry!\n"..timer, 0, screenheight - 60, screenwidth, "center")
+    end
     if coins.hudtimer > 0 then
       love.graphics.setColor(1, 1, 1, ((math.min(math.max(coins.hudtimer, 0), 60)%160)/60))
       DrawCoinHud(leveltime)
@@ -742,6 +760,7 @@ function debug.collectInfo()
   if gamestate == "ingame" or gamestate == "pause" or gamestate == "editing" then
     debuginfo = debuginfo.."\nMap:\nLeveltime: "..leveltime..
     "\nFrametime: "..frametime..
+    "\nTimer: "..timer..
     "\nFlash: "..flash..
     "\nDarkness: "..darkness..
     "\nMap width: "..mapwidth..

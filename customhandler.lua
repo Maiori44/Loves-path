@@ -60,6 +60,8 @@ local readOnlyValues = {
   DIR_DOWN = "DIR_* constant",
   player = "pointer",
   tilemap = "pointer",
+  leveltime = "checker",
+  timer = "checker",
 }
 
 function SearchCustom(modname)
@@ -87,8 +89,6 @@ function SearchCustom(modname)
       tonumber = tonumber,
       ipairs = ipairs,
       pairs = pairs,
-      UpdateFrame = nil,
-      leveltime = nil,
       
       --SOUND LIBRARY--
       PlaySound = sound.playSound,
@@ -150,8 +150,11 @@ function SearchCustom(modname)
       TILE_CUSTOM2 = 47,
       TILE_CUSTOM3 = 48,
       tilemap = tilemap,
-      UpdateFrame = nil,
       leveltime = nil,
+      timer = nil,
+      SetTimer = function(time)
+        timer = time
+      end,
       CheckMap = CheckMap,
       IterateMap = IterateMap,
       AddCustomCoin = function(map, x, y)
@@ -161,6 +164,7 @@ function SearchCustom(modname)
         coins[map] = {x = x, y = y, got = false}
         LoadData()
       end,
+      UpdateFrame = nil,
       MapLoad = nil,
       
       --SPRITES LIBRARY--
