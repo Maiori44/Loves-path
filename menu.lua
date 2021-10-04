@@ -39,6 +39,9 @@ end
 
 
 local function SaveMap(map, mapname, tilesetname, musicname, width, height, reset)
+  if map:sub(1, 7) == "Source/" then
+    map = map:sub(8)
+  end
   local file = io.open(map, "w+")
   if not file then
     messagebox.setMessage("Failed to save map!", "Check if the Map folder exists in your mod folder", true)
