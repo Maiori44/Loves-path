@@ -271,7 +271,6 @@ menu = {
       local mapinfo = menu["map settings"]
       SaveMap(mapspath.."/map"..GetMapNum(gamemap)..".map", mapinfo[1].string.."\n", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
       LoadEditorMap("map"..GetMapNum(gamemap)..".map")
-      menu["map settings"][6].name = "Map saved!"
     end},
     {name = "Resume editing", func = function() gamestate = "editing" end},
     {name = "Return to Title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},
