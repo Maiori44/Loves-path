@@ -72,6 +72,7 @@ end
 
 function EraseObject(mo)
   objects[mo.key] = nil
+  table.insert(voids, mo.key)
   if mo.type == "player" then player = nil end
 end
 
