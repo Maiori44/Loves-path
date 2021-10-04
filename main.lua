@@ -1,4 +1,4 @@
-VERSION = "Version 80 BETA 1.0"
+VERSION = "Version 81 BETA 1.1"
 
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
@@ -581,7 +581,7 @@ local tileDescriptions = {
 local credits =
 "-Coding-\n"..
 "Felice \"Felix44\" D'Angelo\n\n"..
-"-Sprites & Art-\n"..
+"-Art-\n"..
 "Ester Blasone\n"..
 "MAKYUNI\n\n"..
 "-Music-\n"..
