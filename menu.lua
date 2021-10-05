@@ -185,11 +185,11 @@ menu = {
       menu.settings[#menu.settings-1].name = "Erase Data"
       SaveSettings()
       gamestate = "title"
-      pointer = 1
+      pointer = 4
     end}
   },
   credits = {
-    {name = "Back", func = function() gamestate = "title" pointer = 1 end}
+    {name = "Back", func = function() gamestate = "title" pointer = #menu.title - 1 end}
   },
   ["select level"] = {},
   ["level editor"] = {
@@ -228,7 +228,7 @@ menu = {
         messagebox.setMessage("Documentation not found!", "Could not find \"readme.txt\" in your folder\nreinstall the game to get another copy", true)
       end
     end},
-    {name = "Back", func = function() gamestate = "title" pointer = 1 end},
+    {name = "Back", func = function() gamestate = "title" pointer = 2 end},
   },
   ["create map"] = {
     {name = "Map num: ", int = ""},
@@ -259,7 +259,7 @@ menu = {
         scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
       end
     end},
-    {name = "Back", func = function() gamestate = "level editor" pointer = 1 end}
+    {name = "Back", func = function() gamestate = "level editor" pointer = 2 end}
   },
   ["map settings"] = {
     {name = "Map name: ", string = ""},
@@ -285,7 +285,7 @@ menu = {
       local musicname = sound.soundtest[sound.soundtestpointer].filename
       sound.setMusic((sound.musicname == musicname and "") or musicname)
     end},
-    {name = "Back", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end}
+    {name = "Back", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 3 end}
   },
 }
 
