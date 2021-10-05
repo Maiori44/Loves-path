@@ -191,7 +191,7 @@ menu = {
   credits = {
     {name = "Back", func = function() gamestate = "title" pointer = #menu.title - 1 end}
   },
-  ["select level"] = {},
+  ["select level"] = nil,
   ["level editor"] = {
     {name = "Load map: ", int = "", func = function()
       if WarnPlayer() then return end
