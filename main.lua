@@ -1,4 +1,4 @@
-VERSION = "Version 83 BETA 1.1"
+VERSION = "Version 84 BETA 1.1"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -518,7 +518,10 @@ tilesets = {
       [TILE_CUSTOM3] = true
     },
     tile = {
-      [TILE_CUSTOM1] = nil,
+      [TILE_CUSTOM1] = function(x, y)
+        timer = timer + 15
+        tilemap[y][x] = TILE_FLOOR1
+      end,
       [TILE_CUSTOM2] = function(x, y)
         SpawnObject(boxsprite, x, y, "box")
         tilemap[y][x] = TILE_FLOOR2
