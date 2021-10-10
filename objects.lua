@@ -336,6 +336,7 @@ AddObjectType("player", {
     particles.spawnStars(obstmo.x, obstmo.y)
     EraseObject(obstmo) end,
   key = PushObject,
+  box = PushObject,
   enemy = RemoveObject,
   bullet = RemoveObject,
   snowball = SlowPushObject,
@@ -432,3 +433,20 @@ AddObjectType("snowman", {}, function(mo)
   end
 end)
 
+---CHAPTER 3
+
+--BOX
+AddObjectType("box", {
+  [TILE_FLOOR1] = StopObject,
+  [TILE_FLOOR2] = StopObject,
+  [TILE_FLOOR3] = StopObject,
+  [TILE_KEY] = StopObject,
+  [TILE_START] = StopObject,
+  [TILE_GOAL] = StopObject,
+  [TILE_REDWALLOFF] = StopObject,
+  [TILE_BLUEWALLOFF] = StopObject,
+  [TILE_AFLOOR1] = StopObject,
+  [TILE_AFLOOR2] = StopObject,
+  [TILE_SPIKEOFF] = StopObject,
+  [TILE_ENEMY] = StopObject
+})

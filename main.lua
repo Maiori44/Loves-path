@@ -445,6 +445,7 @@ end
 
 local snowsprite = love.graphics.newImage("Sprites/Chapter 2/snowball.png")
 local snowmansprite = love.graphics.newImage("Sprites/Chapter 2/snowman.png")
+local boxsprite = love.graphics.newImage("Sprites/Chapter 3/box.png")
 
 local wallDesc = "\nMost objects can't walk in this tile"
 local floorDesc = "\nObjects can walk in this tile"
@@ -508,7 +509,7 @@ tilesets = {
     vanilla = true,
     description = {
       [TILE_CUSTOM1] = "+15\nAdds 15 seconds to timer",
-      [TILE_CUSTOM2] = "BOX\nWill spawn a box in this tile",
+      [TILE_CUSTOM2] = "BOX\nWill spawn a pushable box in this tile",
       [TILE_CUSTOM3] = "BOX CONTAINER THING\nIf all of these tiles are covered by boxes the level will be completed"
     },
     collision = {
@@ -518,7 +519,10 @@ tilesets = {
     },
     tile = {
       [TILE_CUSTOM1] = nil,
-      [TILE_CUSTOM2] = nil,
+      [TILE_CUSTOM2] = function(x, y)
+        SpawnObject(boxsprite, x, y, "box")
+        tilemap[y][x] = TILE_FLOOR2
+      end,
       [TILE_CUSTOM3] = nil
       }
   },
