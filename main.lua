@@ -336,7 +336,7 @@ local function DrawTilemap()
   if help then
     local x = (centerx+help.x*math.floor(32*scale))+(16*scale)
     local y = (centery+help.y*math.floor(32*scale))+(16*scale)
-    love.graphics.draw(help.particle, x, y, 0, scal4e)
+    love.graphics.draw(help.particle, x, y, 0, scale)
   end
   scale = oldscale
   if gamestate ~= "pause" and gamestate ~= "map settings" then
