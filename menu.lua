@@ -4,6 +4,19 @@ local coins = require "coins"
 pointer = 1
 local valuesnames = {[0] = "off", [1] = "on"}
 local numtobool = {[0] = false, [1] = true}
+local percentuals = {
+  [0] = "0%",
+  [1] = "10%",
+  [2] = "20%",
+  [3] = "30%",
+  [4] = "40%",
+  [5] = "50%",
+  [6] = "60%",
+  [7] = "70%",
+  [8] = "80%",
+  [9] = "90%",
+  [10] = "100%"
+}
 
 local function ToggleValue()
   local setting = menu.settings[pointer]
@@ -72,15 +85,11 @@ local function ResetData()
     screenwidth = love.graphics.getWidth()
     screenheight = love.graphics.getHeight()
   end
-  menu.settings[2].value = 0
-  menu.settings[3].value = 0
-  menu.settings[4].value = 1
-  menu.settings[5].value = 1
-  menu.settings[6].value = 1
-  menu.settings[7].value = 1
-  menu.settings[8].value = 1
   for i = 1,#menu.settings-2 do
-    menu.settings[i].valuename = valuesnames[menu.settings[i].value]
+    menu.settings[i].value = menu.settings[i].oldvalue
+    if menu.settings[i].valuename then
+      menu.settings[i].valuename = valuesnames[menu.settings[i].value]
+    end
   end
   lastmap = 1
   for k, v in pairs(coins) do
@@ -88,6 +97,7 @@ local function ResetData()
       coins[k].got = false
     end
   end
+  sound.setMusic("menu.ogg")
   SaveSettings()
   SaveData()
 end
@@ -157,28 +167,33 @@ menu = {
   },
   settings = {
     {name = "Show FPS", value = 1, valuename = "on", func = ToggleValue},
-    {name = "Fullscreen", value = 0, valuename = "off", func = function()
+    {name = "Fullscreen", value = 0, valuename = "off", func = function(this)
         ToggleValue()
-        love.window.setMode(800, 600, {fullscreen = numtobool[menu.settings[pointer].value]})
+        love.window.setMode(800, 600, {fullscreen = numtobool[this.value]})
         screenwidth = love.graphics.getWidth()
         screenheight = love.graphics.getHeight()
     end},
     {name = "Timer", value = 0, valuename = "off", func = ToggleValue},
-    {name = "Music", value = 1, valuename = "on", func = function()
-      ToggleValue()
-      sound.setMusic("menu.ogg")
+    {name = "Music", value = 5, values = percentuals, func = function(this)
+      if this.value == 0 then
+        sound.stopMusic()
+        return
+      elseif not sound.music then
+        sound.setMusic("menu.ogg")
+      end
+      sound.music:setVolume(this.value / 10)
     end},
-    {name = "Sounds", value = 1, valuename = "on", func = ToggleValue},
+    {name = "Sounds", value = 5, values = percentuals},
     {name = "Particles", value = 1, valuename = "on", func = ToggleValue},
     {name = "Flashing stuff", value = 1, valuename = "on", func = ToggleValue},
     {name = "Cutscenes", value = 1, valuename = "on", func = ToggleValue},
-    {name = "Erase Data", func = function()
-      if menu.settings[#menu.settings-1].name == "Erase Data" then
-        menu.settings[#menu.settings-1].name = "Are you sure?"
+    {name = "Erase Data", func = function(this)
+      if this.name == "Erase Data" then
+        this.name = "Are you sure?"
         messagebox.setMessage("Are you sure?", "This button will erase the save file and settings file\nyou will lose all your progress\nif you're sure you want to do this, select the button again")
-      elseif menu.settings[#menu.settings-1].name == "Are you sure?" then
+      elseif this.name == "Are you sure?" then
         ResetData()
-        menu.settings[#menu.settings-1].name = "Data erased"
+        this.name = "Data erased"
       end
     end},
     {name = "Back", func = function()
@@ -360,14 +375,18 @@ function LoadSettings()
   end
   for i = 1,#menu.settings-2 do
     local oldvalue = menu.settings[i].value
+    menu.settings[i].oldvalue = oldvalue
     menu.settings[i].value = DataCheck(string.byte(file:read(1) or menu.settings[i].value))
-    menu.settings[i].valuename = valuesnames[menu.settings[i].value]
-    if not menu.settings[i].value or menu.settings[i].value > 1 then
-      local options = {"No", "Yes"}
+    if menu.settings[i].valuename then
+      menu.settings[i].valuename = valuesnames[menu.settings[i].value]
+    end
+    if not menu.settings[i].value or menu.settings[i].value > ((menu.settings[i].values and #menu.settings[i].values + 1) or 1) then
       local errormsg = 'Value "'..menu.settings[i].name..'" has missing or invalid value\nIt will be set to default.'
       love.window.showMessageBox("Error while loading saved data!", errormsg, "warning")
       menu.settings[i].value = oldvalue
-      menu.settings[i].valuename = valuesnames[menu.settings[i].value]
+      if menu.settings[i].valuename then
+        menu.settings[i].valuename = valuesnames[menu.settings[i].value]
+      end
     end
   end
   if menu.settings[2].value == 1 then

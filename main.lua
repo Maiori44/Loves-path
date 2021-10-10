@@ -1,4 +1,4 @@
-VERSION = "Version 82 BETA 1.1"
+VERSION = "Version 83 BETA 1.1"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -390,9 +390,12 @@ local function DrawMenu()
     if #menu[gamestate] == 1 or (gamestate == "sound test" and i == 2) then
       y = 480
     end
-    if menu[gamestate][i].value and menu[gamestate][i].valuename then 
+    local value = menu[gamestate][i].value
+    if value then 
       rectangle = screenwidth-screenwidth/8
-      love.graphics.printf(menu[gamestate][i].valuename, 0, y, screenwidth+screenwidth/5, "center")
+      local text = menu[gamestate][i].valuename
+      text = (text and text) or (i == pointer and "< "..menu[gamestate][i].values[value].." >") or menu[gamestate][i].values[value]
+      love.graphics.printf(text, 0, y, screenwidth+screenwidth/5, "center")
     end
     if gamestate ~= "select level" then
       local name = menu[gamestate][i].name
@@ -400,8 +403,7 @@ local function DrawMenu()
         name = name..(menu[gamestate][i].string or menu[gamestate][i].int)
       end
       if i == pointer and ((menu[gamestate][i].string and menu[gamestate][i].string:len() < 20)
-      or (menu[gamestate][i].int and menu[gamestate][i].int:len() < 2))
-      and menu[gamestate][i].name ~= "Map not found!" then
+      or (menu[gamestate][i].int and menu[gamestate][i].int:len() < 2)) then
         name = name.."_"
       end
       love.graphics.printf(name, 0, y, rectangle, "center")

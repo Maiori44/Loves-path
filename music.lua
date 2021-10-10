@@ -25,6 +25,7 @@ function sound.setMusic(filename)
   if sound.music then sound.music:stop() end
   sound.music = love.audio.newSource(filepath, "stream")
   sound.music:setLooping(true)
+  sound.music:setVolume(menu.settings[4].value / 10)
   sound.music:play()
 end
 
@@ -34,6 +35,7 @@ function sound.playSound(filename)
     if not sound.list[i] then
       sound.list[i] = love.audio.newSource("Sounds/"..filename, "static")
       sound.list[i]:play()
+      sound.list[i]:setVolume(menu.settings[5].value / 10)
       break
     end
   end

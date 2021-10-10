@@ -127,8 +127,21 @@ function love.keypressed(key)
     elseif key == "down" then
       pointer = pointer+1
       if pointer > #menu[gamestate] then pointer = 1 end
+    elseif menu[gamestate][pointer].values then
+      local setting = menu[gamestate][pointer]
+      if key == "right" then
+        setting.value = (setting.value + 1) % (#setting.values + 1)
+        if menu[gamestate][pointer].func then 
+          menu[gamestate][pointer].func(setting)
+        end
+      elseif key == "left" then
+        setting.value = (setting.value == 0 and #setting.values) or setting.value - 1
+        if menu[gamestate][pointer].func then 
+          menu[gamestate][pointer].func(setting)
+        end
+      end
     elseif (key == "space" or key == "return") and menu[gamestate][pointer].func then
-      menu[gamestate][pointer].func()
+      menu[gamestate][pointer].func(menu[gamestate][pointer])
     elseif gamestate == "sound test" and pointer == 1 then
       if key == "right" then
         repeat
