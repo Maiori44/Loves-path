@@ -89,7 +89,6 @@ local function BlueSwitch(mo, momx, momy)
 end
 
 local function CrackBridge(mo)
-  if momx == 0 and momy == 0 then return end
   tilemap[mo.y][mo.x] = TILE_CRACKEDBRIDGE
 end
 
