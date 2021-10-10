@@ -1,8 +1,5 @@
 VERSION = "Version 82 BETA 1.1"
 
-PARTICLE_SNOW = 41
-PARTICLE_HELP = 42
-
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
 end

@@ -1,3 +1,6 @@
+PARTICLE_SNOW = 41
+PARTICLE_HELP = 42
+
 local particles = {list = {}}
 
 local path = "Sprites/Particles/"
