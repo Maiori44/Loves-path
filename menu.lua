@@ -1,5 +1,6 @@
 local sound = require "music"
 local coins = require "coins"
+local nativefs = require "nativefs"
 
 pointer = 1
 local valuesnames = {[0] = "off", [1] = "on"}
@@ -144,11 +145,12 @@ menu = {
       local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
       for k, filename in ipairs(love.filesystem.getDirectoryItems(path)) do
         if love.filesystem.getInfo(path.."/"..filename, "directory") then
-          table.insert(menu["select mod"], {name = filename, func = function()
+          table.insert(menu["select mod"], {name = "load \""..filename.."\"", func = function()
             SearchCustom(filename)
             gamestate = "title"
             pointer = 1
             table.remove(menu.title, 5)
+            table.remove(menu["level editor"], 3)
           end})
         end
       end
@@ -237,6 +239,26 @@ menu = {
       menu["create map"][3].string = (ptilesetname == "" and "forest.png") or ptilesetname
       menu["create map"][7].name = "Create map"
       pointer = 1
+    end},
+    {name = "Create Mod: ", string = "", func = function(this)
+      if this.string == "" then
+        messagebox.setMessage("Missing Mod name!", "Your mod must have a name")
+        return
+      elseif this.string == "save" then
+        messagebox.setMessage("Invalid Mod name!", "Naming your mod \"save\" will make it override the vanilla save file\nthat's not a good idea\nchoose another name")
+        return
+      elseif nativefs.getInfo("Custom/"..this.string, "directory") then
+        messagebox.setMessage("Mod already exists!", "A mod named \""..this.string.."\" already exists!\nif it's your mod you can load it from the addons menu")
+        return
+      end
+      local modpath = "Custom/"..this.string
+      nativefs.createDirectory(modpath)
+      nativefs.createDirectory(modpath.."/Maps")
+      nativefs.createDirectory(modpath.."/Tiles")
+      nativefs.createDirectory(modpath.."/Enemies")
+      nativefs.createDirectory(modpath.."/Music")
+      nativefs.write(modpath.."/custom.lua", "--Files generated automatically by the game\n--More info about them in readme.txt")
+      messagebox.setMessage("Mod successfully created!", "The mod can be found at "..modpath)
     end},
     {name = "Documentation", func = function()
       if not love.system.openURL("file://"..love.filesystem.getSourceBaseDirectory().."/readme.txt") then
