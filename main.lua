@@ -181,7 +181,7 @@ local updateModes = {
   ingame = function(dt)
     if not player then darkness = math.min(darkness+0.2, 70) end
     particles.update(dt)
-    frametime = frametime+dt
+    frametime = frametime + math.min(dt, 1/15)
     while frametime > 1/60 do
       leveltime = leveltime+1
       frames = frames+1
@@ -856,7 +856,7 @@ function love.draw()
   end
   love.graphics.setColor(1, 1, 1, 1)
   if not debugmode and menu.settings[1].value == 1 then
-    love.graphics.print("FPS: "..tostring(love.timer.getFPS()), 10, 10)
+    love.graphics.print("FPS: "..tostring(math.min(love.timer.getFPS(), 60)), 10, 10)
   elseif debugmode and debugmode["Game info"] then
     local debuginfo, count, scale = debug.collectInfo()
     if love.timer.getFPS() < 10 or count > 999 then
