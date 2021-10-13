@@ -39,7 +39,9 @@ function love.keypressed(key)
       if not love.filesystem.getInfo("Source/Screenshots", "directory") then
         nativefs.createDirectory("Screenshots")
       end
-      nativefs.write("Screenshots/"..os.date("%Y%m%d%H%M%S")..".png", imagedata:encode("png"))
+      local date = os.date("%Y%m%d%H%M%S")..".png"
+      nativefs.write("Screenshots/"..date, imagedata:encode("png"))
+      notification.setMessage("Sreenshot saved as:\n"..date)
     end)
   elseif key == "+" and (gamestate == "ingame" or gamestate == "editing") then
     scale = math.min(scale+0.1, 2)

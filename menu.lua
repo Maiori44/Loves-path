@@ -145,12 +145,13 @@ menu = {
       local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
       for k, filename in ipairs(love.filesystem.getDirectoryItems(path)) do
         if love.filesystem.getInfo(path.."/"..filename, "directory") then
-          table.insert(menu["select mod"], {name = "load \""..filename.."\"", func = function()
+          table.insert(menu["select mod"], {name = filename, func = function()
             SearchCustom(filename)
             gamestate = "title"
             pointer = 1
             table.remove(menu.title, 5)
             table.remove(menu["level editor"], 3)
+            notification.setMessage("Mod loaded succesfully")
           end})
         end
       end
@@ -195,7 +196,8 @@ menu = {
         messagebox.setMessage("Are you sure?", "This button will erase the save file and settings file\nyou will lose all your progress\nif you're sure you want to do this, select the button again")
       elseif this.name == "Are you sure?" then
         ResetData()
-        this.name = "Data erased"
+        this.name = "Erase Data"
+        notification.setMessage("Data erased")
       end
     end},
     {name = "Back", func = function()
@@ -242,9 +244,8 @@ menu = {
     end},
     {name = "Create Mod: ", string = "", func = function(this)
       if this.string == "" then
-        messagebox.setMessage("Missing Mod name!", "Your mod must have a name")
         return
-      elseif this.string == "save" then
+      if this.string == "save" then
         messagebox.setMessage("Invalid Mod name!", "Naming your mod \"save\" will make it override the vanilla save file\nthat's not a good idea\nchoose another name")
         return
       elseif nativefs.getInfo("Custom/"..this.string, "directory") then
@@ -308,6 +309,7 @@ menu = {
       local mapinfo = menu["map settings"]
       SaveMap(mapspath.."/map"..GetMapNum(gamemap)..".map", mapinfo[1].string.."\n", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
       LoadEditorMap("map"..GetMapNum(gamemap)..".map")
+      notification.setMessage("Map saved")
     end},
     {name = "Resume editing", func = function() gamestate = "editing" end},
     {name = "Return to Title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},

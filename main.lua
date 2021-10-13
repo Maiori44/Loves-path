@@ -1,4 +1,4 @@
-VERSION = "Version 85 BETA 1.1"
+VERSION = "Version 86 BETA 1.1"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -90,6 +90,15 @@ messagebox = {
     if error or (contents and type(contents) == "boolean") then
       messagebox.error = true
     end
+  end
+}
+
+notification = {
+  text = "",
+  timer = 0,
+  setMessage = function(text)
+    notification.text = text
+    notification.timer = 120
   end
 }
 
@@ -875,6 +884,12 @@ function love.draw()
     love.graphics.setColor(1, 1, 1, 1)
   end
   love.graphics.printf(VERSION, 0, screenheight-20, screenwidth, "right")
+  if notification.timer > 0 then
+    love.graphics.setColor(1, 1, 1, ((math.min(math.max(notification.timer, 0), 60) % 120) / 60))
+    love.graphics.print(notification.text, 10, 45)
+    love.graphics.setColor(1, 1, 1, 1)
+    notification.timer = notification.timer - 1
+  end
   if messagebox.show then
     love.graphics.setColor(0, 0, 0, 0.5)
     love.graphics.rectangle("fill", 0, 0, screenwidth, screenheight)
