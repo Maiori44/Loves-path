@@ -245,7 +245,7 @@ menu = {
     {name = "Create Mod: ", string = "", func = function(this)
       if this.string == "" then
         return
-      if this.string == "save" then
+      elseif this.string == "save" then
         messagebox.setMessage("Invalid Mod name!", "Naming your mod \"save\" will make it override the vanilla save file\nthat's not a good idea\nchoose another name")
         return
       elseif nativefs.getInfo("Custom/"..this.string, "directory") then
