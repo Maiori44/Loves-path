@@ -1,5 +1,6 @@
 local sound = require "music"
 local particles = require "particles"
+local nativefs = require "nativefs"
 
 local rainbowSecret = {input = {}, needed = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}}
 
@@ -34,10 +35,11 @@ function love.keypressed(key)
       debugmode[options[button]] = (debugmode[options[button]] == nil and true) or (not debugmode[options[button]]) 
     end
   elseif key == "f8" then
-    love.graphics.captureScreenshot(function(test)
-      local testfile = io.open("test.png", "w+")
-      testfile:write(test:encode("png"):getString())
-      testfile:close()
+    love.graphics.captureScreenshot(function(imagedata)
+      if not love.filesystem.getInfo("Source/Screenshots", "directory") then
+        nativefs.createDirectory("Screenshots")
+      end
+      nativefs.write("Screenshots/"..os.date("%Y%m%d%H%M%S")..".png", imagedata:encode("png"))
     end)
   elseif key == "+" and (gamestate == "ingame" or gamestate == "editing") then
     scale = math.min(scale+0.1, 2)
