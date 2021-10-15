@@ -516,6 +516,8 @@ tilesets = {
   },
   ["castle.png"] = { --CHAPTER 3
     vanilla = true,
+    thunder = true,
+    enemyquadtype = "movement",
     description = {
       [TILE_CUSTOM1] = "+15\nAdds 15 seconds to timer",
       [TILE_CUSTOM2] = "BOX\nWill spawn a pushable box in this tile",
