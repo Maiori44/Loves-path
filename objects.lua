@@ -18,13 +18,13 @@ voids = {}
 collisions = {}
 thinkers = {}
 
-function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags)
+function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags, hp)
   if not collisions[type] then error('object type "'..type..'" does not exist!') end
   local newobject = {
     sprite = sprite,
     quads = quads,
-    quadtype = (quadtype and quadtype) or (not quads and "none") or (#quads == 1 and "single")
-    or (#quads == 8 and "directions") or "default",
+    quadtype = (quadtype and quadtype) or (not quads and "none") or (hp and "hp") or (#quads == 1 and "single") or (#quads == 8 and "directions") or "default",
+    hp = hp or 1,
     x = x,
     y = y,
     momx = 0,
@@ -32,11 +32,6 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags)
     direction = direction or DIR_LEFT,
     type = type,
   }
-  if flags and type(flags) == "table" then
-    for k, v in pairs(flags) do
-      newobject.k = v
-    end
-  end
   local key = (#voids > 0 and table.remove(voids) or #objects + 1)
   newobject.key = key
   objects[key] = newobject
@@ -74,6 +69,15 @@ function EraseObject(mo)
   objects[mo.key] = nil
   table.insert(voids, mo.key)
   if mo.type == "player" then player = nil end
+end
+
+function DamageObject(mo, amount)
+  mo.hp = mo.hp - (amount or 1)
+  if mo.hp == 0 then
+    RemoveObject(mo)
+    return true
+  end
+  return false
 end
 
 local function RedSwitch(mo, momx, momy)
@@ -347,7 +351,13 @@ AddObjectType("player", {
     particles.spawnStars(obstmo.x, obstmo.y)
     EraseObject(obstmo) end,
   key = PushObject,
-  box = PushObject,
+  box = function(_, obstmo, momx, momy)
+    local check = PushObject(nil, obstmo, momx, momy)
+    if check == false then
+      return DamageObject(obstmo)
+    end
+    return check
+  end,
   enemy = RemoveObject,
   bullet = RemoveObject,
   snowball = SlowPushObject,

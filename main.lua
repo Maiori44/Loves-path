@@ -534,15 +534,13 @@ tilesets = {
         tilemap[y][x] = TILE_FLOOR1
       end,
       [TILE_CUSTOM2] = function(x, y)
-        SpawnObject(boxsprite, x, y, "box")
+        SpawnObject(boxsprite, x, y, "box", nil, nil, nil, nil, 5)
         tilemap[y][x] = TILE_FLOOR2
       end,
       [TILE_CUSTOM3] = nil
       }
   },
 }
-
---if not customEnv then print("amogus") end
 
 local tileDescriptions = {
   [TILE_WALL1] = "WALL 1"..wallDesc,
@@ -787,7 +785,7 @@ function debug.collectInfo()
     "\nStart Y: "..GetStartY().."\n"
     local objectsinfo = "\nObjects:\n"
     for k, mo in pairs(objects) do
-      objectsinfo = objectsinfo..mo.type.." x:"..mo.x.."("..mo.momx..") y:"..mo.y.."("..mo.momy..") d:"..mo.direction.."("..mo.quadtype..") k:"..mo.key.."("..k..")\n"
+      objectsinfo = objectsinfo..mo.type.." hp: "..mo.hp.." x:"..mo.x.."("..mo.momx..") y:"..mo.y.."("..mo.momy..") d:"..mo.direction.."("..mo.quadtype..") k:"..mo.key.."("..k..")\n"
     end
     if objectsinfo == "\nObjects:\n" then objectsinfo = "" end
     debuginfo = debuginfo..objectsinfo

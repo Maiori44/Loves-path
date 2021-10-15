@@ -187,6 +187,7 @@ function SearchCustom(modname)
       RemoveStandingObject = RemoveStandingObject,
       RemoveCollidedObject = RemoveCollidedObject,
       EraseObject = EraseObject,
+      DamageObject = DamageObject,
       StopObject = StopObject,
       PushObject = PushObject,
       SlowPushObject = SlowPushObject,
