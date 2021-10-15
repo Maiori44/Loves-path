@@ -178,10 +178,7 @@ menu = {
     end},
     {name = "Timer", value = 0, valuename = "off", func = ToggleValue},
     {name = "Music", value = 5, values = percentuals, func = function(this)
-      if this.value == 0 then
-        sound.stopMusic()
-        return
-      elseif not sound.music then
+      if not sound.music then
         sound.setMusic("menu.ogg")
       end
       sound.music:setVolume(this.value / 10)
@@ -201,6 +198,7 @@ menu = {
       end
     end},
     {name = "Back", func = function()
+      sound.setMusic("menu.ogg")
       menu.settings[#menu.settings-1].name = "Erase Data"
       SaveSettings()
       gamestate = "title"
