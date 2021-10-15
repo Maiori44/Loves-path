@@ -280,6 +280,9 @@ local quadDrawingMethods = {
     local movingaxis = mo[mo.lastaxis or "x"]
     love.graphics.draw(mo.sprite, mo.quads[(movingaxis%#mo.quads)+1], x, y, 0, scale)
   end,
+  hp = function(mo, x, y)
+    love.graphics.draw(mo.sprite, mo.quads[mo.hp], x, y, 0, scale)
+  end,
   default = function(mo, x, y)
     love.graphics.draw(mo.sprite, mo.quads[math.floor((leveltime%(#mo.quads*10))/10)+1], x, y, 0, scale)
   end
