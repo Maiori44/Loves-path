@@ -1,4 +1,4 @@
-VERSION = "Version 87 BETA 1.1"
+VERSION = "Version 88 BETA 1.1"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -899,9 +899,9 @@ function love.draw()
     local increase = math.abs(math.sin(os.clock()) / 5)
     local width = ((screenwidth / 2) - (messagebox.width / 2)) - 10
     local height = (screenheight / 2) - (messagebox.height / 2)
-    love.graphics.setColor(0.7 + increase, 0, (messagebox.error and 0) or 0.5 + increase, 1)
+    love.graphics.setColor(0.7 + increase, 0, (messagebox.error and 0) or (0.5 + increase), 1)
     love.graphics.rectangle("fill", width, height, messagebox.width + 20, messagebox.height + 20)
-    love.graphics.setColor(0.9 + increase, 0, (messagebox.error and 0) or 0.7 + increase, 1)
+    love.graphics.setColor(0.9 + increase, 0, (messagebox.error and 0) or (0.7 + increase), 1)
     love.graphics.rectangle("line", width, height, messagebox.width + 20, messagebox.height + 20)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.printf(messagebox.title, 0, height + 10, screenwidth / 1.5, "center", 0, 1.5)
@@ -911,7 +911,6 @@ function love.draw()
 end
 
 function love.quit()
-  if dontquit then return false end
   SaveSettings()
   SaveData()
 end

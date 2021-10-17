@@ -109,7 +109,7 @@ local function DestroyBridge(mo, momx, momy)
     end
   end
   local uppertile = tilemap[mo.y - 1][mo.x]
-  if uppertile and uppertile ~= TILE_EMPTY and uppertile ~= TILE_BRIDGE and uppertile ~= TILE_CRACKEDBRIDGE and uppertile ~= TILE_ and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
+  if uppertile and uppertile ~= TILE_EMPTY and uppertile ~= TILE_BRIDGE and uppertile ~= TILE_CRACKEDBRIDGE and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
     tilemap[mo.y][mo.x] = TILE_CHASM1
   elseif uppertile and (uppertile == TILE_BRIDGE or uppertile == TILE_CRACKEDBRIDGE) then
     tilemap[mo.y][mo.x] = TILE_CHASM2
@@ -254,7 +254,7 @@ function FireShot(mo, sprite, quads, type)
 end
 
 function FacePlayer(mo)
-  distx, disty = GetDistance(mo, player)
+  local distx, disty = GetDistance(mo, player)
   local py = (disty/math.abs(disty))*-1
   local px = (distx/math.abs(distx))*-1
   if ((distx ~= 0 and distx < disty and collisions[mo.type][tilemap[mo.y][mo.x-distx]])

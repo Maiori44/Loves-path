@@ -124,7 +124,7 @@ function LoadMap(mapname)
   for y = 1,mapheight do
     tilemap[y] = {}
     for x = 1,mapwidth do
-      tile = tonumber(ReadTile() or 0)
+      local tile = tonumber(ReadTile() or 0)
       tilemap[y][x] = tile or TILE_EMPTY
       if tile == TILE_START then
         playerx = x
