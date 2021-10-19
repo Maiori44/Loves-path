@@ -22,6 +22,9 @@ function love.keypressed(key)
       rainbowSecret.input = {}
     end
   end
+  if gamestate == "ingame" and customEnv and customEnv.KeyPressed then
+    customEnv.KeyPressed(key)
+  end
   if key == "f3" and debugmode then
     local options = {"Noclip", "Slowdown", "Map info", "Graphic info", "Game info", "Cancel", escapebutton = 1}
     local text = "Choose which option to toggle:\n"..

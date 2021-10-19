@@ -90,6 +90,7 @@ function SearchCustom(modname)
       ipairs = ipairs,
       pairs = pairs,
       
+      KeyPressed = nil,
       --SOUND LIBRARY--
       PlaySound = sound.playSound,
       AddSoundTestEntry = function(name, subtitle, creator, filename, required)
