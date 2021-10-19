@@ -80,17 +80,21 @@ function SearchCustom(modname)
     customEnv = {
       --MISCELLANEOUS LIBRARY--
       VERSION = VERSION,
-      print = function(title, text)
-        messagebox.setMessage(tostring(title), tostring(text))
-      end,
+      print = print,
       error = error,
       type = type,
       tostring = tostring,
       tonumber = tonumber,
       ipairs = ipairs,
       pairs = pairs,
-      
       KeyPressed = nil,
+      SetMessageBox = function(title, text)
+        messagebox.setMessage(tostring(title), tostring(text))
+      end,
+      SetNotifcation = function(text)
+        notification.setMessage(tostring(text))
+      end,
+
       --SOUND LIBRARY--
       PlaySound = sound.playSound,
       AddSoundTestEntry = function(name, subtitle, creator, filename, required)
