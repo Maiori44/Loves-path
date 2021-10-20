@@ -234,6 +234,7 @@ function SearchCustom(modname)
             tilesets[tilesetname][k] = v
           end
         end
+        table.insert(possibletilesets, tilesetname)
       end,
     }
     setfenv(CustomInfo, setmetatable({}, {

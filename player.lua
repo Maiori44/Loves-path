@@ -61,11 +61,16 @@ function love.keypressed(key)
       gamestate = "map settings"
       pointer = 1
       menu["map settings"][1].string = gamemapname
-      menu["map settings"][2].string = tilesetname
+      menu["map settings"][2].value = 0
       menu["map settings"][3].string = sound.musicname or ""
       menu["map settings"][4].int = tostring(mapwidth)
       menu["map settings"][5].int = tostring(mapheight)
-      menu["map settings"][6].name = "Save"
+      for k, v in ipairs(possibletilesets) do
+        if tilesetname == v then
+          menu["map settings"][2].value = k
+          break
+        end
+      end
     elseif key == "tab" then
       mouse.mode = (mouse.mode == "camera" and "editing") or "camera"
       wheelmoved = 0

@@ -18,6 +18,11 @@ local percentuals = {
   [9] = "90%",
   [10] = "100%"
 }
+possibletilesets = {
+  [0] = "forest.png",
+  [1] = "frost.png",
+  [2] = "castle.png"
+}
 
 local function ToggleValue()
   local setting = menu.settings[pointer]
@@ -269,7 +274,7 @@ menu = {
   ["create map"] = {
     {name = "Map num: ", int = ""},
     {name = "Map name: ", string = ""},
-    {name = "Tileset: ", string = ""},
+    {name = "Tileset: ", value = 0, values = possibletilesets},
     {name = "Music name: ", string = ""},
     {name = "Map width: ", int = ""},
     {name = "Map height: ", int = ""},
@@ -283,7 +288,7 @@ menu = {
         messagebox.setMessage("Map "..mapnum.." already exists!", "You can load it from the \"load map:\" button\nby setting the map to load to \""..mapnum.."\"")
       else
         local mapinfo = menu["create map"]
-        if not SaveMap(mapspath.."/map"..GetMapNum(mapinfo[1].int)..".map", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].string.."\n", mapinfo[5].int.."\n", mapinfo[6].int.."\n", true) then return end
+        if not SaveMap(mapspath.."/map"..GetMapNum(mapinfo[1].int)..".map", mapinfo[2].string.."\n", mapinfo[3].values[mapinfo[3].value].."\n", mapinfo[4].string.."\n", mapinfo[5].int.."\n", mapinfo[6].int.."\n", true) then return end
         gamemap = tonumber(mapinfo[1].int)
         LoadEditorMap("map"..GetMapNum(gamemap)..".map")
         leveltime = 0
@@ -299,13 +304,13 @@ menu = {
   },
   ["map settings"] = {
     {name = "Map name: ", string = ""},
-    {name = "Tileset: ", string = ""},
+    {name = "Tileset: ", value = 0, values = possibletilesets},
     {name = "Music name: ", string = ""},
     {name = "Map width: ", int = ""},
     {name = "Map height: ", int = ""},
     {name = "Save", func = function()
       local mapinfo = menu["map settings"]
-      SaveMap(mapspath.."/map"..GetMapNum(gamemap)..".map", mapinfo[1].string.."\n", mapinfo[2].string.."\n", mapinfo[3].string.."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
+      SaveMap(mapspath.."/map"..GetMapNum(gamemap)..".map", mapinfo[1].string.."\n", mapinfo[2].values[mapinfo[2].value].."\n", mapinfo[3].string.."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
       LoadEditorMap("map"..GetMapNum(gamemap)..".map")
       notification.setMessage("Map saved")
     end},
