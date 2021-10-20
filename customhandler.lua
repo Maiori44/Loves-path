@@ -231,7 +231,7 @@ function SearchCustom(modname)
         }
         if flags then
           for k, v in pairs(flags) do
-            tilesets[tilesetname].k = v
+            tilesets[tilesetname][k] = v
           end
         end
       end,
