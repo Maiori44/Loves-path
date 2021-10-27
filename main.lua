@@ -1,4 +1,4 @@
-VERSION = "Version 89 BETA 1.1"
+VERSION = "Version 90 BETA 1.1"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -524,7 +524,7 @@ tilesets = {
     description = {
       [TILE_CUSTOM1] = "+15\nAdds 15 seconds to timer",
       [TILE_CUSTOM2] = "BOX\nWill spawn a pushable box in this tile",
-      [TILE_CUSTOM3] = "BOX CONTAINER THING\nIf all of these tiles are covered by boxes the level will be completed"
+      [TILE_CUSTOM3] = "WIP\nDoes nothing for now"--"BOX CONTAINER THING\nIf all of these tiles are covered by boxes the level will be completed"
     },
     collision = {
       [TILE_CUSTOM1] = true,
@@ -537,7 +537,7 @@ tilesets = {
         tilemap[y][x] = TILE_FLOOR1
       end,
       [TILE_CUSTOM2] = function(x, y)
-        SpawnObject(boxsprite, x, y, "box", nil, nil, nil, nil, 5)
+        SpawnObject(boxsprite, x, y, "box", GetQuads(5, boxsprite), "hp", nil, nil, 5)
         tilemap[y][x] = TILE_FLOOR2
       end,
       [TILE_CUSTOM3] = nil
