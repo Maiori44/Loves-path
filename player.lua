@@ -105,6 +105,9 @@ function love.keypressed(key)
     end
   elseif gamestate == "pause" and key == "escape" then
     gamestate = "ingame"
+  elseif key == "escape" then
+    local pback = menu[gamestate][#menu[gamestate]]
+    if pback.name == "back" then pback.func() end
   elseif gamestate == "select level" then
     local max = math.min((debugmode and 255) or lastmap, #menu["select level"]-1)
     if key == "left" then
@@ -121,8 +124,7 @@ function love.keypressed(key)
     if pointer < 1 or pointer > #menu["select level"] or pointer > max then
       pointer = #menu["select level"]
     end
-  elseif (gamestate == "map settings" or gamestate == "create map" or gamestate == "level editor")
-  and key == "backspace" then
+  elseif key == "backspace" then
     local setting = menu[gamestate][pointer]
     if setting.int and utf8.len(setting.int) > 0 then
       setting.int = setting.int:sub(1, utf8.len(setting.int)-1)
@@ -173,13 +175,11 @@ function love.keypressed(key)
 end
 
 function love.textinput(text)
-  if gamestate == "map settings" or gamestate == "create map" or gamestate == "level editor" then
-    local setting = menu[gamestate][pointer]
-    if setting.int and tonumber(text) and setting.int:len() < 2 then
-      setting.int = setting.int..text
-    elseif setting.string and setting.string:len() < 20 then
-      setting.string = setting.string..text
-    end
+  local setting = menu[gamestate][pointer]
+  if setting.int and tonumber(text) and setting.int:len() < 2 then
+    setting.int = setting.int..text
+  elseif setting.string and setting.string:len() < 20 then
+    setting.string = setting.string..text
   end
 end
 

@@ -1,4 +1,4 @@
-VERSION = "Version 90 BETA 1.1"
+VERSION = "Version 91 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -758,6 +758,7 @@ local drawModes = {
     end
     love.graphics.printf((#menu["select mod"] - 1).." mods found", 0, 90, screenwidth, "center")
   end,
+  addons = DrawMenu,
 }
 
 function debug.collectInfo()

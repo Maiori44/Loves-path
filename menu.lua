@@ -108,14 +108,6 @@ local function ResetData()
   SaveData()
 end
 
-local function WarnPlayer()
-  if mapspath == "Maps/" and not debugmode then
-    messagebox.setMessage("You can't edit the vanilla maps!", "You need to create a mod for that,\nif you want to create and edit your own maps\nselect the documentation button")
-    return true
-  end
-  return false
-end
-
 menu = {
   title = {
     {name = "Start Game", func = function() 
@@ -131,11 +123,9 @@ menu = {
         pointer = 1
       end
     end},
-    {name = "Level Editor", func = function()
-      gamestate = "level editor"
+    {name = "Addons", func = function()
+      gamestate = "addons"
       pointer = 1
-      menu["level editor"][1].name = "Load map: "
-      menu["level editor"][1].int = ""
     end},
     {name = "Sound test", func = function()
       gamestate = "sound test"
@@ -145,25 +135,6 @@ menu = {
       menu["sound test"][1].name = "< Love's path >"
     end},
     {name = "Settings", func = function() gamestate = "settings" pointer = 1 end},
-    {name = "Addons", func = function()
-      menu["select mod"] = {}
-      local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
-      for k, filename in ipairs(love.filesystem.getDirectoryItems(path)) do
-        if love.filesystem.getInfo(path.."/"..filename, "directory") then
-          table.insert(menu["select mod"], {name = filename, func = function()
-            SearchCustom(filename)
-            gamestate = "title"
-            pointer = 1
-            table.remove(menu.title, 5)
-            table.remove(menu["level editor"], 3)
-            notification.setMessage("Mod loaded succesfully")
-          end})
-        end
-      end
-      table.insert(menu["select mod"], {name = "back", func = function() gamestate = "title" pointer = 1 end})
-      gamestate = "select mod"
-      pointer = 1
-    end},
     {name = "Credits", func = function() gamestate = "credits" pointer = 1 end},
     {name = "Quit", func = function() love.event.quit(0) end}
   },
@@ -202,7 +173,7 @@ menu = {
         notification.setMessage("Data erased")
       end
     end},
-    {name = "Back", func = function()
+    {name = "back", func = function()
       sound.setMusic("menu.ogg")
       menu.settings[#menu.settings-1].name = "Erase Data"
       SaveSettings()
@@ -211,12 +182,11 @@ menu = {
     end}
   },
   credits = {
-    {name = "Back", func = function() gamestate = "title" pointer = #menu.title - 1 end}
+    {name = "back", func = function() gamestate = "title" pointer = #menu.title - 1 end}
   },
   ["select level"] = nil,
   ["level editor"] = {
     {name = "Load map: ", int = "", func = function()
-      if WarnPlayer() then return end
       if menu["level editor"][1].int ~= "" then
         gamemap = tonumber(menu["level editor"][1].int)
         if LoadEditorMap("map"..GetMapNum(gamemap)..".map") then
@@ -236,7 +206,6 @@ menu = {
       end
     end},
     {name = "Create Map", func = function() 
-      if WarnPlayer() then return end
       gamestate = "create map"
       local mapnum = menu["create map"][1].int
       local ptilesetname = menu["create map"][3].string
@@ -245,31 +214,7 @@ menu = {
       menu["create map"][7].name = "Create map"
       pointer = 1
     end},
-    {name = "Create Mod: ", string = "", func = function(this)
-      if this.string == "" then
-        return
-      elseif this.string == "save" then
-        messagebox.setMessage("Invalid Mod name!", "Naming your mod \"save\" will make it override the vanilla save file\nthat's not a good idea\nchoose another name")
-        return
-      elseif nativefs.getInfo("Custom/"..this.string, "directory") then
-        messagebox.setMessage("Mod already exists!", "A mod named \""..this.string.."\" already exists!\nif it's your mod you can load it from the addons menu")
-        return
-      end
-      local modpath = "Custom/"..this.string
-      nativefs.createDirectory(modpath)
-      nativefs.createDirectory(modpath.."/Maps")
-      nativefs.createDirectory(modpath.."/Tiles")
-      nativefs.createDirectory(modpath.."/Enemies")
-      nativefs.createDirectory(modpath.."/Music")
-      nativefs.write(modpath.."/custom.lua", "--Files generated automatically by the game\n--More info about them in readme.txt")
-      messagebox.setMessage("Mod successfully created!", "The mod can be found at "..modpath)
-    end},
-    {name = "Documentation", func = function()
-      if not love.system.openURL("file://"..love.filesystem.getSourceBaseDirectory().."/readme.txt") then
-        messagebox.setMessage("Documentation not found!", "Could not find \"readme.txt\" in your folder\nreinstall the game to get another copy", true)
-      end
-    end},
-    {name = "Back", func = function() gamestate = "title" pointer = 2 end},
+    {name = "back", func = function() gamestate = "addons" pointer = 1 end},
   },
   ["create map"] = {
     {name = "Map num: ", int = ""},
@@ -300,7 +245,7 @@ menu = {
         scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
       end
     end},
-    {name = "Back", func = function() gamestate = "level editor" pointer = 2 end}
+    {name = "back", func = function() gamestate = "level editor" pointer = 2 end}
   },
   ["map settings"] = {
     {name = "Map name: ", string = ""},
@@ -327,8 +272,64 @@ menu = {
       local musicname = sound.soundtest[sound.soundtestpointer].filename
       sound.setMusic((sound.musicname == musicname and "") or musicname)
     end},
-    {name = "Back", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 3 end}
+    {name = "back", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 3 end}
   },
+  addons = {
+    {name = "Level Editor", func = function()
+      if mapspath == "Maps/" and not debugmode then
+        messagebox.setMessage("You can't edit the vanilla maps!", "You need to create a mod for that,\nif you want to create and edit your own maps\nselect the documentation button")
+        return
+      end
+      gamestate = "level editor"
+      pointer = 1
+      menu["level editor"][1].name = "Load map: "
+      menu["level editor"][1].int = ""
+    end},
+    {name = "Load mod", func = function()
+      menu["select mod"] = {}
+      local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
+      for k, filename in ipairs(love.filesystem.getDirectoryItems(path)) do
+        if love.filesystem.getInfo(path.."/"..filename, "directory") then
+          table.insert(menu["select mod"], {name = filename, func = function()
+            SearchCustom(filename)
+            gamestate = "title"
+            pointer = 1
+            table.remove(menu.addons, 2)
+            table.remove(menu.addons, 2)
+            notification.setMessage("\""..filename.."\" loaded succesfully")
+          end})
+        end
+      end
+      table.insert(menu["select mod"], {name = "back", func = function() gamestate = "addons" pointer = 2 end})
+      gamestate = "select mod"
+      pointer = 1
+    end},
+    {name = "Create Mod: ", string = "", func = function(this)
+      if this.string == "" then
+        return
+      elseif this.string == "save" then
+        messagebox.setMessage("Invalid Mod name!", "Naming your mod \"save\" will make it override the vanilla save file\nthat's not a good idea\nchoose another name")
+        return
+      elseif nativefs.getInfo("Custom/"..this.string, "directory") then
+        messagebox.setMessage("Mod already exists!", "A mod named \""..this.string.."\" already exists!\nif it's your mod you can load it from the addons menu")
+        return
+      end
+      local modpath = "Custom/"..this.string
+      nativefs.createDirectory(modpath)
+      nativefs.createDirectory(modpath.."/Maps")
+      nativefs.createDirectory(modpath.."/Tiles")
+      nativefs.createDirectory(modpath.."/Enemies")
+      nativefs.createDirectory(modpath.."/Music")
+      nativefs.write(modpath.."/custom.lua", "--Files generated automatically by the game\n--More info about them in readme.txt")
+      messagebox.setMessage("Mod successfully created!", "The mod can be found at "..modpath)
+    end},
+    {name = "Documentation", func = function()
+      if not love.system.openURL("file://"..love.filesystem.getSourceBaseDirectory().."/readme.txt") then
+        messagebox.setMessage("Documentation not found!", "Could not find \"readme.txt\" in your folder\nreinstall the game to get another copy", true)
+      end
+    end},
+    {name = "back", func = function() gamestate = "title" pointer = 2 end}
+  }
 }
 
 GetAllMaps()
