@@ -759,6 +759,7 @@ local drawModes = {
     love.graphics.printf((#menu["select mod"] - 1).." mods found", 0, 90, screenwidth, "center")
   end,
   addons = DrawMenu,
+  extras = DrawMenu,
 }
 
 function debug.collectInfo()
