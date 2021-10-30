@@ -189,11 +189,15 @@ local updateModes = {
           end
         end
       end
-      if ((leveltime+40)%60) == 0 then
+      if ((leveltime + 40) % 60) == 0 then
         IterateMap(TILE_SPIKEOFF, function(x, y) particles.spawnWarning(x, y, 0.4) end)
-      elseif (leveltime%60) == 0 then
+      elseif (leveltime % 60) == 0 then
         if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
           sound.playSound("spikes.wav")
+        end
+        if tilesets[tilesetname].thunder and menu.settings[7].value == 1 and (math.floor(love.math.random(1, 28)) % 14) == 0 then
+          flash = 0.7
+          sound.playSound("thunder.wav")
         end
         if timer > 0 then
           timer = timer - 1
