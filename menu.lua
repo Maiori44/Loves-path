@@ -127,12 +127,9 @@ menu = {
       gamestate = "addons"
       pointer = 1
     end},
-    {name = "Sound test", func = function()
-      gamestate = "sound test"
+    {name = "Extras", func = function()
+      gamestate = "extras"
       pointer = 1
-      sound.setMusic("")
-      sound.soundtestpointer = 1
-      menu["sound test"][1].name = "< Love's path >"
     end},
     {name = "Settings", func = function() gamestate = "settings" pointer = 1 end},
     {name = "Credits", func = function() gamestate = "credits" pointer = 1 end},
@@ -272,7 +269,7 @@ menu = {
       local musicname = sound.soundtest[sound.soundtestpointer].filename
       sound.setMusic((sound.musicname == musicname and "") or musicname)
     end},
-    {name = "back", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 3 end}
+    {name = "back", func = function() gamestate = "extras" sound.setMusic("menu.ogg") pointer = 1 end}
   },
   addons = {
     {name = "Level Editor", func = function()
@@ -329,6 +326,22 @@ menu = {
       end
     end},
     {name = "back", func = function() gamestate = "title" pointer = 2 end}
+  },
+  extras = {
+    {name = "Sound test", func = function()
+      gamestate = "sound test"
+      pointer = 1
+      sound.setMusic("")
+      sound.soundtestpointer = 1
+      menu["sound test"][1].name = "< Love's path >"
+    end},
+    {name = "Theater", func = function()
+      messagebox.setMessage("Coming Soon!", ":)")
+    end},
+    {name = "???", func = function()
+      messagebox.setMessage("Coming Soon!", ":)")
+    end},
+    {name = "back", func = function() gamestate = "title" pointer = 3 end}
   }
 }
 

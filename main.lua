@@ -1,4 +1,4 @@
-VERSION = "Version 91 BETA 1.2"
+VERSION = "Version 92 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -652,7 +652,7 @@ local drawModes = {
     love.graphics.printf(credits, 0, 120, screenwidth, "center")
     DrawMenu()
   end,
-  ["select level"] = function() DrawMenu() love.graphics.setColor(1, 1, 1, 1) DrawCoinHud(os.clock()*50) end,
+  ["select level"] = function() DrawMenu() love.graphics.setColor(1, 1, 1, 1) DrawCoinHud(love.timer.getTime()*50) end,
   ["level editor"] = DrawMenu,
   editing = function()
     DrawTilemap()
