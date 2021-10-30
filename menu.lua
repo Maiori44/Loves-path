@@ -69,9 +69,9 @@ local function SaveMap(map, mapname, tilesetname, musicname, width, height, rese
   file:write((#mapname == 1 and "unnamed\n") or mapname)
   file:write((#tilesetname == 1 and "forest.png\n") or tilesetname)
   file:write((#musicname == 1 and "none\n") or musicname)
-  local awidth = (width ~= "\n") and ((tonumber(width:sub(1, width:len()-1)) > 35) and "35\n" or width) or "10\n"
+  local awidth = (width ~= "\n") and (width ~= "0\n") and ((tonumber(width:sub(1, width:len()-1)) > 35) and "35\n" or width) or "10\n"
   file:write(awidth)
-  local aheight = (height ~= "\n") and ((tonumber(height:sub(1, height:len()-1)) > 35) and "35\n" or height) or "10\n"
+  local aheight = (height ~= "\n") and (height ~= "0\n") and ((tonumber(height:sub(1, height:len()-1)) > 35) and "35\n" or height) or "10\n"
   file:write(aheight)
   for y = 1, tonumber(aheight) do
     for x = 1, tonumber(awidth) do
