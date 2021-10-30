@@ -86,7 +86,7 @@ end
 
 local playersprite = love.graphics.newImage("Sprites/player.png")
 local keysprite = love.graphics.newImage("Sprites/key.png")
-local enemysprite = love.graphics.newImage("Sprites/Enemies/forest.png")
+local enemysprite = GetImage("Sprites/Enemies/forest.png")
 
 local function GetMapData(mapname)
   return love.filesystem.read(mapspath..mapname)
@@ -115,8 +115,8 @@ function LoadMap(mapname)
     return "error"
   end
   if oldtileset ~= tilesetname then
-    enemysprite = love.graphics.newImage(path.."Enemies/"..tilesetname)
-    tileset = love.graphics.newImage(path.."Tiles/"..tilesetname)
+    enemysprite = GetImage(path.."Enemies/"..tilesetname)
+    tileset = GetImage(path.."Tiles/"..tilesetname)
   end
   local playerx, playery
   tilemap = {}
@@ -237,8 +237,8 @@ function LoadEditorMap(mapname)
   objects = {}
   voids = {}
   if oldtileset ~= tilesetname then
-    enemysprite = love.graphics.newImage(path.."Enemies/"..tilesetname)
-    tileset = love.graphics.newImage(path.."Tiles/"..tilesetname)
+    enemysprite = GetImage(path.."Enemies/"..tilesetname)
+    tileset = GetImage(path.."Tiles/"..tilesetname)
   end
   wheelmoved = 0
   flash = 1

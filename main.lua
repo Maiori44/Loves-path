@@ -35,35 +35,6 @@ function CheckArgument(n, funcname, arg, ctype)
   end
 end
 
-function GetDirectionalQuads(image)
-  local quads = {}
-  local imagewidth = image:getWidth()
-  local imageheight = image:getHeight()
-  quads[1] = love.graphics.newQuad(1, 1, 32, 32, imagewidth, imageheight)
-  quads[2] = love.graphics.newQuad(35, 1, 32, 32, imagewidth, imageheight)
-  quads[3] = love.graphics.newQuad(1, 35, 32, 32, imagewidth, imageheight)
-  quads[4] = love.graphics.newQuad(35, 35, 32, 32, imagewidth, imageheight)
-  quads[5] = love.graphics.newQuad(1, 69, 32, 32, imagewidth, imageheight)
-  quads[6] = love.graphics.newQuad(35, 69, 32, 32, imagewidth, imageheight)
-  quads[7] = love.graphics.newQuad(1, 103, 32, 32, imagewidth, imageheight)
-  quads[8] = love.graphics.newQuad(35, 103, 32, 32, imagewidth, imageheight)
-  return quads
-end
-
-function GetQuads(neededquads, image)
-  local quads = {}
-  local imagewidth = image:getWidth()
-  local imageheight = image:getHeight()
-  for i = 0,neededquads-1 do
-    table.insert(quads, love.graphics.newQuad(1+(34*i), 1, 32, 32, imagewidth, imageheight))
-  end
-  return quads
-end
-
-function GetExtraQuad(image)
-  return {love.graphics.newQuad(69, 1, 32, 32, image:getWidth(), image:getHeight())}
-end
-
 local font
 
 messagebox = {
@@ -102,6 +73,7 @@ notification = {
   end
 }
 
+require "cache"
 require "customhandler"
 require "maps"
 require "objects"
@@ -455,10 +427,6 @@ local function DrawCoinHud(time)
   love.graphics.print(coinsgot.."/"..coinstotal, 50, screenheight-40)
 end
 
-local snowsprite = love.graphics.newImage("Sprites/Chapter 2/snowball.png")
-local snowmansprite = love.graphics.newImage("Sprites/Chapter 2/snowman.png")
-local boxsprite = love.graphics.newImage("Sprites/Chapter 3/box.png")
-
 local wallDesc = "\nMost objects can't walk in this tile"
 local floorDesc = "\nObjects can walk in this tile"
 local pushDesc = "\nObjects in this tile will be pushed to the "
@@ -507,11 +475,13 @@ tilesets = {
     },
     tile = {
       [TILE_CUSTOM1] = function(x, y)
+        local snowsprite = GetImage("Sprites/Chapter 2/snowball.png")
         SpawnObject(snowsprite, x, y, "snowball", GetQuads(4, snowsprite), "position")
         tilemap[y][x] = TILE_FLOOR3
       end,
       [TILE_CUSTOM2] = nil,
       [TILE_CUSTOM3] = function(x, y)
+        local snowmansprite = GetImage("Sprites/Chapter 2/snowman.png")
         SpawnObject(snowmansprite, x, y, "snowman", GetDirectionalQuads(snowmansprite))
         tilemap[y][x] = TILE_FLOOR3
       end,
@@ -537,6 +507,7 @@ tilesets = {
         tilemap[y][x] = TILE_FLOOR1
       end,
       [TILE_CUSTOM2] = function(x, y)
+        local boxsprite = GetImage("Sprites/Chapter 3/box.png")
         SpawnObject(boxsprite, x, y, "box", GetQuads(5, boxsprite), "hp", nil, nil, 5)
         tilemap[y][x] = TILE_FLOOR2
       end,

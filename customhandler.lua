@@ -174,7 +174,7 @@ function SearchCustom(modname)
       
       --SPRITES LIBRARY--
       GetImage = function(filepath)
-        return love.graphics.newImage(path.."/"..filepath)
+        return GetImage(path.."/"..filepath)
       end,
       GetDirectionalQuads = GetDirectionalQuads,
       GetQuads = GetQuads,

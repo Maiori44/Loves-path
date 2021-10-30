@@ -175,6 +175,7 @@ function love.keypressed(key)
 end
 
 function love.textinput(text)
+  if not menu[gamestate] then return end
   local setting = menu[gamestate][pointer]
   if setting.int and tonumber(text) and setting.int:len() < 2 then
     setting.int = setting.int..text
