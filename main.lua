@@ -708,7 +708,7 @@ local drawModes = {
   ["the end"] = function()
     local n = "\n"
     local msg =
-    "This is the end of the Alpha"..n..
+    "This is the end of the Beta"..n..
     "Thanks for playing!"..n..n..
     "Looking for something else to do?"..n..
     "Try the level editor!"..n..n..
