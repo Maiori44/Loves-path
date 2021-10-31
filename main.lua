@@ -1,4 +1,4 @@
-VERSION = "Version 92 BETA 1.2"
+VERSION = "Version 93 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -498,12 +498,22 @@ tilesets = {
     description = {
       [TILE_CUSTOM1] = "+15\nAdds 15 seconds to timer",
       [TILE_CUSTOM2] = "BOX\nWill spawn a pushable box in this tile",
-      [TILE_CUSTOM3] = "WIP\nDoes nothing for now"--"BOX CONTAINER THING\nIf all of these tiles are covered by boxes the level will be completed"
+      [TILE_CUSTOM3] = "BOX CONTAINER\nIf all of these tiles are covered by boxes the level will be completed"
     },
     collision = {
       [TILE_CUSTOM1] = true,
       [TILE_CUSTOM2] = true,
-      [TILE_CUSTOM3] = true
+      [TILE_CUSTOM3] = function(mo)
+        if mo.type == "box" then
+          sound.playSound("box.wav")
+          local all = true
+          IterateMap(TILE_CUSTOM3, function(x, y)
+            local mo = SearchObject(x, y)
+            if not mo or mo.type ~= "box" then all = false end
+          end)
+          if all then EndLevel() end
+        end
+      end
     },
     tile = {
       [TILE_CUSTOM1] = function(x, y)
