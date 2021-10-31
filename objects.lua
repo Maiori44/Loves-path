@@ -265,6 +265,45 @@ function FacePlayer(mo)
   end
 end
 
+function EndLevel()
+  gamemap = gamemap + 1
+  if gamemap == lastmap then
+    local unlocks = "Unlocked music:"
+    for k, entry in ipairs(sound.soundtest) do
+      if entry.require == gamemap + 1 then
+        unlocks = unlocks.."\n"..entry.name
+      end
+    end
+    if unlocks ~= "Unlocked music:" then
+      notification.setMessage(unlocks)
+    end
+  end
+  lastmap = math.max(gamemap + 1, lastmap)
+  SaveData()
+  if gamemap == #menu["select level"] - 1 then
+    pointer = 1
+    gamestate = "the end"
+    sound.reset()
+    sound.setMusic("")
+    return
+  end
+  local errorcheck = LoadMap("map"..GetMapNum(gamemap)..".map")
+  if errorcheck and errorcheck == "error" then
+    gamemap = gamemap-1
+    messagebox.setMessage("Failed to load next map!", "The current map was reloaded instead", true)
+    local errorcheck2 = LoadMap("map"..GetMapNum(gamemap)..".map")
+    if errorcheck2 and errorcheck2 == "error" then
+      local finalcheck = LoadMap("map00.map")
+      messagebox.setMessage("Failed to load next or current map!", "as a last ditch effor map00.map was loaded\nsomething must really be broken...", true)
+      if finalcheck and finalcheck == "error" then
+        error("Could not find a map to load\nthe Maps folder may be corrupted, reinstall the game and replace it.")
+      end
+    end
+  end
+  sound.reset()
+  sound.playSound("win.wav")
+end
+
 function AddObjectType(typename, collision, thinker)
   CheckArgument(1, "AddObjectType", typename, "string")
   if collisions[typename] then error('object type "'..typename..'" already exists!') end
@@ -307,43 +346,7 @@ end
 
 --PLAYER
 AddObjectType("player", {
-  [TILE_GOAL] = function()
-    gamemap = gamemap + 1
-    if gamemap == lastmap then
-      local unlocks = "Unlocked music:"
-      for k, entry in ipairs(sound.soundtest) do
-        if entry.require == gamemap + 1 then
-          unlocks = unlocks.."\n"..entry.name
-        end
-      end
-      if unlocks ~= "Unlocked music:" then
-        notification.setMessage(unlocks)
-      end
-    end
-    lastmap = math.max(gamemap + 1, lastmap)
-    SaveData()
-    if gamemap == #menu["select level"] - 1 then
-      pointer = 1
-      gamestate = "the end"
-      sound.setMusic("")
-      return
-    end
-    local errorcheck = LoadMap("map"..GetMapNum(gamemap)..".map")
-    if errorcheck and errorcheck == "error" then
-      gamemap = gamemap-1
-      messagebox.setMessage("Failed to load next map!", "The current map was reloaded instead", true)
-      local errorcheck2 = LoadMap("map"..GetMapNum(gamemap)..".map")
-      if errorcheck2 and errorcheck2 == "error" then
-        local finalcheck = LoadMap("map00.map")
-        messagebox.setMessage("Failed to load next or current map!", "as a last ditch effor map00.map was loaded\nsomething must really be broken...", true)
-        if finalcheck and finalcheck == "error" then
-          error("Could not find a map to load\nthe Maps folder may be corrupted, reinstall the game and replace it.")
-        end
-      end
-    end
-    sound.reset()
-    sound.playSound("win.wav")
-  end,
+  [TILE_GOAL] = EndLevel,
   coin = function(_, obstmo)
     coins.hudtimer = 160
     coins[gamemap].got = true
@@ -469,5 +472,5 @@ AddObjectType("box", {
   [TILE_AFLOOR1] = StopObject,
   [TILE_AFLOOR2] = StopObject,
   [TILE_SPIKEOFF] = StopObject,
-  [TILE_ENEMY] = StopObject
+  [TILE_ENEMY] = StopObject,
 })
