@@ -67,7 +67,7 @@ function particles.spawnStars(x, y)
   end
 end
 
-function particles.spawnBridgeShards(x, y, amount)
+function particles.spawnBridgeShards(x, y, amount, alpha)
   if menu.settings[6].value == 0 then return end
   for i = 1,40 do
     if not particles.list[i] then
@@ -76,7 +76,8 @@ function particles.spawnBridgeShards(x, y, amount)
       particles.list[i].particle:setParticleLifetime(0.5, (tilemap[y + 1][x] ~= TILE_EMPTY and 0.5) or 1.3)
       particles.list[i].particle:setLinearAcceleration(0, 30, 0, 40)
       particles.list[i].particle:setSpin(-3, 3)
-      particles.list[i].particle:setColors(tilesets[tilesetname].bridgeshardcolor or {1, 1, 1, 1}, {0, 0, 0, 0})
+      tilesets[tilesetname].bridgeshardcolor[4] = alpha
+      particles.list[i].particle:setColors(tilesets[tilesetname].bridgeshardcolor or {1, 1, 1, alpha or 1}, {0, 0, 0, 0})
       particles.list[i].particle:setEmissionArea("normal", 4, 4)
       particles.list[i].particle:setSizes(0.5)
       particles.list[i].particle:emit(amount)

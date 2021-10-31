@@ -103,7 +103,7 @@ local function DestroyBridge(mo, momx, momy)
     if tilemap[mo.y + 1][mo.x] == TILE_CHASM2 then
       tilemap[mo.y + 1][mo.x] = TILE_EMPTY
       particles.spawnBridgeShards(mo.x, mo.y, 6)
-      particles.spawnBridgeShards(mo.x, mo.y + 1, 6)
+      particles.spawnBridgeShards(mo.x, mo.y + 1, 6, 0.2)
     else
       particles.spawnBridgeShards(mo.x, mo.y, 12)
     end
