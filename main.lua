@@ -199,7 +199,7 @@ local updateModes = {
           flash = 0.7
           sound.playSound("thunder.wav")
         end
-        if timer > 0 then
+        if timer > 0 and player then
           timer = timer - 1
           if timer <= 0 then
             RemoveObject(player)
@@ -615,7 +615,7 @@ local drawModes = {
     if not player then
       love.graphics.printf("Press [R] to retry", 0, 20, screenwidth, "center")
     end
-    if timer > 0 then
+    if timer > 0 and player then
       love.graphics.printf("Hurry!\n"..timer, 0, screenheight - 60, screenwidth, "center")
     end
     if coins.hudtimer > 0 then
