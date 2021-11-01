@@ -111,11 +111,11 @@ local function DoTime(timetodo, timetoreset)
 end
 
 function GetStartX()
-  return ((screenwidth-(mapwidth+2)*((love.window.getFullscreen() and scale * GetScaleByScreen()) or scale)*32)/2)+mouse.camerax
+  return ((screenwidth-(mapwidth+2)*(scale * GetScaleByScreen())*32)/2)+mouse.camerax
 end
 
 function GetStartY()
-  return ((screenheight-((mapheight < 20 and mapheight) or mapheight+2)*((love.window.getFullscreen() and scale * GetScaleByScreen()) or scale)*32)/2)+mouse.cameray
+  return ((screenheight-((mapheight < 20 and mapheight) or mapheight+2)*(scale * GetScaleByScreen())*32)/2)+mouse.cameray
 end
 
 function love.load(args)
@@ -280,8 +280,7 @@ local function DrawTilemap()
   if tilesets[tilesetname].dark then
     love.graphics.setColor(0.3, 0.3, 0.3, 1)
   end
-  local oldscale = scale
-  scale = (love.window.getFullscreen() and scale * GetScaleByScreen()) or scale
+  scale = scale * GetScaleByScreen()
   for i,row in ipairs(tilemap) do
     for j,tile in ipairs(row) do
       if tile ~= 0 then
@@ -330,7 +329,7 @@ local function DrawTilemap()
     local y = (centery+help.y*math.floor(32*scale))+(16*scale)
     love.graphics.draw(help.particle, x, y, 0, scale)
   end
-  scale = oldscale
+  scale = scale / GetScaleByScreen()
   if gamestate ~= "pause" and gamestate ~= "map settings" then
     love.graphics.setColor(1, 1, 1, (180%(math.min(math.max(leveltime, 120), 180))/60))
   else
@@ -657,14 +656,13 @@ local drawModes = {
     end
     local centerx = GetStartX()
     local centery = GetStartY()
-    local oldscale = scale
-    scale = (love.window.getFullscreen() and scale * GetScaleByScreen()) or scale
+    scale =  scale * GetScaleByScreen()
     local x = centerx+32*scale
     local y = centery+32*scale
     local xlen = (math.floor((mapwidth*32*scale)/mapwidth) * mapwidth)
     local ylen = (math.floor((mapheight*32*scale)/mapheight) * mapheight)
     love.graphics.rectangle("line", x, y, xlen, ylen)
-    scale = oldscale
+    scale = scale / GetScaleByScreen()
     love.graphics.print(mouse.mode..((mouse.mode == "editing" and " x:"..mouse.x.." y:"..mouse.y) or ""), 10, screenheight-20)
     if wheelmoved > 0 and mouse.mode == "editing" then
       love.graphics.setColor(1, 1, 1, ((math.min(math.max(wheelmoved, 0), 60)%120)/60))
@@ -685,12 +683,11 @@ local drawModes = {
     end
     if mouse.mode == "editing" and mouse.boundsCheck() then
       love.graphics.setColor(1, 1, 1, 0.5)
-      local oldscale = scale
-      scale = (love.window.getFullscreen() and scale * GetScaleByScreen()) or scale
+      scale = scale * GetScaleByScreen()
       local x = centerx+mouse.x*math.floor(32*scale)
       local y = centery+mouse.y*math.floor(32*scale)
       love.graphics.draw(tileset, quads[mouse.tile], x, y, 0, scale)
-      scale = oldscale
+      scale = scale / GetScaleByScreen()
     end
   end,
   ["map settings"] = function()
@@ -698,14 +695,13 @@ local drawModes = {
     DrawTilemap()
     local centerx = GetStartX()
     local centery = GetStartY()
-    local oldscale = scale
-    scale = (love.window.getFullscreen() and scale * GetScaleByScreen()) or scale
+    scale = scale * GetScaleByScreen()
     local x = centerx + 32 * scale
     local y = centery + 32 * scale
     local xlen = math.floor((mapwidth*32*scale)/mapwidth)*mapwidth
     local ylen = math.floor((mapheight*32*scale)/mapheight)*mapheight
     love.graphics.rectangle("line", x, y, xlen, ylen)
-    scale = oldscale
+    scale = scale / GetScaleByScreen()
     love.graphics.setColor(1, 1, 1, 1)
     DrawMenu()
   end,
@@ -756,8 +752,7 @@ function debug.collectInfo()
   local count = collectgarbage("count")
   local debuginfo = "FPS: "..tostring(love.timer.getFPS()).."\nMemory: "..count.."\n"..
   "Gamemap: "..gamemap.."\n".."Lastmap: "..lastmap.."\n".."Gamestate: "..gamestate.."\n\n"
-  debuginfo = debuginfo.."Mouse:\n"..
-  "tile: "..tostring(mouse.tile).."\n"..
+  debuginfo = "tile: "..tostring(mouse.tile).."\n"..
   "mode: "..tostring(mouse.mode).."\n"..
   "scale: "..tostring(scale).."\n"..
   "fullscreen scale: "..tostring(GetScaleByScreen()).."\n"..
@@ -766,7 +761,9 @@ function debug.collectInfo()
   "camera X: "..tostring(mouse.camerax).."\n"..
   "camera Y: "..tostring(mouse.cameray)..
   "\nScreen X: "..tostring(love.mouse.getX())..
-  "\nScreen Y: "..tostring(love.mouse.getY()).."\n"
+  "\nScreen Y: "..tostring(love.mouse.getY())..
+  "\nScreen width: "..tostring(screenwidth)..
+  "\nScreen height: "..tostring(screenheight).."\n"
   if gamestate == "ingame" or gamestate == "pause" or gamestate == "editing" then
     debuginfo = debuginfo.."\nMap:\nLeveltime: "..leveltime..
     "\nFrametime: "..frametime..
@@ -900,6 +897,20 @@ function love.draw()
     love.graphics.printf(messagebox.contents, 0, height + 50, screenwidth, "center")
     love.graphics.printf("(press any button to close this)", 0, height + messagebox.height, screenwidth / 0.7, "center", 0, 0.7)
   end
+end
+
+function love.resize(width, height)
+  local fwidth = math.max(width, 515)
+  local fheight = math.max(height, 500)
+  if fwidth > width or fheight > height then
+    love.window.setMode(800, 600, {resizable = true})
+    notification.setMessage("That resolution was a bit too small...")
+    screenwidth = 800
+    screenheight = 600
+    return
+  end
+  screenwidth = fwidth
+  screenheight = fheight
 end
 
 function love.quit()
