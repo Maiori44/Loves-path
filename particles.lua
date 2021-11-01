@@ -1,5 +1,6 @@
 PARTICLE_SNOW = 41
 PARTICLE_HELP = 42
+PARTICLE_RAIN = 43
 
 local particles = {list = {}}
 
@@ -11,10 +12,11 @@ function particles.spawnSmoke(x, y)
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
       particles.list[i].particle = love.graphics.newParticleSystem(GetImage(path.."smoke.png"), 10)
-      particles.list[i].particle:setParticleLifetime(0.4, 0.7)
-      particles.list[i].particle:setLinearAcceleration(-100, -100, 100, 100)
-      particles.list[i].particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
-      particles.list[i].particle:emit(10)
+      local particle = particles.list[i].particle
+      particle:setParticleLifetime(0.4, 0.7)
+      particle:setLinearAcceleration(-100, -100, 100, 100)
+      particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
+      particle:emit(10)
       break
     end
   end
@@ -26,11 +28,12 @@ function particles.spawnShards(x, y, mult)
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
       particles.list[i].particle = love.graphics.newParticleSystem(GetImage(path.."shard.png"), 20*mult)
-      particles.list[i].particle:setParticleLifetime(2*mult, 4*mult)
-      particles.list[i].particle:setLinearAcceleration(-500*mult, -500*mult, 500*mult, 500*mult)
-      particles.list[i].particle:setSpin(-15, 15)
-      particles.list[i].particle:setColors(mult, mult, mult, mult, mult, 0, 0, 0)
-      particles.list[i].particle:emit(20*mult)
+      local particle = particles.list[i].particle
+      particle:setParticleLifetime(2*mult, 4*mult)
+      particle:setLinearAcceleration(-500*mult, -500*mult, 500*mult, 500*mult)
+      particle:setSpin(-15, 15)
+      particle:setColors(mult, mult, mult, mult, mult, 0, 0, 0)
+      particle:emit(20*mult)
       break
     end
   end
@@ -42,10 +45,11 @@ function particles.spawnWarning(x, y, speed)
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
       particles.list[i].particle = love.graphics.newParticleSystem(GetImage(path.."warning.png"), 1)
-      particles.list[i].particle:setParticleLifetime(speed or 1)
-      particles.list[i].particle:setSizes(1, 1.5)
-      particles.list[i].particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
-      particles.list[i].particle:emit(1)
+      local particle = particles.list[i].particle
+      particle:setParticleLifetime(speed or 1)
+      particle:setSizes(1, 1.5)
+      particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
+      particle:emit(1)
       break
     end
   end
@@ -57,11 +61,12 @@ function particles.spawnStars(x, y)
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
       particles.list[i].particle = love.graphics.newParticleSystem(GetImage(path.."star.png"), 10)
-      particles.list[i].particle:setParticleLifetime(2, 3)
-      particles.list[i].particle:setLinearAcceleration(-100, -100, 100, 100)
-      particles.list[i].particle:setSizes(1, 0)
-      particles.list[i].particle:setColors(1, 1, 1, 0.7, 1, 1, 1, 0)
-      particles.list[i].particle:emit(10)
+      local particle = particles.list[i].particle
+      particle:setParticleLifetime(2, 3)
+      particle:setLinearAcceleration(-100, -100, 100, 100)
+      particle:setSizes(1, 0)
+      particle:setColors(1, 1, 1, 0.7, 1, 1, 1, 0)
+      particle:emit(10)
       break
     end
   end
@@ -73,14 +78,15 @@ function particles.spawnBridgeShards(x, y, amount, alpha)
     if not particles.list[i] then
       particles.list[i] = {x = x, y = y}
       particles.list[i].particle = love.graphics.newParticleSystem(GetImage(path.."bridge.png"), amount)
-      particles.list[i].particle:setParticleLifetime(0.5, (tilemap[y + 1][x] ~= TILE_EMPTY and 0.5) or 1.3)
-      particles.list[i].particle:setLinearAcceleration(0, 30, 0, 40)
-      particles.list[i].particle:setSpin(-3, 3)
+      local particle = particles.list[i].particle
+      particle:setParticleLifetime(0.5, (tilemap[y + 1][x] ~= TILE_EMPTY and 0.5) or 1.3)
+      particle:setLinearAcceleration(0, 30, 0, 40)
+      particle:setSpin(-3, 3)
       tilesets[tilesetname].bridgeshardcolor[4] = alpha
-      particles.list[i].particle:setColors(tilesets[tilesetname].bridgeshardcolor or {1, 1, 1, alpha or 1}, {0, 0, 0, 0})
-      particles.list[i].particle:setEmissionArea("normal", 4, 4)
-      particles.list[i].particle:setSizes(0.5)
-      particles.list[i].particle:emit(amount)
+      particle:setColors(tilesets[tilesetname].bridgeshardcolor or {1, 1, 1, alpha or 1}, {0, 0, 0, 0})
+      particle:setEmissionArea("normal", 4, 4)
+      particle:setSizes(0.5)
+      particle:emit(amount)
       break
     end
   end
@@ -90,21 +96,37 @@ function particles.spawnSnow()
   if menu.settings[6].value == 0 then return end
   particles.list[PARTICLE_SNOW] = {}
   particles.list[PARTICLE_SNOW].particle = love.graphics.newParticleSystem(GetImage("Sprites/Particles/snow.png"), 100)
-  particles.list[PARTICLE_SNOW].particle:setParticleLifetime(15, 25)
-  particles.list[PARTICLE_SNOW].particle:setEmissionArea("normal", screenwidth+20, 0)
-  particles.list[PARTICLE_SNOW].particle:setEmissionRate(5)
-  particles.list[PARTICLE_SNOW].particle:setSizeVariation(1, 0.5)
-  particles.list[PARTICLE_SNOW].particle:setLinearAcceleration(-30, 0, 30, 30)
+  local particle = particles.list[PARTICLE_SNOW].particle
+  particle:setParticleLifetime(15, 25)
+  particle:setEmissionArea("normal", screenwidth+20, 0)
+  particle:setEmissionRate(5)
+  particle:setSizeVariation(1, 0.5)
+  particle:setLinearAcceleration(-30, 0, 30, 30)
+  particle:emit(1)
 end
 
 function particles.spawnHelp(x, y)
   if menu.settings[6].value == 0 then return end
   particles.list[PARTICLE_HELP] = {x = x, y = y}
   particles.list[PARTICLE_HELP].particle = love.graphics.newParticleSystem(GetImage(path.."circle.png"), 1)
-  particles.list[PARTICLE_HELP].particle:setParticleLifetime(1.5)
-  particles.list[PARTICLE_HELP].particle:setSizes(0.1, 5)
-  particles.list[PARTICLE_HELP].particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
-  particles.list[PARTICLE_HELP].particle:emit(1)
+  local particle = particles.list[PARTICLE_HELP].particle
+  particle:setParticleLifetime(1.5)
+  particle:setSizes(0.1, 5)
+  particle:setColors(1, 1, 1, 1, 1, 1, 1, 0)
+  particle:emit(1)
+end
+
+function particles.spawnRain()
+  if menu.settings[6].value == 0 then return end
+  particles.list[PARTICLE_RAIN] = {}
+  particles.list[PARTICLE_RAIN].particle = love.graphics.newParticleSystem(GetImage("Sprites/Particles/rain.png"), 500)
+  local particle = particles.list[PARTICLE_RAIN].particle
+  particle:setParticleLifetime(10)
+  particle:setEmissionArea("normal", screenwidth+20, 0)
+  particle:setEmissionRate(50)
+  particle:setSizes(1.7)
+  particle:setLinearAcceleration(0, 120, 0, 60)
+  particle:emit(1)
 end
 
 function particles.update(dt)
@@ -121,7 +143,6 @@ function particles.collectGarbage()
       particles.list[k] = nil
     end
   end
-  collectgarbage()
 end
 
 function particles.reset(num)

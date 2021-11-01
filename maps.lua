@@ -165,10 +165,15 @@ function LoadMap(mapname)
   end
   particles.reset()
   particles.reset(PARTICLE_HELP)
-  if tilesets[tilesetname].snow and not particles.list[PARTICLE_SNOW] then
+  if tilesets[tilesetname].snow and not particles.list[PARTICLE_SNOW] and menu.settings[6].value == 1 then
     particles.spawnSnow()
-  elseif not tilesets[tilesetname].snow then
+  elseif not tilesets[tilesetname].snow or menu.settings[6].value == 0 then
     particles.reset(PARTICLE_SNOW)
+  end
+  if tilesets[tilesetname].rain and not particles.list[PARTICLE_RAIN] and menu.settings[6].value == 1 then
+    particles.spawnRain()
+  elseif not tilesets[tilesetname].rain or menu.settings[6].value == 0 then
+    particles.reset(PARTICLE_RAIN)
   end
 end
 
@@ -246,6 +251,7 @@ function LoadEditorMap(mapname)
   mouse.mode = "editing"
   love.window.requestAttention()
   particles.reset()
-  particles.reset(41)
+  particles.reset(PARTICLE_SNOW)
+  particles.reset(PARTICLE_RAIN)
   return true
 end

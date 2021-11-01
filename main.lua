@@ -1,4 +1,4 @@
-VERSION = "Version 93 BETA 1.2"
+VERSION = "Version 94 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -320,6 +320,10 @@ local function DrawTilemap()
   if snow then
     love.graphics.draw(snow.particle, -10, -10)
   end
+  local rain = particles.list[PARTICLE_RAIN]
+  if rain then
+    love.graphics.draw(rain.particle, -10, -10)
+  end
   local help = particles.list[PARTICLE_HELP]
   if help then
     local x = (centerx+help.x*math.floor(32*scale))+(16*scale)
@@ -494,6 +498,7 @@ tilesets = {
   ["castle.png"] = { --CHAPTER 3
     vanilla = true,
     thunder = true,
+    rain = true,
     enemyquadtype = "movement",
     description = {
       [TILE_CUSTOM1] = "+15\nAdds 15 seconds to timer",
