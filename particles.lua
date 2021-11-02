@@ -126,6 +126,7 @@ function particles.spawnRain()
   particle:setEmissionRate(50)
   particle:setSizes(1.7)
   particle:setLinearAcceleration(0, 120, 0, 60)
+  particle:setColors(tilesets[tilesetname].rain)
   particle:emit(1)
 end
 
