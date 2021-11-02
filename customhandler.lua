@@ -64,6 +64,24 @@ local readOnlyValues = {
   timer = "checker",
 }
 
+local tilesetFlagsTypes = {
+  snow = "boolean",
+  dark = "boolean",
+  rain = "table",
+  thunder = "boolean",
+  glitch = "boolean",
+  enemyquadtype = "string",
+  bridgeshardcolor = "table",
+  vanilla = "nil",
+}
+
+function CheckArgument(n, funcname, arg, ctype, bad)
+  local atype = type(arg)
+  if atype ~= ctype then
+    error("bad "..(bad or "argument").." #"..n.." to '"..funcname.."' ("..ctype.." expected, got "..atype..")")
+  end
+end
+
 function SearchCustom(modname)
   path = path..modname
   if love.filesystem.getInfo(path, "directory") then
@@ -230,8 +248,15 @@ function SearchCustom(modname)
           tile = setmetatable(tile or {}, {__index = function() return nil end})
         }
         if flags then
+          local num = 0
           for k, v in pairs(flags) do
-            tilesets[tilesetname][k] = v
+            num = num + 1
+            if tilesetFlagsTypes[k] then
+              CheckArgument(num, k, v, tilesetFlagsTypes[k], "tileset flag value")
+              tilesets[tilesetname][k] = v
+            else
+              error("Unknown tileset flag \""..k.."\"")
+            end
           end
         end
         table.insert(possibletilesets, tilesetname)

@@ -1,4 +1,4 @@
-VERSION = "Version 95 BETA 1.2"
+VERSION = "Version 96 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -26,13 +26,6 @@ function GetMapNum(mapnum)
   if tonumber(mapnum) < 10 then mapnum = "0"..mapnum end
   if mapnum:len() > 2 then mapnum = mapnum:sub(2) end
   return mapnum
-end
-
-function CheckArgument(n, funcname, arg, ctype)
-  local atype = type(arg)
-  if atype ~= ctype then
-    error("bad argument # "..n.." to '"..funcname.."' ("..ctype.." expected, got "..atype..")")
-  end
 end
 
 local font
