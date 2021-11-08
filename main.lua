@@ -383,7 +383,7 @@ local function DrawMenu()
     end
     if gamestate ~= "select level" then
       local name = menu[gamestate][i].name
-      if (menu[gamestate][i].string or menu[gamestate][i].int) and menu[gamestate][i].name ~= "Map not found!" then
+      if (menu[gamestate][i].string or menu[gamestate][i].int) then
         name = name..(menu[gamestate][i].string or menu[gamestate][i].int)
       end
       if i == pointer and ((menu[gamestate][i].string and menu[gamestate][i].string:len() < 20)
