@@ -1,4 +1,4 @@
-VERSION = "Version 96 BETA 1.2"
+VERSION = "Version 97 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -396,8 +396,8 @@ local function DrawMenu()
       local offset = (unit >= 0 and unit) or 9
       local x = x+(50*offset)
       if i > 10 and GetUnit(i) == 1 then
-        ly = ly+50
-        x = ((love.window.getFullscreen() and 458) or 175)
+        ly = ly + 50
+        x = (screenwidth / 2) - 225
       end
       if menu[gamestate][i].name == "back" then
         love.graphics.printf("back", 0, 470, screenwidth, "center")
