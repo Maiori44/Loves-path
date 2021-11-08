@@ -257,6 +257,18 @@ local quadDrawingMethods = {
   end
 }
 
+local function AnimatedPrint(text, x, y, speed)
+  speed = speed or 4
+  local len = #text
+  for i = 1, len do
+    local char = text:sub(i, i)
+    local o = math.sin((i + love.timer.getTime() * 20) / (len / 4)) * speed
+    o = math.floor(o - o / 2 + .5)
+    love.graphics.print(char, x, y + o)
+    x = x + font:getWidth(char)
+  end
+end
+
 local function DrawTilemap()
   local shaders = {}
   if tilesets[tilesetname].glitch and gamestate == "ingame" and menu.settings[7].value == 1
@@ -334,6 +346,7 @@ local function DrawTilemap()
     love.graphics.setShader()
   end
   love.graphics.printf(gamemapname, 0, 50, screenwidth/2, "center", 0, 2, 2)
+  --AnimatedPrint(gamemapname, 0, 50)
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setShader()
   if wheelmoved > 0 and mouse.mode == "camera" then
@@ -390,7 +403,7 @@ local function DrawMenu()
       or (menu[gamestate][i].int and menu[gamestate][i].int:len() < 2)) then
         name = name.."_"
       end
-      love.graphics.printf(name, 0, y, rectangle, "center")
+      (i == pointer and AnimatedPrint or love.graphics.print)(name, rectangle / 2 - font:getWidth(name) / 2, y)
     else
       local unit = GetUnit(i)-1
       local offset = (unit >= 0 and unit) or 9
@@ -400,12 +413,13 @@ local function DrawMenu()
         x = (screenwidth / 2) - 225
       end
       if menu[gamestate][i].name == "back" then
-        love.graphics.printf("back", 0, 470, screenwidth, "center")
+        --love.graphics.printf("back", 0, 470, screenwidth, "center")
+        (i == pointer and AnimatedPrint or love.graphics.print)("back", screenwidth / 2 - 24, 470)
       else
         local n = menu[gamestate][i].name
         love.graphics.print(n, x, ly)
         if coins[i-1] then
-          love.graphics.draw(hudcoin, hudcoinquads[((coins[i-1].got and "got") or "notgot")], x+font:getWidth(n), ly)
+          love.graphics.draw(hudcoin, hudcoinquads[((coins[i-1].got and "got") or "notgot")], x + font:getWidth(n), ly)
         end
       end
     end
@@ -606,7 +620,8 @@ local drawModes = {
     end
     if particles.main then love.graphics.draw(particles.main, -20, -20) end
     if not player then
-      love.graphics.printf("Press [R] to retry", 0, 20, screenwidth, "center")
+      --love.graphics.printf("Press [R] to retry", 0, 20, screenwidth, "center")
+      AnimatedPrint("Press [R] to retry", screenwidth / 2 - 105, 20, 8)
     end
     if timer > 0 and player then
       love.graphics.printf("Hurry!\n"..timer, 0, screenheight - 60, screenwidth, "center")
