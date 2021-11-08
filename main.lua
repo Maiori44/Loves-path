@@ -139,8 +139,8 @@ function love.load(args)
   sound.setMusic("menu.ogg")
 end
 
-local glitchshader = love.graphics.newShader(({love.filesystem.read("Shaders/glitch.glsl")})[1])
-local deathshader = love.graphics.newShader(({love.filesystem.read("Shaders/death.glsl")})[1])
+local glitchshader = love.graphics.newShader("Shaders/glitch.glsl")
+local deathshader = love.graphics.newShader("Shaders/death.glsl")
 
 local updateModes = {
   ingame = function(dt)
