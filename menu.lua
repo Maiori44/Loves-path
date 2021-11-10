@@ -30,6 +30,12 @@ local function ToggleValue()
   setting.valuename = valuesnames[setting.value]
 end
 
+local function ChangeGamestate(newgamestate)
+  laststate = gamestate
+  gamestate = newgamestate
+  statetimer = 0
+end
+
 function GetAllMaps()
   menu["select level"] = {}
   local mapn = 1
@@ -53,7 +59,7 @@ function GetAllMaps()
   if #menu["select level"] > 255 then
     love.window.showMessageBox("Loaded too many maps!", "Saving data may fail.", "warning")
   end
-  table.insert(menu["select level"], {name = "back", func = function() gamestate = "title" pointer = 1 end})
+  table.insert(menu["select level"], {name = "back", func = function() ChangeGamestate("title") pointer = 1 end})
 end
 
 
@@ -110,8 +116,8 @@ end
 
 menu = {
   title = {
-    {name = "Start Game", func = function() 
-      if lastmap == 1 then 
+    {name = "Start Game", func = function()
+      if lastmap == 1 then
         gamemap = 0
         LoadMap("map00.map")
         frames = 0
@@ -119,24 +125,24 @@ menu = {
         minutes = 0
         hours = 0
       else
-        gamestate = "select level" 
+        ChangeGamestate("select level")
         pointer = 1
       end
     end},
     {name = "Addons", func = function()
-      gamestate = "addons"
+      ChangeGamestate("addons")
       pointer = 1
     end},
     {name = "Extras", func = function()
-      gamestate = "extras"
+      ChangeGamestate("extras")
       pointer = 1
     end},
-    {name = "Settings", func = function() gamestate = "settings" pointer = 1 end},
-    {name = "Credits", func = function() gamestate = "credits" pointer = 1 end},
+    {name = "Settings", func = function() ChangeGamestate("settings") pointer = 1 end},
+    {name = "Credits", func = function() ChangeGamestate("credits") pointer = 1 end},
     {name = "Quit", func = function() love.event.quit(0) end}
   },
   pause = {
-    {name = "Resume", func = function() gamestate = "ingame" end},
+    {name = "Resume", func = function() ChangeGamestate("ingame") end},
     {name = "Restart", func = function() LoadMap("map"..gamemap..".map") end},
     {name = "Return to title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},
     {name = "Quit", func = function() love.event.quit(0) end}
@@ -174,12 +180,12 @@ menu = {
       sound.setMusic("menu.ogg")
       menu.settings[#menu.settings-1].name = "Erase Data"
       SaveSettings()
-      gamestate = "title"
+      ChangeGamestate("title")
       pointer = 4
     end}
   },
   credits = {
-    {name = "back", func = function() gamestate = "title" pointer = #menu.title - 1 end}
+    {name = "back", func = function() ChangeGamestate("title") pointer = #menu.title - 1 end}
   },
   ["select level"] = nil,
   ["level editor"] = {
@@ -203,7 +209,7 @@ menu = {
       end
     end},
     {name = "Create Map", func = function() 
-      gamestate = "create map"
+      ChangeGamestate("create map")
       local mapnum = menu["create map"][1].int
       local ptilesetname = menu["create map"][3].string
       menu["create map"][1].int = (mapnum == "" and tostring(#menu["select level"]-1)) or mapnum
@@ -211,7 +217,7 @@ menu = {
       menu["create map"][7].name = "Create map"
       pointer = 1
     end},
-    {name = "back", func = function() gamestate = "addons" pointer = 1 end},
+    {name = "back", func = function() ChangeGamestate("addons") pointer = 1 end},
   },
   ["create map"] = {
     {name = "Map num: ", int = ""},
@@ -242,7 +248,7 @@ menu = {
         scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
       end
     end},
-    {name = "back", func = function() gamestate = "level editor" pointer = 2 end}
+    {name = "back", func = function() ChangeGamestate("level editor") pointer = 2 end}
   },
   ["map settings"] = {
     {name = "Map name: ", string = ""},
@@ -269,7 +275,7 @@ menu = {
       local musicname = sound.soundtest[sound.soundtestpointer].filename
       sound.setMusic((sound.musicname == musicname and "") or musicname)
     end},
-    {name = "back", func = function() gamestate = "extras" sound.setMusic("menu.ogg") pointer = 1 end}
+    {name = "back", func = function() ChangeGamestate("extras") sound.setMusic("menu.ogg") pointer = 1 end}
   },
   addons = {
     {name = "Level Editor", func = function()
@@ -277,7 +283,7 @@ menu = {
         messagebox.setMessage("You can't edit the vanilla maps!", "You need to create a mod for that,\nif you want to create and edit your own maps\nselect the documentation button")
         return
       end
-      gamestate = "level editor"
+      ChangeGamestate("level editor")
       pointer = 1
       menu["level editor"][1].name = "Load map: "
       menu["level editor"][1].int = ""
@@ -297,8 +303,8 @@ menu = {
           end})
         end
       end
-      table.insert(menu["select mod"], {name = "back", func = function() gamestate = "addons" pointer = 2 end})
-      gamestate = "select mod"
+      table.insert(menu["select mod"], {name = "back", func = function() ChangeGamestate("addons") pointer = 2 end})
+      ChangeGamestate("select mod")
       pointer = 1
     end},
     {name = "Create Mod: ", string = "", func = function(this)
@@ -325,11 +331,11 @@ menu = {
         messagebox.setMessage("Documentation not found!", "Could not find \"readme.txt\" in your folder\nreinstall the game to get another copy", true)
       end
     end},
-    {name = "back", func = function() gamestate = "title" pointer = 2 end}
+    {name = "back", func = function() ChangeGamestate("title") pointer = 2 end}
   },
   extras = {
     {name = "Sound test", func = function()
-      gamestate = "sound test"
+      ChangeGamestate("sound test")
       pointer = 1
       sound.setMusic("")
       sound.soundtestpointer = 1
@@ -341,7 +347,7 @@ menu = {
     {name = "???", func = function()
       messagebox.setMessage("Coming Soon!", ":)")
     end},
-    {name = "back", func = function() gamestate = "title" pointer = 3 end}
+    {name = "back", func = function() ChangeGamestate("title") pointer = 3 end}
   }
 }
 

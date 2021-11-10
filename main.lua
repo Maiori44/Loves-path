@@ -1,4 +1,4 @@
-VERSION = "Version 97 BETA 1.2"
+VERSION = "Version 98 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -122,6 +122,8 @@ function love.load(args)
   minutes = 0
   hours = 0
   gamestate = "title"
+  laststate = "title"
+  statetimer = 1
   gamemap = 0
   lastmap = 1
   scale = 1
@@ -218,6 +220,9 @@ function love.update(dt)
   glitchshader:send("random", love.math.random()-0.5)
   deathshader:send("darkness", darkness)
   coins.hudtimer = math.max(coins.hudtimer-1, 0)
+  if statetimer < 1 then
+    statetimer = statetimer + (1 - statetimer) / 10
+  end
   if customEnv then customEnv.leveltime = leveltime end
   if #sound.list >= 10 then sound.collectGarbage() end
   if #particles.list >= 20 then particles.collectGarbage() end
@@ -346,7 +351,6 @@ local function DrawTilemap()
     love.graphics.setShader()
   end
   love.graphics.printf(gamemapname, 0, 50, screenwidth/2, "center", 0, 2, 2)
-  --AnimatedPrint(gamemapname, 0, 50)
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setShader()
   if wheelmoved > 0 and mouse.mode == "camera" then
@@ -363,7 +367,15 @@ local hudcoinquads = {
   got = love.graphics.newQuad(11, 1, 8, 8, 20, 10),
 }
 
-local function DrawMenu()
+local function DrawMenu(gs)
+  local gamestate = gs or gamestate
+  if gamestate ~= laststate and statetimer < 1 then
+    love.graphics.translate(screenwidth - ((1 -statetimer) * screenwidth), 0)
+    DrawMenu(laststate)
+    love.graphics.origin()
+    love.graphics.translate((1 - statetimer) * screenwidth, 0)
+    --add a - to total to get reverse movement
+  end
   if gamestate == "title" then
     love.graphics.draw(titlescreen, (screenwidth/2)-150, 50)
     love.graphics.setColor(1, 1, 1, math.abs(math.sin(os.clock())))
@@ -424,6 +436,7 @@ local function DrawMenu()
       end
     end
   end
+  love.graphics.setColor(1, 1, 1, 1)
 end
 
 local function DrawCoinHud(time)
@@ -592,18 +605,6 @@ local tileDescriptions = {
   [TILE_CUSTOM3] = "You're not supposed to see this message"
 }
 
-local credits =
-"-Coding-\n"..
-"Felice \"Felix44\" D'Angelo\n\n"..
-"-Art-\n"..
-"Ester Blasone\n"..
-"MAKYUNI\n\n"..
-"-Music-\n"..
-"MAKYUNI\n\n"..
-"-Maps-\n"..
-"Felice \"Felix44\" D'Angelo\n"..
-"Fele88"
-
 local drawModes = {
   ingame = function()
     DrawTilemap()
@@ -646,10 +647,23 @@ local drawModes = {
   end,
   settings = DrawMenu,
   credits = function()
-    love.graphics.printf(credits, 0, 120, screenwidth, "center")
     DrawMenu()
+    love.graphics.printf("-Coding-\n"..
+    "Felice \"Felix44\" D'Angelo\n\n"..
+    "-Art-\n"..
+    "Ester Blasone\n"..
+    "MAKYUNI\n\n"..
+    "-Music-\n"..
+    "MAKYUNI\n\n"..
+    "-Maps-\n"..
+    "Felice \"Felix44\" D'Angelo\n"..
+    "Fele88", 0, 120, screenwidth, "center")
   end,
-  ["select level"] = function() DrawMenu() love.graphics.setColor(1, 1, 1, 1) DrawCoinHud(love.timer.getTime()*50) end,
+  ["select level"] = function()
+    DrawMenu()
+    love.graphics.origin()
+    DrawCoinHud(love.timer.getTime() * 50)
+  end,
   ["level editor"] = DrawMenu,
   editing = function()
     DrawTilemap()
@@ -726,6 +740,7 @@ local drawModes = {
     DrawMenu()
   end,
   ["sound test"] = function()
+    DrawMenu()
     love.graphics.printf(sound.soundtest[sound.soundtestpointer].subtitle, 0, 230, screenwidth, "center")
     love.graphics.printf("By: "..sound.soundtest[sound.soundtestpointer].creator, 0, 260, screenwidth, "center")
     if sound.musicname == sound.soundtest[sound.soundtestpointer].filename then love.graphics.setColor(1, 1, 0, 1) end
@@ -740,8 +755,8 @@ local drawModes = {
       totmusic = totmusic + 1
       gotmusic = (lastmap >= (music.require or 0) and gotmusic + 1) or gotmusic
     end
+    love.graphics.origin()
     love.graphics.print("Unlocked music: "..gotmusic.."/"..totmusic, 10, screenheight - 20)
-    DrawMenu()
   end,
   ["select mod"] = function()
     DrawMenu()
@@ -758,8 +773,8 @@ local drawModes = {
 
 function debug.collectInfo()
   local count = collectgarbage("count")
-  local debuginfo = "FPS: "..tostring(love.timer.getFPS()).."\nMemory: "..count.."\n"..
-  "Gamemap: "..gamemap.."\n".."Lastmap: "..lastmap.."\n".."Gamestate: "..gamestate.."\n\n"
+  local debuginfo = "FPS: "..tostring(love.timer.getFPS()).."\nMemory: "..count..
+  "\nGamemap: "..gamemap.."\nLastmap: "..lastmap.."\nGamestate: "..gamestate.."\nLaststate:"..laststate.."\n\n"
   debuginfo = "tile: "..tostring(mouse.tile).."\n"..
   "mode: "..tostring(mouse.mode).."\n"..
   "scale: "..tostring(scale).."\n"..
@@ -851,6 +866,7 @@ function love.draw()
   font:setFilter("nearest", "nearest", 1)
   if drawModes[gamestate] then
     drawModes[gamestate]()
+    love.graphics.origin()
   else
     error("invalid gamestate!")
   end

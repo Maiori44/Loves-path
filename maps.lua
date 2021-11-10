@@ -150,6 +150,7 @@ function LoadMap(mapname)
     player = SpawnObject(playersprite, playerx, playery, "player")
     if customEnv then customEnv.player = player end
   end
+  statetimer = 1
   leveltime = 0
   frametime = 0
   flash = 1
@@ -246,6 +247,7 @@ function LoadEditorMap(mapname)
     tileset = GetImage(path.."Tiles/"..tilesetname)
   end
   wheelmoved = 0
+  statetimer = 1
   flash = 1
   darkness = 0
   mouse.mode = "editing"
