@@ -267,7 +267,7 @@ local function AnimatedPrint(text, x, y, speed)
   local len = #text
   for i = 1, len do
     local char = text:sub(i, i)
-    local o = math.sin((i + love.timer.getTime() * 20) / (len / 4)) * speed
+    local o = math.sin((i + love.timer.getTime() * 20) / 2.5) * speed
     o = math.floor(o - o / 2 + .5)
     love.graphics.print(char, x, y + o)
     x = x + font:getWidth(char)
