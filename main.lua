@@ -370,10 +370,10 @@ local hudcoinquads = {
 local function DrawMenu(gs)
   local gamestate = gs or gamestate
   if gamestate ~= laststate and statetimer < 1 then
-    love.graphics.translate(screenwidth - ((1 -statetimer) * screenwidth), 0)
+    love.graphics.translate(0, screenwidth - ((1 -statetimer) * screenwidth))
     DrawMenu(laststate)
     love.graphics.origin()
-    love.graphics.translate((1 - statetimer) * screenwidth, 0)
+    love.graphics.translate(0, (1 - statetimer) * screenwidth)
     --add a - to total to get reverse movement
   end
   if gamestate == "title" then
