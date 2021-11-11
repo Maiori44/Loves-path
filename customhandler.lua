@@ -223,6 +223,7 @@ function SearchCustom(modname)
       DashObject = DashObject,
       FireShot = FireShot,
       FacePlayer = FacePlayer,
+      EndLevel = EndLevel,
       AddObjectType = AddObjectType,
       AddObjectCollision = function(motype, collidedmotype, collision)
         CheckArgument(1, "AddObjectCollision", motype, "string")
