@@ -1,4 +1,4 @@
-VERSION = "Version 98 BETA 1.2"
+VERSION = "Version 99 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -148,57 +148,53 @@ local updateModes = {
   ingame = function(dt)
     if not player then darkness = math.min(darkness+0.2, 70) end
     particles.update(dt)
-    frametime = frametime + math.min(dt, 1/15)
-    while frametime > 1/60 do
-      leveltime = leveltime+1
-      frames = frames+1
-      seconds, frames = DoTime(seconds, frames)
-      minutes, seconds = DoTime(minutes, seconds)
-      hours, minutes = DoTime(hours, minutes)
-      frametime = frametime-1/60
-      if debugmode and debugmode.Slowdown and leveltime % 60 ~= 0 then return end
-      flash = math.max(flash-0.02, 0)
-      if customEnv then
-        customEnv.leveltime = leveltime
-        customEnv.timer = timer
-        if customEnv.UpdateFrame then
-          customEnv.UpdateFrame(frames, seconds, minutes, hours)
-        end
+    leveltime = leveltime+1
+    frames = frames+1
+    seconds, frames = DoTime(seconds, frames)
+    minutes, seconds = DoTime(minutes, seconds)
+    hours, minutes = DoTime(hours, minutes)
+    if debugmode and debugmode.Slowdown and leveltime % 60 ~= 0 then return end
+    flash = math.max(flash-0.02, 0)
+    if customEnv then
+      customEnv.leveltime = leveltime
+      customEnv.timer = timer
+      if customEnv.UpdateFrame then
+        customEnv.UpdateFrame(frames, seconds, minutes, hours)
       end
-      TryMove(player, 0, 0)
-      if (leveltime%2) == 0 then
-        for k, mo in pairs(objects) do
-          if thinkers[mo.type] then thinkers[mo.type](mo) end
-          if mo.momx and mo.momy and (mo.momx ~= 0 or mo.momy ~= 0) then
-            local movingmom = (mo.momx ~= 0 and mo.momx) or mo.momy
-            movingmom = (movingmom > 0 and math.ceil(2/movingmom)) or math.floor(2/movingmom)
-            if (leveltime%movingmom == 0) then
-              local momx = GetTrueMomentum(mo.momx)
-              local momy = GetTrueMomentum(mo.momy)
-              if not TryMove(mo, momx, momy) then
-                mo.momx = 0
-                mo.momy = 0
-                sound.playSound("stop.wav")
-              end
+    end
+    TryMove(player, 0, 0)
+    if (leveltime%2) == 0 then
+      for k, mo in pairs(objects) do
+        if thinkers[mo.type] then thinkers[mo.type](mo) end
+        if mo.momx and mo.momy and (mo.momx ~= 0 or mo.momy ~= 0) then
+          local movingmom = (mo.momx ~= 0 and mo.momx) or mo.momy
+          movingmom = (movingmom > 0 and math.ceil(2/movingmom)) or math.floor(2/movingmom)
+          if (leveltime%movingmom == 0) then
+            local momx = GetTrueMomentum(mo.momx)
+            local momy = GetTrueMomentum(mo.momy)
+            if not TryMove(mo, momx, momy) then
+              mo.momx = 0
+              mo.momy = 0
+              sound.playSound("stop.wav")
             end
           end
         end
       end
-      if ((leveltime + 40) % 60) == 0 then
-        IterateMap(TILE_SPIKEOFF, function(x, y) particles.spawnWarning(x, y, 0.4) end)
-      elseif (leveltime % 60) == 0 then
-        if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
-          sound.playSound("spikes.wav")
-        end
-        if tilesets[tilesetname].thunder and menu.settings[7].value == 1 and (math.floor(love.math.random(1, 28)) % 14) == 0 then
-          flash = 0.7
-          sound.playSound("thunder.wav")
-        end
-        if timer > 0 and player then
-          timer = timer - 1
-          if timer <= 0 then
-            RemoveObject(player)
-          end
+    end
+    if ((leveltime + 40) % 60) == 0 then
+      IterateMap(TILE_SPIKEOFF, function(x, y) particles.spawnWarning(x, y, 0.4) end)
+    elseif (leveltime % 60) == 0 then
+      if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
+        sound.playSound("spikes.wav")
+      end
+      if tilesets[tilesetname].thunder and menu.settings[7].value == 1 and (math.floor(love.math.random(1, 28)) % 14) == 0 then
+        flash = 0.7
+        sound.playSound("thunder.wav")
+      end
+      if timer > 0 and player then
+        timer = timer - 1
+        if timer <= 0 then
+          RemoveObject(player)
         end
       end
     end
@@ -220,13 +216,17 @@ function love.update(dt)
   glitchshader:send("random", love.math.random()-0.5)
   deathshader:send("darkness", darkness)
   coins.hudtimer = math.max(coins.hudtimer-1, 0)
-  if statetimer < 1 then
-    statetimer = statetimer + (1 - statetimer) / 10
+  frametime = frametime + math.min(dt, 1/15)
+  while frametime > 1/60 do
+    frametime = frametime-1/60
+    if statetimer < 1 then
+      statetimer = statetimer + (1 - statetimer) / 10
+    end
+    if customEnv then customEnv.leveltime = leveltime end
+    if #sound.list >= 10 then sound.collectGarbage() end
+    if #particles.list >= 20 then particles.collectGarbage() end
+    if updateModes[gamestate] then updateModes[gamestate](dt) end
   end
-  if customEnv then customEnv.leveltime = leveltime end
-  if #sound.list >= 10 then sound.collectGarbage() end
-  if #particles.list >= 20 then particles.collectGarbage() end
-  if updateModes[gamestate] then updateModes[gamestate](dt) end
 end
 
 local tileAnimations = {
