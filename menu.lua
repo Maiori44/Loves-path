@@ -344,8 +344,12 @@ menu = {
     {name = "Theater", func = function()
       messagebox.setMessage("Coming Soon!", ":)")
     end},
-    {name = "???", func = function()
-      messagebox.setMessage("Coming Soon!", ":)")
+    {name = "Bonus levels", func = function()
+      local coinsgot, coinstotal = coins.count()
+      if coinsgot ~= coinstotal then
+        messagebox.setMessage("The door is locked...", "It seems like you need "..coinstotal - coinsgot.." more coins to enter")
+        return
+      end
     end},
     {name = "back", func = function() ChangeGamestate("title") pointer = 3 end}
   }

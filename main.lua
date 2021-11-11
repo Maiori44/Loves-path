@@ -1,4 +1,4 @@
-VERSION = "Version 99 BETA 1.2"
+VERSION = "Version 100 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -441,16 +441,7 @@ end
 
 local function DrawCoinHud(time)
   love.graphics.draw(coins.sprite, coins.quads[math.floor((time%(#coins.quads*10))/10)+1], 10, screenheight-50)
-  local coinstotal = 0
-  local coinsgot = 0
-  for k, coin in pairs(coins) do
-    if type(k) == "number" then
-      coinstotal = coinstotal+1
-      if coin.got then
-        coinsgot = coinsgot+1
-      end
-    end
-  end
+  local coinsgot, coinstotal = coins.count()
   love.graphics.print(coinsgot.."/"..coinstotal, 50, screenheight-40)
 end
 
@@ -760,15 +751,20 @@ local drawModes = {
   end,
   ["select mod"] = function()
     DrawMenu()
-    if (#menu["select mod"] - 1) == 0 then
+    local mods = #menu["select mod"] - 1
+    if mods == 0 then
       love.graphics.setColor(1, 0, 0, 1)
     else
       love.graphics.setColor(1, 1, 0, 1)
     end
-    love.graphics.printf((#menu["select mod"] - 1).." mods found", 0, 90, screenwidth, "center")
+    love.graphics.printf(mods.." mods found", 0, 90, screenwidth, "center")
   end,
   addons = DrawMenu,
-  extras = DrawMenu,
+  extras = function()
+    DrawMenu()
+    love.graphics.origin()
+    DrawCoinHud(love.timer.getTime() * 50)
+  end
 }
 
 function debug.collectInfo()

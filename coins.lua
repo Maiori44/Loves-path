@@ -14,6 +14,20 @@ local coins = {
   [21] = {x = 6, y = 5, got = false},
 }
 
+function coins.count()
+  local coinstotal = 0
+  local coinsgot = 0
+  for k, coin in pairs(coins) do
+    if type(k) == "number" then
+      coinstotal = coinstotal+1
+      if coin.got then
+        coinsgot = coinsgot+1
+      end
+    end
+  end
+  return coinsgot, coinstotal
+end
+
 function coins.reset()
   for k, v in pairs(coins) do
     if type(k) == "number" then
