@@ -209,7 +209,10 @@ end
 function IterateMap(tile, func)
   for y = 1, mapheight do
     for x = 1, mapwidth do
-      if tilemap[y][x] == tile then func(x, y) end
+      if tilemap[y][x] == tile then
+        local check = func(x, y)
+        if not check then return end
+      end
     end
   end
 end
