@@ -65,6 +65,7 @@ sound.soundtest = {
   {name = "Castle of Time", subtitle = "Chapter 3 Act 1", creator = "MAKYUNI", filename = "castle1.ogg", require = 21},
   {name = "Growing Burden", subtitle = "Chapter 3 Act 2", creator = "MAKYUNI", filename = "castle2.ogg", require = 21}, --change the require in the future
   {name = "Inside the mind", subtitle = "Chapter 5 test", creator = "Felix44", filename = "mind.ogg", require = 21}, --placeholder
+  {require = 256}
 }
 
 return sound

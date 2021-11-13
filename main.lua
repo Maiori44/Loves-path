@@ -1,4 +1,4 @@
-VERSION = "Version 100 BETA 1.2"
+VERSION = "Version 101 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -138,6 +138,11 @@ function love.load(args)
   gamemapname = ""
   musicname = ""
   pcall(LoadSettings)
+  local coinsgot, coinstotal = coins.count()
+  if coinsgot == coinstotal then
+    sound.soundtest[#sound.soundtest] = coins.soundtest
+    menu.extras[3].name = "Bonus levels"
+  end
   sound.setMusic("menu.ogg")
 end
 
@@ -452,11 +457,29 @@ local falsepushDesc = "\nThis tile will do nothing, use the first frame of the p
 local spikeDesc = "\nObjects in this tile will be destroyed"
 
 tilesets = {
+  ["bonus.png"] = { --BONUS LEVELS
+    vanilla = true,
+    description = {
+      [TILE_CUSTOM1] = "BUTTON\nyou aren't supposed to use this tileset btw",
+      [TILE_CUSTOM2] = "UNUSED\nif you just like the tiles I suggest you copy\nthe .png file from the .exe",
+      [TILE_CUSTOM3] = "UNUSED\nbut you're probably reading this from the source code, aren't you?"
+    },
+    collision = {
+      [TILE_CUSTOM1] = true,
+      [TILE_CUSTOM2] = true,
+      [TILE_CUSTOM3] = true
+    },
+    tile = {
+      [TILE_CUSTOM1] = nil,
+      [TILE_CUSTOM2] = nil,
+      [TILE_CUSTOM3] = nil
+    }
+  },
   ["forest.png"] = { --CHAPTER 1
     vanilla = true,
     bridgeshardcolor = {0.7, 0.4, 0.1},
     description = {
-      [TILE_CUSTOM1] = "UNUSED"..floorDesc, 
+      [TILE_CUSTOM1] = "UNUSED"..floorDesc,
       [TILE_CUSTOM2] = "UNUSED"..floorDesc,
       [TILE_CUSTOM3] = "UNUSED"..floorDesc
     },
@@ -469,7 +492,7 @@ tilesets = {
       [TILE_CUSTOM1] = nil,
       [TILE_CUSTOM2] = nil,
       [TILE_CUSTOM3] = nil
-      }
+    }
   },
   ["frost.png"] = { --CHAPTER 2
     vanilla = true,
@@ -477,7 +500,7 @@ tilesets = {
     enemyquadtype = "movement",
     bridgeshardcolor = {0.7, 0.7, 0.7},
     description = {
-      [TILE_CUSTOM1] = "SNOWBALL".."\nA Snowball will spawn in this tile", 
+      [TILE_CUSTOM1] = "SNOWBALL".."\nA Snowball will spawn in this tile",
       [TILE_CUSTOM2] = "STICKS WALL"..wallDesc.."\nIf a Snowball rams this wall it will collapse",
       [TILE_CUSTOM3] = "SNOWMAN".."\nA Snowman will spawn in this tile"
     },

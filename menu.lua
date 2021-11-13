@@ -299,6 +299,7 @@ menu = {
             pointer = 1
             table.remove(menu.addons, 2)
             table.remove(menu.addons, 2)
+            table.remove(menu.extras, 3)
             notification.setMessage("\""..filename.."\" loaded succesfully")
           end})
         end
@@ -344,7 +345,7 @@ menu = {
     {name = "Theater", func = function()
       messagebox.setMessage("Coming Soon!", ":)")
     end},
-    {name = "Bonus levels", func = function()
+    {name = "???", func = function()
       local coinsgot, coinstotal = coins.count()
       if coinsgot ~= coinstotal then
         messagebox.setMessage("The door is locked...", "It seems like you need "..coinstotal - coinsgot.." more coins to enter")
