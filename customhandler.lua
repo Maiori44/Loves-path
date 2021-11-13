@@ -93,8 +93,19 @@ function SearchCustom(modname)
     savefile = modname..".dat"
     LoadData()
     local ok, CustomInfo = pcall(love.filesystem.load, path.."/custom.lua")
-    if not CustomInfo then return end
+    if not CustomInfo then
+      customEnv = {}
+      return
+    end
     if not ok then love.window.showMessageBox("Failed to load custom.lua!", CustomInfo, "error") return end
+    local musics = love.filesystem.getDirectoryItems(path.."/Music")
+    if musics then
+      for _, musicname in ipairs(musics) do
+        if musicname:sub(#musicname - 3) == ".ogg" then
+          table.insert(possibleMusic, musicname)
+        end
+      end
+    end
     customEnv = {
       --MISCELLANEOUS LIBRARY--
       VERSION = VERSION,

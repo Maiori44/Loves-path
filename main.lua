@@ -114,6 +114,7 @@ end
 function love.load(args)
   if args[1] == "-debug" then
     debugmode = {["Game info"] = true}
+    table.insert(possibleTilesets, "bonus.png")
   end
   font = love.graphics.newFont("editundo.ttf", 24, "mono")
   leveltime = 0
@@ -379,7 +380,6 @@ local function DrawMenu(gs)
     DrawMenu(laststate)
     love.graphics.origin()
     love.graphics.translate(0, (1 - statetimer) * screenwidth)
-    --add a - to total to get reverse movement
   end
   if gamestate == "title" then
     love.graphics.draw(titlescreen, (screenwidth/2)-150, 50)
@@ -430,7 +430,6 @@ local function DrawMenu(gs)
         x = (screenwidth / 2) - 225
       end
       if menu[gamestate][i].name == "back" then
-        --love.graphics.printf("back", 0, 470, screenwidth, "center")
         (i == pointer and AnimatedPrint or love.graphics.print)("back", screenwidth / 2 - 24, 470)
       else
         local n = menu[gamestate][i].name
@@ -534,7 +533,7 @@ tilesets = {
     rain = {0.3, 0.5, 0.54, 1},
     enemyquadtype = "movement",
     description = {
-      [TILE_CUSTOM1] = "+15\nAdds 15 seconds to timer",
+      [TILE_CUSTOM1] = "+15\nAdds 15 seconds to the timer",
       [TILE_CUSTOM2] = "BOX\nWill spawn a pushable box in this tile",
       [TILE_CUSTOM3] = "BOX CONTAINER\nIf all of these tiles are covered by boxes the level will be completed"
     },
@@ -635,7 +634,6 @@ local drawModes = {
     end
     if particles.main then love.graphics.draw(particles.main, -20, -20) end
     if not player then
-      --love.graphics.printf("Press [R] to retry", 0, 20, screenwidth, "center")
       AnimatedPrint("Press [R] to retry", screenwidth / 2 - 105, 20, 8)
     end
     if timer > 0 and player then
@@ -793,8 +791,8 @@ local drawModes = {
 function debug.collectInfo()
   local count = collectgarbage("count")
   local debuginfo = "FPS: "..tostring(love.timer.getFPS()).."\nMemory: "..count..
-  "\nGamemap: "..gamemap.."\nLastmap: "..lastmap.."\nGamestate: "..gamestate.."\nLaststate:"..laststate.."\n\n"
-  debuginfo = "tile: "..tostring(mouse.tile).."\n"..
+  "\nGamemap: "..gamemap.."\nLastmap: "..lastmap.."\nGamestate: "..gamestate.."\nLaststate: "..laststate.."\nModded: "..(customEnv and "true" or "false").."\n"
+  debuginfo = debuginfo.."\ntile: "..tostring(mouse.tile).."\n"..
   "mode: "..tostring(mouse.mode).."\n"..
   "scale: "..tostring(scale).."\n"..
   "fullscreen scale: "..tostring(GetScaleByScreen()).."\n"..
