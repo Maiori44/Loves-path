@@ -260,7 +260,7 @@ function SearchCustom(modname)
             end
           end
         end
-        table.insert(possibletilesets, tilesetname)
+        table.insert(possibleTilesets, tilesetname)
       end,
     }
     setfenv(CustomInfo, setmetatable({}, {

@@ -18,11 +18,13 @@ local percentuals = {
   [9] = "90%",
   [10] = "100%"
 }
-possibletilesets = {
+
+possibleTilesets = {
   [0] = "forest.png",
   [1] = "frost.png",
   [2] = "castle.png"
 }
+
 
 local function ToggleValue()
   local setting = menu.settings[pointer]
@@ -222,7 +224,7 @@ menu = {
   ["create map"] = {
     {name = "Map num: ", int = ""},
     {name = "Map name: ", string = ""},
-    {name = "Tileset: ", value = 0, values = possibletilesets},
+    {name = "Tileset: ", value = 0, values = possibleTilesets},
     {name = "Music name: ", string = ""},
     {name = "Map width: ", int = ""},
     {name = "Map height: ", int = ""},
@@ -252,7 +254,7 @@ menu = {
   },
   ["map settings"] = {
     {name = "Map name: ", string = ""},
-    {name = "Tileset: ", value = 0, values = possibletilesets},
+    {name = "Tileset: ", value = 0, values = possibleTilesets},
     {name = "Music name: ", string = ""},
     {name = "Map width: ", int = ""},
     {name = "Map height: ", int = ""},
