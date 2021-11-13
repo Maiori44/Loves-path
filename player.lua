@@ -62,12 +62,18 @@ function love.keypressed(key)
       pointer = 1
       menu["map settings"][1].string = gamemapname
       menu["map settings"][2].value = 0
-      menu["map settings"][3].string = sound.musicname or ""
+      menu["map settings"][3].value = 0
       menu["map settings"][4].int = tostring(mapwidth)
       menu["map settings"][5].int = tostring(mapheight)
       for k, v in ipairs(possibleTilesets) do
         if tilesetname == v then
           menu["map settings"][2].value = k
+          break
+        end
+      end
+      for k, v in ipairs(possibleMusic) do
+        if sound.musicname == v then
+          menu["map settings"][3].value = k
           break
         end
       end
