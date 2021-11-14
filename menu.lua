@@ -155,7 +155,13 @@ menu = {
   },
   pause = {
     {name = "Resume", func = function() ChangeGamestate("ingame") end},
-    {name = "Restart", func = function() LoadMap("map"..gamemap..".map") end},
+    {name = "Restart", func = function()
+      if gamemap < 0 then
+        menu["bonus levels"][math.abs(gamemap)].func()
+      else
+        LoadMap("map"..GetMapNum(gamemap)..".map")
+      end
+    end},
     {name = "Return to title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},
     {name = "Quit", func = function() love.event.quit(0) end}
   },
@@ -381,11 +387,19 @@ menu = {
         SpawnObject(bfmonitor, x, 12, "bfmonitor", GetQuads(7, bfmonitor), "hp", nil, 1)
       end
       for x = 10, 14 do
-        SpawnObject(nummonitor, x, 4, "nummonitor", GetQuads(10, nummonitor), "hp", nil, 1)
+        SpawnObject(nummonitor, x, 4, "dummy", GetQuads(10, nummonitor), "hp", nil, 1)
       end
     end},
     {name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
   },
+  ["bonus level complete!"] = {
+    {name = "retry", func = function() menu["bonus levels"][math.abs(gamemap)].func() end},
+    {name = "return to level select", func = function()
+      gamestate = "bonus levels"
+      pointer = math.abs(gamemap)
+      sound.setMusic("menu.ogg")
+    end}
+  }
 }
 
 GetAllMaps()

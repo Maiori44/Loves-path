@@ -90,7 +90,6 @@ function love.keypressed(key)
       else
         LoadMap("map"..GetMapNum(gamemap)..".map")
       end
-      --LoadMap("map"..GetMapNum(gamemap)..".map")
     elseif key == "escape" then
       gamestate = "pause"
       pointer = 1

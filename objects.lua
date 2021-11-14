@@ -304,40 +304,42 @@ function EndLevel()
   sound.playSound("win.wav")
 end
 
+local defaultCollisions = {
+  __index = {
+    [TILE_EMPTY] = RemoveMovingObject,
+    [TILE_FLOOR1] = true,
+    [TILE_FLOOR2] = true,
+    [TILE_FLOOR3] = true,
+    [TILE_KEY] = true,
+    [TILE_REDSWITCH] = RedSwitch,
+    [TILE_BLUESWITCH] = BlueSwitch,
+    [TILE_START] = true,
+    [TILE_GOAL] = true,
+    [TILE_REDWALLOFF] = true,
+    [TILE_BLUEWALLOFF] = true,
+    [TILE_AFLOOR1] = true,
+    [TILE_AFLOOR2] = true,
+    [TILE_RIGHTPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 1, 0) return true end,
+    [TILE_LEFTPUSHER1] = function(mo, momx, momy) ThrustObject(mo, -1, 0) return true end,
+    [TILE_UPPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, -1) return true end,
+    [TILE_DOWNPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, 1) return true end,
+    [TILE_SPIKEON] = RemoveObject,
+    [TILE_SPIKEOFF] = true,
+    [TILE_SPIKE] = RemoveObject,
+    [TILE_BRIDGE] = CrackBridge, 
+    [TILE_CRACKEDBRIDGE] = DestroyBridge,
+    [TILE_SLIME] = StopObject,
+    [TILE_CHASM1] = RemoveMovingObject,
+    [TILE_CHASM2] = RemoveMovingObject,
+    [TILE_ENEMY] = true,
+  }
+}
+
 function AddObjectType(typename, collision, thinker)
   CheckArgument(1, "AddObjectType", typename, "string")
   if collisions[typename] then error('object type "'..typename..'" already exists!') end
-  collisions[typename] = setmetatable(collision or {}, {
-    __index = {
-      [TILE_EMPTY] = RemoveMovingObject,
-      [TILE_FLOOR1] = true,
-      [TILE_FLOOR2] = true,
-      [TILE_FLOOR3] = true,
-      [TILE_KEY] = true,
-      [TILE_REDSWITCH] = RedSwitch,
-      [TILE_BLUESWITCH] = BlueSwitch,
-      [TILE_START] = true,
-      [TILE_GOAL] = true,
-      [TILE_REDWALLOFF] = true,
-      [TILE_BLUEWALLOFF] = true,
-      [TILE_AFLOOR1] = true,
-      [TILE_AFLOOR2] = true,
-      [TILE_RIGHTPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 1, 0) return true end,
-      [TILE_LEFTPUSHER1] = function(mo, momx, momy) ThrustObject(mo, -1, 0) return true end,
-      [TILE_UPPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, -1) return true end,
-      [TILE_DOWNPUSHER1] = function(mo, momx, momy) ThrustObject(mo, 0, 1) return true end,
-      [TILE_SPIKEON] = RemoveObject,
-      [TILE_SPIKEOFF] = true,
-      [TILE_SPIKE] = RemoveObject,
-      [TILE_BRIDGE] = CrackBridge, 
-      [TILE_CRACKEDBRIDGE] = DestroyBridge,
-      [TILE_SLIME] = StopObject,
-      [TILE_CHASM1] = RemoveMovingObject,
-      [TILE_CHASM2] = RemoveMovingObject,
-      [TILE_ENEMY] = true,
-    }
-  })
-  if thinker and type(thinker) == "function" then thinkers[typename] = thinker end
+  collisions[typename] = setmetatable(collision or {}, defaultCollisions)
+  if type(thinker) == "function" then thinkers[typename] = thinker end
 end
 
 ----OBJECT DEFINITIONS
@@ -390,7 +392,7 @@ AddObjectType("key", {
   [TILE_FLOOR3] = StopObject,
   [TILE_LOCK] = function(mo)
     tilemap[mo.y][mo.x] = TILE_FLOOR1
-    objects[mo.key] = nil
+    EraseObject(mo)
     sound.playSound("lock.wav")
   end,
   [TILE_KEY] = StopObject,
@@ -490,13 +492,25 @@ AddObjectType("box", {
 
 ---BONUS LEVELS
 
+--DUMMY
+AddObjectType("dummy")
+
 --BRAINFUCK MONITOR
 AddObjectType("bfmonitor")
 
---NUMERIC MONITOR
-AddObjectType("nummonitor")
-
 --BRAINFUCK READER
+local function EndBrainfuck(mo)
+  EraseObject(mo.posmo)
+  EraseObject(mo)
+  player.momy = -1
+  if SearchObject(10, 4).hp == 1 and SearchObject(11, 4).hp == 8 and SearchObject(12, 4).hp == 8 and SearchObject(13, 4).hp == 8 and SearchObject(14, 4).hp == 8 then
+    if tilemap[16][20] == TILE_LOCK then
+      tilemap[16][20] = TILE_FLOOR1
+      sound.playSound("lock.wav")
+    end
+  end
+end
+
 local brainfuckOptions = {
   function() end,
   function(pos)
@@ -509,9 +523,11 @@ local brainfuckOptions = {
   end,
   function(pos, mo)
     mo.hp = (pos - 1) % 5
+    mo.posmo.x = 10 + mo.hp
   end,
   function(pos, mo)
     mo.hp = (pos + 1) % 5
+    mo.posmo.x = 10 + mo.hp
   end,
   function(pos, mo)
     if SearchObject(10 + pos, 4).hp == 1 then
@@ -521,8 +537,7 @@ local brainfuckOptions = {
           return
         end
       end
-      EraseObject(mo)
-      player.momy = -1
+      EndBrainfuck(mo)
     end
   end,
   function(pos, mo)
@@ -534,8 +549,7 @@ local brainfuckOptions = {
           return
         end
       end
-      EraseObject(mo)
-      player.momy = -1
+      EndBrainfuck(mo)
     end
   end,
 }
@@ -549,8 +563,7 @@ AddObjectType("bfreader", nil, function(mo)
   if leveltime % 10 > 0 then return end
   mo.x = mo.x + 1
   if mo.x == 20 then
-    EraseObject(mo)
-    player.momy = -1
+    EndBrainfuck(mo)
     return
   end
   brainfuckOptions[SearchObject(mo.x, mo.y).hp](mo.hp, mo)

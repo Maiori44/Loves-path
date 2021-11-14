@@ -1,4 +1,4 @@
-VERSION = "Version 101 BETA 1.2"
+VERSION = "Version 102 BETA 1.2"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -460,18 +460,22 @@ tilesets = {
     vanilla = true,
     description = {
       [TILE_CUSTOM1] = "BUTTON\nyou aren't supposed to use this tileset btw",
-      [TILE_CUSTOM2] = "UNUSED\nif you just like the tiles I suggest you copy\nthe .png file from the .exe",
-      [TILE_CUSTOM3] = "UNUSED\nbut you're probably reading this from the source code, aren't you?"
+      [TILE_CUSTOM2] = "CUSTOM GOAL\nif you just like the tiles I suggest you copy\nthe .png file from the .exe",
+      [TILE_CUSTOM3] = "BUTTON?\nbut you're probably reading this from the source code, aren't you?"
     },
     collision = {
       [TILE_CUSTOM1] = function(_, momx, momy)
         if momx == 0 and momy == 0 then return end
-        for x = 10, 13 do
+        for x = 10, 14 do
           SearchObject(x, 4).hp = 1
         end
-        SpawnObject(GetImage("Sprites/Bonuses/reader.png"), 4, 12, "bfreader", nil, nil, nil, 0)
+        local readersprite = GetImage("Sprites/Bonuses/reader.png")
+        SpawnObject(readersprite, 4, 12, "bfreader", nil, nil, nil, 0).posmo = SpawnObject(readersprite, 10, 4, "dummy")
       end,
-      [TILE_CUSTOM2] = true,
+      [TILE_CUSTOM2] = function()
+        gamestate = "bonus level complete!"
+        sound.playSound("win.wav")
+      end,
       [TILE_CUSTOM3] = true
     },
     tile = {
@@ -793,6 +797,15 @@ local drawModes = {
     DrawCoinHud(love.timer.getTime() * 50)
   end,
   ["bonus levels"] = DrawMenu,
+  ["bonus level complete!"] = function()
+    love.graphics.setColor(1, 1, 1, 0.5)
+    DrawTilemap()
+    love.graphics.setColor(1, 1, 1, 1)
+    DrawMenu()
+    local tseconds = (seconds < 10 and "0"..seconds) or tostring(seconds)
+    local tminutes = (minutes < 10 and "0"..minutes) or tostring(minutes)
+    love.graphics.printf("Completed in "..hours..":"..tminutes.."."..tseconds, 0, 90, screenwidth, "center")
+  end,
 }
 
 function debug.collectInfo()
