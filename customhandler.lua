@@ -72,6 +72,7 @@ local tilesetFlagsTypes = {
   glitch = "boolean",
   enemyquadtype = "string",
   bridgeshardcolor = "table",
+  playersprite = "userdata",
   vanilla = "nil",
 }
 
