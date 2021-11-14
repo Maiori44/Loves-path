@@ -464,7 +464,13 @@ tilesets = {
       [TILE_CUSTOM3] = "UNUSED\nbut you're probably reading this from the source code, aren't you?"
     },
     collision = {
-      [TILE_CUSTOM1] = true,
+      [TILE_CUSTOM1] = function(_, momx, momy)
+        if momx == 0 and momy == 0 then return end
+        for x = 10, 13 do
+          SearchObject(x, 4).hp = 1
+        end
+        SpawnObject(GetImage("Sprites/Bonuses/reader.png"), 4, 12, "bfreader", nil, nil, nil, 0)
+      end,
       [TILE_CUSTOM2] = true,
       [TILE_CUSTOM3] = true
     },
@@ -559,7 +565,7 @@ tilesets = {
       end,
       [TILE_CUSTOM2] = function(x, y)
         local boxsprite = GetImage("Sprites/Chapter 3/box.png")
-        SpawnObject(boxsprite, x, y, "box", GetQuads(5, boxsprite), "hp", nil, nil, 5)
+        SpawnObject(boxsprite, x, y, "box", GetQuads(5, boxsprite), "hp", nil, 5)
         tilemap[y][x] = TILE_FLOOR2
       end,
       [TILE_CUSTOM3] = nil
@@ -785,7 +791,8 @@ local drawModes = {
     DrawMenu()
     love.graphics.origin()
     DrawCoinHud(love.timer.getTime() * 50)
-  end
+  end,
+  ["bonus levels"] = DrawMenu,
 }
 
 function debug.collectInfo()
@@ -892,7 +899,7 @@ function love.draw()
     love.graphics.print("FPS: "..tostring(math.min(love.timer.getFPS(), 60)), 10, 10)
   elseif debugmode and debugmode["Game info"] then
     local debuginfo, count, scale = debug.collectInfo()
-    if love.timer.getFPS() < 10 or count > 999 then
+    if love.timer.getFPS() < 10 or count > 1499 then
       love.graphics.setColor(1, 0, 0, 1)
     else
       love.graphics.setColor(1, 1, 0, 1)

@@ -18,7 +18,7 @@ voids = {}
 collisions = {}
 thinkers = {}
 
-function SpawnObject(sprite, x, y, type, quads, quadtype, direction, flags, hp)
+function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
   if not collisions[type] then error('object type "'..type..'" does not exist!') end
   local newobject = {
     sprite = sprite,
@@ -374,6 +374,10 @@ AddObjectType("player", {
   bullet = RemoveObject,
   snowball = SlowPushObject,
   snowman = RemoveObject,
+  bfmonitor = function(_, obstmo)
+    obstmo.hp = math.max((obstmo.hp + 1) % 8, 1)
+    return true
+  end
 })
 
 --COIN
@@ -483,3 +487,71 @@ AddObjectType("box", {
   [TILE_SPIKEOFF] = StopObject,
   [TILE_ENEMY] = StopObject,
 })
+
+---BONUS LEVELS
+
+--BRAINFUCK MONITOR
+AddObjectType("bfmonitor")
+
+--NUMERIC MONITOR
+AddObjectType("nummonitor")
+
+--BRAINFUCK READER
+local brainfuckOptions = {
+  function() end,
+  function(pos)
+    local monitor = SearchObject(10 + pos, 4)
+    monitor.hp = math.max((monitor.hp + 1) % 11, 1)
+  end,
+  function(pos)
+    local monitor = SearchObject(10 + pos, 4)
+    monitor.hp = monitor.hp == 1 and 10 or monitor.hp - 1
+  end,
+  function(pos, mo)
+    mo.hp = (pos - 1) % 5
+  end,
+  function(pos, mo)
+    mo.hp = (pos + 1) % 5
+  end,
+  function(pos, mo)
+    if SearchObject(10 + pos, 4).hp == 1 then
+      while mo.x < 18 do
+        mo.x = mo.x + 1
+        if SearchObject(mo.x, mo.y).hp == 7 then
+          return
+        end
+      end
+      EraseObject(mo)
+      player.momy = -1
+    end
+  end,
+  function(pos, mo)
+    if SearchObject(10 + pos, 4).hp ~= 1 then
+      while mo.x > 5 do
+        mo.x = mo.x - 1
+        if SearchObject(mo.x, mo.y).hp == 6 then
+          print(mo.x)
+          return
+        end
+      end
+      EraseObject(mo)
+      player.momy = -1
+    end
+  end,
+}
+
+AddObjectType("bfreader", nil, function(mo)
+  if not player then return end
+  player.momx = 0
+  player.momy = 0
+  player.x = 3
+  player.y = 6
+  if leveltime % 10 > 0 then return end
+  mo.x = mo.x + 1
+  if mo.x == 20 then
+    EraseObject(mo)
+    player.momy = -1
+    return
+  end
+  brainfuckOptions[SearchObject(mo.x, mo.y).hp](mo.hp, mo)
+end)

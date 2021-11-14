@@ -363,9 +363,29 @@ menu = {
         messagebox.setMessage("The door is locked...", "It seems like you need "..coinstotal - coinsgot.." more coins to enter")
         return
       end
+      ChangeGamestate("bonus levels")
+      pointer = 1
     end},
     {name = "back", func = function() ChangeGamestate("title") pointer = 3 end}
-  }
+  },
+  ["bonus levels"] = {
+    {name = "brain messer", func = function ()
+      LoadMap("bonus01.special")
+      gamemap = -1
+      frames = 0
+      seconds = 0
+      minutes = 0
+      hours = 0
+      local bfmonitor, nummonitor = GetImage("Sprites/Bonuses/brainfuck monitor.png"), GetImage("Sprites/Bonuses/number monitor.png")
+      for x = 5, 19 do
+        SpawnObject(bfmonitor, x, 12, "bfmonitor", GetQuads(7, bfmonitor), "hp", nil, 1)
+      end
+      for x = 10, 14 do
+        SpawnObject(nummonitor, x, 4, "nummonitor", GetQuads(10, nummonitor), "hp", nil, 1)
+      end
+    end},
+    {name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
+  },
 }
 
 GetAllMaps()
