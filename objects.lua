@@ -545,7 +545,6 @@ local brainfuckOptions = {
       while mo.x > 5 do
         mo.x = mo.x - 1
         if SearchObject(mo.x, mo.y).hp == 6 then
-          print(mo.x)
           return
         end
       end
