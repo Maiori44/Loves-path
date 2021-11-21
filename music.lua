@@ -58,13 +58,15 @@ end
 
 sound.soundtest = {
   {name = "Love's path", subtitle = "Main menu", creator = "MAKYUNI", filename = "menu.ogg"},
-  {name = "Grassy Forest", subtitle = "Chapter 1 Act 1", creator = "MAKYUNI", filename = "forest1.ogg", require = 2},
-  {name = "Haunted Woods", subtitle = "Chapter 1 Act 2", creator = "MAKYUNI", filename = "forest2.ogg", require = 6},
-  {name = "Snowy Mountain", subtitle = "Chapter 2 Act 1", creator = "MAKYUNI", filename = "frost1.ogg", require = 11},
-  {name = "Tough Climb", subtitle = "Chapter 2 Act 2", creator = "MAKYUNI", filename = "frost2.ogg", require = 16},
-  {name = "Castle of Time", subtitle = "Chapter 3 Act 1", creator = "MAKYUNI", filename = "castle1.ogg", require = 21},
-  {name = "Growing Burden", subtitle = "Chapter 3 Act 2", creator = "MAKYUNI", filename = "castle2.ogg", require = 21}, --change the require in the future
-  {name = "Inside the mind", subtitle = "Chapter 5 test", creator = "Felix44", filename = "mind.ogg", require = 21}, --placeholder
+  {name = "Grassy Forest", subtitle = "Chapter 1 Act 1", creator = "MAKYUNI", filename = "forest 1.ogg", require = 2},
+  {name = "Haunted Woods", subtitle = "Chapter 1 Act 2", creator = "MAKYUNI", filename = "forest 2.ogg", require = 6},
+  {name = "Snowy Mountain", subtitle = "Chapter 2 Act 1", creator = "MAKYUNI", filename = "frost 1.ogg", require = 11},
+  {name = "Tough Climb", subtitle = "Chapter 2 Act 2", creator = "MAKYUNI", filename = "frost 2.ogg", require = 16},
+  {name = "Castle of Time", subtitle = "Chapter 3 Act 1", creator = "MAKYUNI", filename = "castle 1.ogg", require = 21},
+  {name = "Growing Burden", subtitle = "Chapter 3 Act 2", creator = "MAKYUNI", filename = "castle 2.ogg", require = 21}, --change the require in the future
+  {name = "Neglected Factory", subtitle = "Chapter 4 Act 1", creator = "MAKYUNI (inspired by Janne Kivilahti)", filename = "factory 1.ogg", require = 21},
+  {name = "Rusted Gears", subtitle = "Chapter 4 Act 2", creator = "MAKYUNI", filename = "factory 2.ogg", require = 21},
+  --{name = "Inside the mind", subtitle = "Chapter 5", creator = "Felix44 & MAKYUNI", filename = "mind.ogg", require = 21}, --placeholder
   {require = 256}
 }
 

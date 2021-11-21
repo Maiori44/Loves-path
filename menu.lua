@@ -27,13 +27,16 @@ possibleTilesets = {
 
 possibleMusic = {
   [0] = "none",
-  [1] = "forest1.ogg",
-  [2] = "forest2.ogg",
-  [3] = "frost1.ogg",
-  [4] = "frost2.ogg",
-  [5] = "castle1.ogg",
-  [6] = "castle2.ogg",
-  [7] = "bonus.ogg",
+  [1] = "forest 1.ogg",
+  [2] = "forest 2.ogg",
+  [3] = "frost 1.ogg",
+  [4] = "frost 2.ogg",
+  [5] = "castle 1.ogg",
+  [6] = "castle 2.ogg",
+  [7] = "factory 1.ogg",
+  [8] = "factory 2.ogg",
+  [9] = "mind.ogg",
+  [10] = "bonus.ogg",
 }
 
 local function ToggleValue()
