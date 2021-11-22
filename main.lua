@@ -1,4 +1,4 @@
-VERSION = "Version 105 BETA 1.3"
+VERSION = "Version 106 BETA 1.3"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -193,7 +193,7 @@ local updateModes = {
       if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
         sound.playSound("spikes.wav")
       end
-      if tilesets[tilesetname].thunder and menu.settings[7].value == 1 and (math.floor(love.math.random(1, 28)) % 14) == 0 then
+      if tilesets[tilesetname].thunder and menu.settings[7].value == 1 and flash == 0 and (math.floor(love.math.random(1, 28)) % 14) == 0 then
         flash = 0.7
         sound.playSound("thunder.wav")
       end
