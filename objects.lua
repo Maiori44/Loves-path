@@ -531,22 +531,28 @@ local brainfuckOptions = {
   end,
   function(pos, mo)
     if SearchObject(10 + pos, 4).hp == 1 then
+      local scope = 0
       while mo.x < 18 do
         mo.x = mo.x + 1
-        if SearchObject(mo.x, mo.y).hp == 7 then
-          return
-        end
+        local symbol = SearchObject(mo.x, mo.y).hp
+        if symbol == 7 then
+          scope = scope - 1
+          if scope == -1 then return end
+        elseif symbol == 6 then scope = scope + 1 end
       end
       EndBrainfuck(mo)
     end
   end,
   function(pos, mo)
     if SearchObject(10 + pos, 4).hp ~= 1 then
+      local scope = 0
       while mo.x > 5 do
         mo.x = mo.x - 1
-        if SearchObject(mo.x, mo.y).hp == 6 then
-          return
-        end
+        local symbol = SearchObject(mo.x, mo.y).hp
+        if symbol == 6 then
+          scope = scope - 1
+          if scope == -1 then return end
+        elseif symbol == 7 then scope = scope + 1 end
       end
       EndBrainfuck(mo)
     end
