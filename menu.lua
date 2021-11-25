@@ -393,6 +393,15 @@ menu = {
         SpawnObject(nummonitor, x, 4, "dummy", GetQuads(10, nummonitor), "hp", nil, 1)
       end
     end},
+    {name = "mirrored", func = function()
+      LoadMap("bonus02.special")
+      gamemap = -2
+      frames = 0
+      seconds = 0
+      minutes = 0
+      hours = 0
+      SpawnObject(GetImage("Sprites/player.png"), 8, 19, "player clone")
+    end},
     {name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
   },
   ["bonus level complete!"] = {

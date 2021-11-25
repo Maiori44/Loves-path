@@ -573,3 +573,11 @@ AddObjectType("bfreader", nil, function(mo)
   end
   brainfuckOptions[SearchObject(mo.x, mo.y).hp](mo.hp, mo)
 end)
+
+--PLAYER CLONE
+AddObjectType("player clone", collisions.player, function(mo)
+  if not player then RemoveObject(mo) return end
+  if mo.momx == 0 and mo.momy == 0 then
+    mo.momx, mo.momy = player.momx, player.momy
+  end
+end)

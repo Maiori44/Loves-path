@@ -84,7 +84,7 @@ for i=0,15 do
   end
 end
 
-local playersprite = love.graphics.newImage("Sprites/player.png")
+local playersprite = GetImage("Sprites/player.png")
 local keysprite = love.graphics.newImage("Sprites/key.png")
 local enemysprite = GetImage("Sprites/Enemies/forest.png")
 
