@@ -577,7 +577,8 @@ end)
 --PLAYER CLONE
 AddObjectType("player clone", collisions.player, function(mo)
   if not player then RemoveObject(mo) return end
-  if mo.momx == 0 and mo.momy == 0 then
+  if mo.playerstands and (player.momx ~= 0 or player.momy ~= 0) and mo.momx == 0 and mo.momy == 0 then
     mo.momx, mo.momy = player.momx, player.momy
   end
+  mo.playerstands = (player.momx == 0 and player.momy == 0)
 end)

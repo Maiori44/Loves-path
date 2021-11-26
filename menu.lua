@@ -45,64 +45,10 @@ local function ToggleValue()
   setting.valuename = valuesnames[setting.value]
 end
 
-local function ChangeGamestate(newgamestate)
+function ChangeGamestate(newgamestate)
   laststate = gamestate
   gamestate = newgamestate
   statetimer = 0
-end
-
-function GetAllMaps()
-  menu["select level"] = {}
-  local mapn = 1
-  local possiblemaps = love.filesystem.getDirectoryItems(mapspath:sub(1, -2))
-  for k, mapname in ipairs(possiblemaps) do
-    if mapname:sub(mapname:len()-3) == ".map" and mapname:match("%d+%d") then
-      menu["select level"][mapn] = {
-        name = tostring(mapn),
-        func = function()
-          LoadMap(mapname)
-          gamemap = tonumber(mapname:match("%d+%d"))
-          frames = 0
-          seconds = 0
-          minutes = 0
-          hours = 0
-        end
-      }
-      mapn = mapn+1
-    end
-  end
-  if #menu["select level"] > 255 then
-    love.window.showMessageBox("Loaded too many maps!", "Saving data may fail.", "warning")
-  end
-  table.insert(menu["select level"], {name = "back", func = function() ChangeGamestate("title") pointer = 1 end})
-end
-
-
-local function SaveMap(map, mapname, tilesetname, musicname, width, height, reset)
-  if map:sub(1, 7) == "Source/" then
-    map = map:sub(8)
-  end
-  local file = io.open(map, "w+")
-  if not file then
-    messagebox.setMessage("Failed to save map!", "Check if the Map folder exists in your mod folder", true)
-    return false
-  end
-  file:write((#mapname == 1 and "unnamed\n") or mapname)
-  file:write((#tilesetname == 1 and "forest.png\n") or tilesetname)
-  file:write((#musicname == 1 and "none\n") or musicname)
-  local awidth = (width ~= "\n") and (width ~= "0\n") and ((tonumber(width:sub(1, width:len()-1)) > 35) and "35\n" or width) or "10\n"
-  file:write(awidth)
-  local aheight = (height ~= "\n") and (height ~= "0\n") and ((tonumber(height:sub(1, height:len()-1)) > 35) and "35\n" or height) or "10\n"
-  file:write(aheight)
-  for y = 1, tonumber(aheight) do
-    for x = 1, tonumber(awidth) do
-      local tile = (tilemap[y] and tilemap[y][x]) or 0
-      file:write((reset and "00") or ((tile < 10 and "0"..tile) or tostring(tile)))
-    end
-  end
-  file:close()
-  GetAllMaps()
-  return true
 end
 
 local function ResetData()
@@ -393,7 +339,7 @@ menu = {
         SpawnObject(nummonitor, x, 4, "dummy", GetQuads(10, nummonitor), "hp", nil, 1)
       end
     end},
-    {name = "mirrored", func = function()
+    {name = "mirrored plane", func = function()
       LoadMap("bonus02.special")
       gamemap = -2
       frames = 0

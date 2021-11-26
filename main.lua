@@ -1,4 +1,4 @@
-VERSION = "Version 108 BETA 1.3"
+VERSION = "Version 110 BETA 1.3"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -115,6 +115,16 @@ function love.load(args)
   if args[1] == "-debug" then
     debugmode = {["Game info"] = true}
     table.insert(possibleTilesets, "bonus.png")
+    table.insert(menu["level editor"], 3, {name = "Load file: ", string = "", func = function()
+      mouse.tile = TILE_WALL1
+      gamestate = LoadEditorMap(menu["level editor"][3].string) and "editing" or "level editor"
+    end})
+    table.insert(menu["map settings"], 6, {name = "Save to file: ", string = "", func = function(this)
+      local mapinfo = menu["map settings"]
+      SaveMap(this.string, mapinfo[1].string.."\n", mapinfo[2].values[mapinfo[2].value].."\n", mapinfo[3].values[mapinfo[3].value].."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
+      LoadEditorMap(this.string)
+      notification.setMessage("Map saved")
+    end})
   end
   font = love.graphics.newFont("editundo.ttf", 24, "mono")
   leveltime = 0
