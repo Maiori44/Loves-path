@@ -575,7 +575,28 @@ AddObjectType("bfreader", nil, function(mo)
 end)
 
 --PLAYER CLONE
-AddObjectType("player clone", collisions.player, function(mo)
+local function RemoveMovingObjectAndPlayer(mo, momx, momy)
+  RemoveMovingObject(mo, momx, momy)
+  if not objects[mo.key] then RemoveObject(player) end
+end
+
+local function RemoveObjectAndPlayer(mo)
+  RemoveObject(mo)
+  RemoveObject(mo, player)
+end
+
+AddObjectType("player clone", {
+  [TILE_EMPTY] = RemoveMovingObjectAndPlayer,
+  [TILE_SPIKEON] = RemoveObjectAndPlayer,
+  [TILE_SPIKEOFF] = true,
+  [TILE_SPIKE] = RemoveObjectAndPlayer,
+  [TILE_BRIDGE] = CrackBridge, 
+  [TILE_CRACKEDBRIDGE] = DestroyBridge,
+  [TILE_SLIME] = StopObject,
+  [TILE_CHASM1] = RemoveMovingObjectAndPlayer,
+  [TILE_CHASM2] = RemoveMovingObjectAndPlayer,
+  [TILE_ENEMY] = true,
+}, function(mo)
   if not player then RemoveObject(mo) return end
   if mo.playerstands and (player.momx ~= 0 or player.momy ~= 0) and mo.momx == 0 and mo.momy == 0 then
     mo.momx, mo.momy = player.momx, player.momy
