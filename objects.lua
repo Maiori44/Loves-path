@@ -15,7 +15,7 @@ DIR_DOWN = 7
 
 objects = {}
 voids = {}
-collisions = {}
+local collisions = {}
 thinkers = {}
 
 function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
