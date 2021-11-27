@@ -229,8 +229,6 @@ local updateModes = {
 }
 
 function love.update(dt)
-  glitchshader:send("random", love.math.random()-0.5)
-  deathshader:send("darkness", darkness)
   coins.hudtimer = math.max(coins.hudtimer-1, 0)
   frametime = frametime + math.min(dt, 1/15)
   while frametime > 1/60 do
@@ -294,10 +292,14 @@ local function DrawTilemap()
   local shaders = {}
   if tilesets[tilesetname].glitch and gamestate == "ingame" and menu.settings[7].value == 1
   and (math.ceil(os.clock()*1000)%4500 < 200) then
+    glitchshader:send("random", love.math.random()-0.5)
     table.insert(shaders, glitchshader)
     sound.music:seek(math.max(sound.music:tell()-love.timer.getDelta(), 0))
   end
-  if not player then table.insert(shaders, deathshader) end
+  if not player then
+    deathshader:send("darkness", darkness)
+    table.insert(shaders, deathshader)
+  end
   if #shaders > 0 then
     love.graphics.setShader(unpack(shaders))
   end
