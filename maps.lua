@@ -266,12 +266,12 @@ function GetAllMaps()
   local mapn = 1
   local possiblemaps = love.filesystem.getDirectoryItems(mapspath:sub(1, -2))
   for k, mapname in ipairs(possiblemaps) do
-    if mapname:sub(mapname:len()-3) == ".map" and mapname:match("%d+%d") then
+    if mapname:match("map%d%d%.map") == mapname then
       menu["select level"][mapn] = {
         name = tostring(mapn),
         func = function()
           LoadMap(mapname)
-          gamemap = tonumber(mapname:match("%d+%d"))
+          gamemap = tonumber(mapname:match("%d%d"))
           frames = 0
           seconds = 0
           minutes = 0
