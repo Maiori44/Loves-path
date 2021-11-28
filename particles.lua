@@ -82,8 +82,12 @@ function particles.spawnBridgeShards(x, y, amount, alpha)
       particle:setParticleLifetime(0.5, (tilemap[y + 1][x] ~= TILE_EMPTY and 0.5) or 1.3)
       particle:setLinearAcceleration(0, 30, 0, 40)
       particle:setSpin(-3, 3)
-      tilesets[tilesetname].bridgeshardcolor[4] = alpha
-      particle:setColors(tilesets[tilesetname].bridgeshardcolor or {1, 1, 1, alpha or 1}, {0, 0, 0, 0})
+      if tilesets[tilesetname].bridgeshardcolor then
+        tilesets[tilesetname].bridgeshardcolor[4] = alpha
+        particle:setColors(tilesets[tilesetname].bridgeshardcolor, {0, 0, 0, 0})
+      else
+        particle:setColors(1, 1, 1, alpha or 1, 0, 0, 0, 0)
+      end
       particle:setEmissionArea("normal", 4, 4)
       particle:setSizes(0.5)
       particle:emit(amount)
