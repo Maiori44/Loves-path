@@ -121,7 +121,7 @@ function love.load(args)
     end})
     table.insert(menu["map settings"], 6, {name = "Save to file: ", string = "", func = function(this)
       local mapinfo = menu["map settings"]
-      SaveMap(this.string, mapinfo[1].string.."\n", mapinfo[2].values[mapinfo[2].value].."\n", mapinfo[3].values[mapinfo[3].value].."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
+      SaveMap("Maps/"..this.string, mapinfo[1].string.."\n", mapinfo[2].values[mapinfo[2].value].."\n", mapinfo[3].values[mapinfo[3].value].."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
       LoadEditorMap(this.string)
       notification.setMessage("Map saved")
     end})
@@ -278,10 +278,9 @@ local quadDrawingMethods = {
 
 local function AnimatedPrint(text, x, y, speed)
   speed = speed or 4
-  local len = #text
-  for i = 1, len do
-    local char = text:sub(i, i)
-    local o = math.sin((i + love.timer.getTime() * 20) / 2.5) * speed
+  for p, c in utf8.codes(text) do
+    local char = utf8.char(c)
+    local o = math.sin((p + love.timer.getTime() * 20) / 2.5) * speed
     o = math.floor(o - o / 2 + .5)
     love.graphics.print(char, x, y + o)
     x = x + font:getWidth(char)
@@ -417,7 +416,7 @@ local function DrawMenu(gs)
       y = 480
     end
     local value = menu[gamestate][i].value
-    if value then 
+    if value then
       rectangle = screenwidth-screenwidth/8
       local text = menu[gamestate][i].valuename
       text = (text and text) or (i == pointer and "< "..menu[gamestate][i].values[value].." >") or menu[gamestate][i].values[value]
@@ -488,7 +487,50 @@ tilesets = {
         gamestate = "bonus level complete!"
         sound.playSound("win.wav")
       end,
-      [TILE_CUSTOM3] = true
+      [TILE_CUSTOM3] = function(mo)
+        if mo == player or (mo.momx == 0 and mo.momy == 0) then return end
+        IterateMap(TILE_CUSTOM3, function(x, y)
+          if SearchObject(x, y) == player then
+            sound.playSound("box.wav")
+            if y == 15 then
+              tilemap[15][30] = TILE_FLOOR1
+              tilemap[6][2] = TILE_FLOOR1
+              tilemap[6][30] = TILE_CUSTOM3
+              tilemap[15][14] = TILE_CUSTOM3
+              tilemap[15][2] = TILE_FLOOR1
+              tilemap[15][18] = TILE_BLUESWITCH
+              tilemap[6][18] = TILE_RIGHTPUSHER1
+              tilemap[11][5] = TILE_SPIKEOFF
+              tilemap[11][11] = TILE_SPIKEOFF
+              tilemap[11][21] = TILE_SPIKEOFF
+              tilemap[11][27] = TILE_SPIKEOFF
+              tilemap[6][14] = TILE_SLIME
+              tilemap[7][30] = TILE_UPPUSHER1
+              CheckMap(TILE_REDWALLON, TILE_REDWALLOFF, TILE_BLUEWALLOFF, TILE_BLUEWALLON)
+            elseif y == 6 then
+              tilemap[6][30] = TILE_FLOOR1
+              tilemap[15][14] = TILE_FLOOR1
+              tilemap[15][18] = TILE_FLOOR1
+              tilemap[6][18] = TILE_FLOOR1
+              tilemap[7][8] = TILE_SLIME
+              tilemap[6][14] = TILE_FLOOR1
+              tilemap[7][30] = TILE_FLOOR1
+              tilemap[7][14] = TILE_LEFTPUSHER1
+              tilemap[13][24] = TILE_CUSTOM3
+              tilemap[14][8] = TILE_CUSTOM3
+            elseif y == 13 then
+              tilemap[7][8] = TILE_FLOOR1
+              tilemap[7][14] = TILE_FLOOR1
+              tilemap[13][24] = TILE_FLOOR1
+              tilemap[14][8] = TILE_FLOOR1
+              tilemap[5][24] = TILE_FLOOR1
+              tilemap[5][8] = TILE_FLOOR1
+              sound.playSound("lock.wav")
+            end
+            return true
+          end
+        end)
+      end,
     },
     tile = {
       [TILE_CUSTOM1] = nil,

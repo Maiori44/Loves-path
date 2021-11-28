@@ -576,13 +576,14 @@ end)
 
 --PLAYER CLONE
 local function RemoveMovingObjectAndPlayer(mo, momx, momy)
+  local key = mo.key
   RemoveMovingObject(mo, momx, momy)
-  if not objects[mo.key] then RemoveObject(player) end
+  if not objects[key] and player then RemoveObject(player) end
 end
 
 local function RemoveObjectAndPlayer(mo)
   RemoveObject(mo)
-  RemoveObject(mo, player)
+  RemoveObject(player)
 end
 
 AddObjectType("player clone", {
@@ -599,7 +600,8 @@ AddObjectType("player clone", {
 }, function(mo)
   if not player then RemoveObject(mo) return end
   if mo.playerstands and (player.momx ~= 0 or player.momy ~= 0) and mo.momx == 0 and mo.momy == 0 then
-    mo.momx, mo.momy = player.momx, player.momy
+    mo.momx, mo.momy = player.momx * -1, player.momy
+    particles.spawnSmoke(mo.x, mo.y)
   end
   mo.playerstands = (player.momx == 0 and player.momy == 0)
 end)

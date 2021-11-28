@@ -346,7 +346,10 @@ menu = {
       seconds = 0
       minutes = 0
       hours = 0
-      SpawnObject(GetImage("Sprites/player.png"), 8, 19, "player clone")
+      objects[1] = SpawnObject(GetImage("Sprites/player.png"), 8, 19, "player clone")
+      objects[2] = player
+      objects[1].key = 1
+      player.key = 2
     end},
     {name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
   },

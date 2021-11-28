@@ -128,7 +128,7 @@ function love.keypressed(key)
       pointer = (pointer-10 <= max and pointer ~= #menu["select level"] and pointer-10) or max
     elseif key == "down" then
       pointer = (pointer+10 <= max and pointer+10) or (pointer == #menu["select level"] and 1) or #menu["select level"]
-    elseif key == "space" or key == "return" then
+    elseif key == "return" then
       menu["select level"][pointer].func()
     end
     if pointer < 1 or pointer > #menu["select level"] or pointer > max then
