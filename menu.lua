@@ -325,7 +325,7 @@ menu = {
   },
   ["bonus levels"] = {
     {name = "brain messer", func = function ()
-      LoadMap("bonus01.special")
+      LoadMap("bonus01.map")
       gamemap = -1
       frames = 0
       seconds = 0
@@ -340,7 +340,7 @@ menu = {
       end
     end},
     {name = "mirrored plane", func = function()
-      LoadMap("bonus02.special")
+      LoadMap("bonus02.map")
       gamemap = -2
       frames = 0
       seconds = 0
