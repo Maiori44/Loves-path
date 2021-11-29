@@ -159,6 +159,7 @@ end
 
 local glitchshader = love.graphics.newShader("Shaders/glitch.glsl")
 local deathshader = love.graphics.newShader("Shaders/death.glsl")
+local darkshader = love.graphics.newShader("Shaders/dark.glsl")
 
 local updateModes = {
   ingame = function(dt)
@@ -289,6 +290,8 @@ end
 
 local function DrawTilemap()
   local shaders = {}
+  local centerx = GetStartX()
+  local centery = GetStartY()
   if tilesets[tilesetname].glitch and gamestate == "ingame" and menu.settings[7].value == 1
   and (math.ceil(os.clock()*1000)%4500 < 200) then
     glitchshader:send("random", love.math.random()-0.5)
@@ -298,12 +301,18 @@ local function DrawTilemap()
   if not player then
     deathshader:send("darkness", darkness)
     table.insert(shaders, deathshader)
+  elseif tilesets[tilesetname].dark then
+    local offset = math.floor(32*scale)
+    darkshader:send("pos", {
+      centerx + player.x * offset + offset / 2,
+      centery + player.y * offset + offset / 2
+    })
+    darkshader:send("scale", scale)
+    table.insert(shaders, darkshader)
   end
   if #shaders > 0 then
     love.graphics.setShader(unpack(shaders))
   end
-  local centerx = GetStartX()
-  local centery = GetStartY()
   if tilesets[tilesetname].dark then
     love.graphics.setColor(0.3, 0.3, 0.3, 1)
   end
