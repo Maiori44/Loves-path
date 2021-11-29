@@ -380,7 +380,15 @@ AddObjectType("player", {
     obstmo.hp = math.max((obstmo.hp + 1) % 8, 1)
     return true
   end
-})
+}, function(mo)
+  if mo.momx == 0 and mo.momy == 0 and (mo.fmomx ~= 0 or mo.fmomy ~= 0) and mo.ftime > 0 then
+    mo.momx = mo.fmomx
+    mo.momy = mo.fmomy
+    mo.ftime = 0
+    return
+  end
+  mo.ftime = math.max(mo.ftime - 1, 0)
+end)
 
 --COIN
 AddObjectType("coin")

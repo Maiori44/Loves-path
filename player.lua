@@ -98,19 +98,23 @@ function love.keypressed(key)
       if not player then return end
       particles.spawnHelp(player.x, player.y)
     end
-    if player and player.momx == 0 and player.momy == 0 then
+    if player then
       if key == "left" or key == "a" then
-        player.momx = -1
-        particles.spawnSmoke(player.x, player.y)
+        player.fmomx = -1
+        player.fmomy = 0
+        player.ftime = 5
       elseif key == "right" or key == "d" then
-        player.momx = 1
-        particles.spawnSmoke(player.x, player.y)
+        player.fmomx = 1
+        player.fmomy = 0
+        player.ftime = 5
       elseif key == "up" or key == "w" then
-        player.momy = -1
-        particles.spawnSmoke(player.x, player.y)
+        player.fmomx = 0
+        player.fmomy = -1
+        player.ftime = 5
       elseif key == "down" or key == "s" then
-        player.momy = 1
-        particles.spawnSmoke(player.x, player.y)
+        player.fmomx = 0
+        player.fmomy = 1
+        player.ftime = 5
       end
     end
   elseif gamestate == "pause" and key == "escape" then

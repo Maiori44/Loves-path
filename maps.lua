@@ -148,6 +148,9 @@ function LoadMap(mapname)
   if customEnv then customEnv.tilemap = tilemap end
   if playerx and playery then
     player = SpawnObject(tilesets[tilesetname].playersprite or playersprite, playerx, playery, "player")
+    player.fmomx = 0
+    player.fmomy = 0
+    player.ftime = 0
     if customEnv then customEnv.player = player end
   end
   statetimer = 1
