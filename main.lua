@@ -1,4 +1,4 @@
-VERSION = "Version 114 BETA 1.3"
+VERSION = "Version 115 BETA 1.3"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -383,6 +383,8 @@ local hudcoinquads = {
   notgot = love.graphics.newQuad(1, 1, 8, 8, 20, 10),
   got = love.graphics.newQuad(11, 1, 8, 8, 20, 10),
 }
+local icons = love.graphics.newImage("Sprites/icons.png")
+local iconsquads = GetQuads(3, icons)
 
 local function DrawMenu(gs)
   local gamestate = gs or gamestate
@@ -737,6 +739,13 @@ local drawModes = {
   end,
   ["select level"] = function()
     DrawMenu()
+    if not customEnv then
+      for i = 1, 3 do
+        if lastmap > (i - 1) * 10 then
+          love.graphics.draw(icons, iconsquads[i], (screenwidth / 2) - 275, 135 + 50 * (i - 1))
+        end
+      end
+    end
     love.graphics.origin()
     DrawCoinHud(love.timer.getTime() * 50)
   end,
