@@ -591,7 +591,7 @@ end
 
 local function RemoveObjectAndPlayer(mo)
   RemoveObject(mo)
-  RemoveObject(player)
+  if player then RemoveObject(player) end
 end
 
 AddObjectType("player clone", {
@@ -607,8 +607,8 @@ AddObjectType("player clone", {
   [TILE_ENEMY] = true,
 }, function(mo)
   if not player then RemoveObject(mo) return end
-  if mo.playerstands and (player.momx ~= 0 or player.momy ~= 0) and mo.momx == 0 and mo.momy == 0 then
-    mo.momx, mo.momy = player.momx * -1, player.momy
+  if mo.playerstands and player.ftime > 0 and (player.fmomx ~= 0 or player.fmomy ~= 0) and mo.momx == 0 and mo.momy == 0 then
+    mo.momx, mo.momy = player.fmomx * -1, player.fmomy
     particles.spawnSmoke(mo.x, mo.y)
   end
   mo.playerstands = (player.momx == 0 and player.momy == 0)
