@@ -321,10 +321,10 @@ local function DrawTilemap()
     deathshader:send("darkness", darkness)
     table.insert(shaders, deathshader)
   end
-  if flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 and (math.ceil(os.clock()*1000)%4500 < 200) then
-    glitchshader:send("random", love.math.random()-0.5)
+  if flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 and (math.ceil(love.timer.getTime() * 1000) % 4500 < 200) then
+    glitchshader:send("random", love.math.random() - 0.5)
     table.insert(shaders, glitchshader)
-    sound.music:seek(math.max(sound.music:tell()-love.timer.getDelta(), 0))
+    sound.music:seek(math.max(sound.music:tell() - love.timer.getDelta(), 0))
   end
   if #shaders > 0 then
     love.graphics.setShader(unpack(shaders))
@@ -567,6 +567,7 @@ tilesets = {
   },
   ["forest.png"] = { --CHAPTER 1
     vanilla = true,
+    glitch = true,
     bridgeshardcolor = {0.7, 0.4, 0.1},
     description = {
       [TILE_CUSTOM1] = "UNUSED"..floorDesc,

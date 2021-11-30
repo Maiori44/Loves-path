@@ -1,13 +1,13 @@
 //https://github.com/steincodes/godot-shader-tutorials/blob/master/Shaders/displace.shader
-//godot shader converted by Flamendless
+//godot shader originally converted by Flamendless
 
-extern Image tex_displace;
-extern float dis_amount = 0.1;
-extern float dis_size = 0.1;
-extern float abb_amount_x = 0.1;
-extern float abb_amount_y = 0.1;
-extern float max_a = 0.5;
-extern number random;
+uniform Image tex_displace;
+uniform float dis_amount = 0.1;
+uniform float dis_size = 0.1;
+uniform float abb_amount_x = 0.1;
+uniform float abb_amount_y = 0.1;
+uniform float max_a = 0.5;
+uniform float random;
 
 vec4 effect(vec4 color, Image texture, vec2 uv, vec2 screen_coords)
 {
