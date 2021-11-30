@@ -313,6 +313,7 @@ local function DrawTilemap()
       mouse.speed = mouse.speed + 2
     end
     if flags.dark then
+      love.graphics.setColor(0.3, 0.3, 0.3, 1)
       darkshader:send("pos", {playerx, playery})
       darkshader:send("scale", scale)
       table.insert(shaders, darkshader)
@@ -328,9 +329,6 @@ local function DrawTilemap()
   end
   if #shaders > 0 then
     love.graphics.setShader(unpack(shaders))
-  end
-  if flags.dark then
-    love.graphics.setColor(0.3, 0.3, 0.3, 1)
   end
   scale = scale * GetScaleByScreen()
   for i,row in ipairs(tilemap) do
