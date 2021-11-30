@@ -1,4 +1,4 @@
-VERSION = "Version 115 BETA 1.3"
+VERSION = "Version 116 BETA 1.3"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -290,30 +290,46 @@ end
 
 local function DrawTilemap()
   local shaders = {}
+  local flags = tilesets[tilesetname]
   local centerx = GetStartX()
   local centery = GetStartY()
-  if tilesets[tilesetname].glitch and gamestate == "ingame" and menu.settings[7].value == 1
-  and (math.ceil(os.clock()*1000)%4500 < 200) then
+  if player then
+    mouse.speed = math.max(mouse.speed - 1, 1)
+    local offset = math.floor(32*scale)
+    local playerx = centerx + player.x * offset + offset / 2
+    local playery = centery + player.y * offset + offset / 2
+    if playerx > screenwidth - 100 then
+      mouse.camerax = mouse.camerax - 2 * mouse.speed
+      mouse.speed = mouse.speed + 2
+    elseif playerx < 100 then
+      mouse.camerax = mouse.camerax + 2 * mouse.speed
+      mouse.speed = mouse.speed + 2
+    end
+    if playery > screenheight - 100 then
+      mouse.cameray = mouse.cameray - 2 * mouse.speed
+      mouse.speed = mouse.speed + 2
+    elseif playery < 100 then
+      mouse.cameray = mouse.cameray + 2 * mouse.speed
+      mouse.speed = mouse.speed + 2
+    end
+    if flags.dark then
+      darkshader:send("pos", {playerx, playery})
+      darkshader:send("scale", scale)
+      table.insert(shaders, darkshader)
+    end
+  else
+    deathshader:send("darkness", darkness)
+    table.insert(shaders, deathshader)
+  end
+  if flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 and (math.ceil(os.clock()*1000)%4500 < 200) then
     glitchshader:send("random", love.math.random()-0.5)
     table.insert(shaders, glitchshader)
     sound.music:seek(math.max(sound.music:tell()-love.timer.getDelta(), 0))
   end
-  if not player then
-    deathshader:send("darkness", darkness)
-    table.insert(shaders, deathshader)
-  elseif tilesets[tilesetname].dark then
-    local offset = math.floor(32*scale)
-    darkshader:send("pos", {
-      centerx + player.x * offset + offset / 2,
-      centery + player.y * offset + offset / 2
-    })
-    darkshader:send("scale", scale)
-    table.insert(shaders, darkshader)
-  end
   if #shaders > 0 then
     love.graphics.setShader(unpack(shaders))
   end
-  if tilesets[tilesetname].dark then
+  if flags.dark then
     love.graphics.setColor(0.3, 0.3, 0.3, 1)
   end
   scale = scale * GetScaleByScreen()

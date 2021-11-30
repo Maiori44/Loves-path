@@ -198,7 +198,7 @@ function love.textinput(text)
   end
 end
 
-mouse = {x = 0, y = 0, tile = TILE_EMPTY, camerax = 0, cameray = 0, mode = "camera"}
+mouse = {x = 0, y = 0, tile = TILE_EMPTY, camerax = 0, cameray = 0, mode = "camera", speed = 1}
 function mouse.boundsCheck()
   if mouse.x <= mapwidth and mouse.y <= mapheight and mouse.x > 0 and mouse.y > 0 then
     return true
