@@ -39,11 +39,12 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
 end
 
 function RemoveObject(mo, soundname)
+  print(mo.type)
   objects[mo.key] = nil
   table.insert(voids, mo.key)
   soundname = (type(soundname) == "string" and soundname) or nil
   soundname = (not soundname and ((mo == player and "heartbreak"..love.math.random(1, 2)..".wav") or "boom.wav")) or soundname
-  if mo.type == "player" then particles.spawnShards(player.x, player.y, 1) darkness = 0 player = nil
+  if mo == player then particles.spawnShards(player.x, player.y, 1) darkness = 0 player = nil
   else particles.spawnShards(mo.x, mo.y, 0.5) end
   sound.playSound(soundname)
 end
@@ -73,7 +74,7 @@ end
 
 function DamageObject(mo, amount)
   mo.hp = mo.hp - (amount or 1)
-  if mo.hp == 0 then
+  if mo.hp <= 0 then
     RemoveObject(mo)
     return true
   end
@@ -160,6 +161,7 @@ function TryMove(mo, momx, momy)
   collisions[mo.type][TILE_CUSTOM1] = tilesets[tilesetname].collision[TILE_CUSTOM1]
   collisions[mo.type][TILE_CUSTOM2] = tilesets[tilesetname].collision[TILE_CUSTOM2]
   collisions[mo.type][TILE_CUSTOM3] = tilesets[tilesetname].collision[TILE_CUSTOM3]
+  local sgamemap = gamemap
   if collisions[mo.type] and tilemap[mo.y+momy] and collisions[mo.type][tilemap[mo.y+momy][mo.x+momx]] then
     local obstmo = SearchObject(mo.x+momx, mo.y+momy)
     if (debugmode and debugmode["Noclip"]) or predicting or obstmo == mo then obstmo = nil end
@@ -181,6 +183,7 @@ function TryMove(mo, momx, momy)
       end
       if check ~= nil then return check end
     end
+    if sgamemap ~= gamemap then return false end
     mo.y = mo.y+momy
     mo.x = mo.x+momx
     if type(collisions[mo.type][tilemap[mo.y][mo.x]]) == "function" and not predicting then
@@ -495,9 +498,17 @@ AddObjectType("box", {
   [TILE_BLUEWALLOFF] = StopObject,
   [TILE_AFLOOR1] = StopObject,
   [TILE_AFLOOR2] = StopObject,
+  [TILE_SPIKEON] = DamageObject,
   [TILE_SPIKEOFF] = StopObject,
+  [TILE_SPIKE] = DamageObject,
   [TILE_ENEMY] = StopObject,
-})
+}, function(mo)
+  if leveltime % 10 > 0 then return end
+  local tile = tilemap[mo.y][mo.x]
+  if tile == TILE_SPIKEON or tile == TILE_SPIKE then
+    DamageObject(mo)
+  end
+end)
 
 ---BONUS LEVELS
 

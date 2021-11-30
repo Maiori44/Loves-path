@@ -182,7 +182,8 @@ local updateModes = {
     end
     TryMove(player, 0, 0)
     if (leveltime%2) == 0 then
-      for k, mo in pairs(objects) do
+      local sgamemap = gamemap
+      for _, mo in pairs(objects) do
         if thinkers[mo.type] then thinkers[mo.type](mo) end
         if mo.momx and mo.momy and (mo.momx ~= 0 or mo.momy ~= 0) then
           local movingmom = (mo.momx ~= 0 and mo.momx) or mo.momy
@@ -190,7 +191,9 @@ local updateModes = {
           if (leveltime%movingmom == 0) then
             local momx = GetTrueMomentum(mo.momx)
             local momy = GetTrueMomentum(mo.momy)
-            if not TryMove(mo, momx, momy) then
+            local check = TryMove(mo, momx, momy)
+            if gamemap ~= sgamemap then return end
+            if not check then
               mo.momx = 0
               mo.momy = 0
               sound.playSound("stop.wav")
