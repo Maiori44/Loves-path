@@ -70,6 +70,7 @@ local tilesetFlagsTypes = {
   rain = "table",
   thunder = "boolean",
   glitch = "boolean",
+  negative = "boolean",
   enemyquadtype = "string",
   bridgeshardcolor = "table",
   playersprite = "userdata",

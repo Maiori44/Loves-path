@@ -385,6 +385,7 @@ AddObjectType("player", {
     mo.momx = mo.fmomx
     mo.momy = mo.fmomy
     mo.ftime = 0
+    particles.spawnSmoke(mo.x, mo.y)
     return
   end
   mo.ftime = math.max(mo.ftime - 1, 0)

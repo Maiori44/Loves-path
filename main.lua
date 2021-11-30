@@ -160,6 +160,7 @@ end
 local glitchshader = love.graphics.newShader("Shaders/glitch.glsl")
 local deathshader = love.graphics.newShader("Shaders/death.glsl")
 local darkshader = love.graphics.newShader("Shaders/dark.glsl")
+local negativeshader = love.graphics.newShader("Shaders/negative.glsl")
 
 local updateModes = {
   ingame = function(dt)
@@ -313,7 +314,6 @@ local function DrawTilemap()
       mouse.speed = mouse.speed + 2
     end
     if flags.dark then
-      love.graphics.setColor(0.3, 0.3, 0.3, 1)
       darkshader:send("pos", {playerx, playery})
       darkshader:send("scale", scale)
       table.insert(shaders, darkshader)
@@ -325,7 +325,12 @@ local function DrawTilemap()
   if flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 and (math.ceil(love.timer.getTime() * 1000) % 4500 < 200) then
     glitchshader:send("random", love.math.random() - 0.5)
     table.insert(shaders, glitchshader)
-    sound.music:seek(math.max(sound.music:tell() - love.timer.getDelta(), 0))
+    if sound.music then
+      sound.music:seek(math.max(sound.music:tell() - love.timer.getDelta(), 0))
+    end
+  end
+  if flags.negative and math.ceil((love.timer.getTime() + 500) * 1000) % 6000 < 1200 then
+    table.insert(shaders, negativeshader)
   end
   if #shaders > 0 then
     love.graphics.setShader(unpack(shaders))
@@ -565,7 +570,6 @@ tilesets = {
   },
   ["forest.png"] = { --CHAPTER 1
     vanilla = true,
-    glitch = true,
     bridgeshardcolor = {0.7, 0.4, 0.1},
     description = {
       [TILE_CUSTOM1] = "UNUSED"..floorDesc,
