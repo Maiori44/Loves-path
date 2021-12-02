@@ -1,4 +1,4 @@
-VERSION = "Version 116 BETA 1.3"
+VERSION = "Version 117 BETA 1.3"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -1055,17 +1055,8 @@ function love.draw()
 end
 
 function love.resize(width, height)
-  local fwidth = math.max(width, 515)
-  local fheight = math.max(height, 500)
-  if fwidth > width or fheight > height then
-    love.window.setMode(800, 600, {resizable = true})
-    notification.setMessage("That resolution was a bit too small...")
-    screenwidth = 800
-    screenheight = 600
-    return
-  end
-  screenwidth = fwidth
-  screenheight = fheight
+  screenwidth = width
+  screenheight = height
 end
 
 function love.quit()

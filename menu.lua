@@ -118,7 +118,7 @@ menu = {
     {name = "Show FPS", value = 1, valuename = "on", func = ToggleValue},
     {name = "Fullscreen", value = 0, valuename = "off", func = function(this)
         ToggleValue()
-        love.window.setMode(800, 600, {fullscreen = numtobool[this.value], resizable = true})
+        love.window.setMode(800, 600, {fullscreen = numtobool[this.value], resizable = true, minwidth = 600, minheight = 500})
         screenwidth = love.graphics.getWidth()
         screenheight = love.graphics.getHeight()
     end},
@@ -449,7 +449,7 @@ function LoadSettings()
     end
   end
   if menu.settings[2].value == 1 then
-    love.window.setMode(800, 600, {fullscreen = numtobool[menu.settings[2].value], resizable = true})
+    love.window.setMode(800, 600, {fullscreen = numtobool[menu.settings[2].value], resizable = true, minwidth = 600, minheight = 500})
     screenwidth = love.graphics.getWidth()
     screenheight = love.graphics.getHeight()
   end
