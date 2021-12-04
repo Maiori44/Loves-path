@@ -39,7 +39,6 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
 end
 
 function RemoveObject(mo, soundname)
-  print(mo.type)
   objects[mo.key] = nil
   table.insert(voids, mo.key)
   soundname = (type(soundname) == "string" and soundname) or nil
