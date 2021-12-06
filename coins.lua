@@ -13,7 +13,7 @@ local coins = {
   [14] = {x = 10, y = 13, got = false},
   [16] = {x = 24, y = 3, got = false},
   [21] = {x = 6, y = 5, got = false},
-  [24] = {x = 17, y = 9, got = false}, --set to 25 later
+  [25] = {x = 17, y = 9, got = false},
 }
 
 function coins.count()
