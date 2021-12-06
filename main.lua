@@ -180,11 +180,11 @@ local updateModes = {
         customEnv.UpdateFrame(frames, seconds, minutes, hours)
       end
     end
-    TryMove(player, 0, 0)
     if (leveltime%2) == 0 then
       local sgamemap = gamemap
       for _, mo in pairs(objects) do
         if thinkers[mo.type] then thinkers[mo.type](mo) end
+        TryMove(mo, 0, 0)
         if mo.momx and mo.momy and (mo.momx ~= 0 or mo.momy ~= 0) then
           local movingmom = (mo.momx ~= 0 and mo.momx) or mo.momy
           movingmom = (movingmom > 0 and math.ceil(2/movingmom)) or math.floor(2/movingmom)

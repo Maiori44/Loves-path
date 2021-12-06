@@ -371,6 +371,8 @@ AddObjectType("player", {
     local check = PushObject(nil, obstmo, momx, momy)
     if check == false then
       return DamageObject(obstmo)
+    elseif tilemap[obstmo.y][obstmo.x] == TILE_CUSTOM3 then
+      obstmo.active = true
     end
     return check
   end,
