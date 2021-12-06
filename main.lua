@@ -638,7 +638,8 @@ tilesets = {
       [TILE_CUSTOM1] = true,
       [TILE_CUSTOM2] = true,
       [TILE_CUSTOM3] = function(mo)
-        if mo.type == "box" then
+        if mo.type == "box" and mo.active then
+          mo.active = false
           sound.playSound("box.wav")
           local all = true
           IterateMap(TILE_CUSTOM3, function(x, y)
