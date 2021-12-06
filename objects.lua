@@ -211,7 +211,7 @@ function PredictMove(mo, momx, momy)
 end
 
 local function ThrustObject(mo, thrustx, thrusty)
-  if not PredictMove(mo, thrustx, thrusty) then return end
+  if not PredictMove(mo, thrustx, thrusty) or SearchObject(mo.x + GetTrueMomentum(thrustx), mo.y + GetTrueMomentum(thrusty)) then return end
   mo.momx = thrustx
   mo.momy = thrusty
   mo.lastaxis = (thrustx ~= 0 and "x") or "y"
