@@ -211,7 +211,14 @@ function PredictMove(mo, momx, momy)
 end
 
 local function ThrustObject(mo, thrustx, thrusty)
-  if not PredictMove(mo, thrustx, thrusty) or SearchObject(mo.x + GetTrueMomentum(thrustx), mo.y + GetTrueMomentum(thrusty)) then return end
+  if not PredictMove(mo, thrustx, thrusty) then StopObject(mo) return end
+  local obstmo = SearchObject(mo.x + GetTrueMomentum(thrustx), mo.y + GetTrueMomentum(thrusty))
+  if obstmo then
+    local collision = collisions[mo.type][obstmo.type]
+    if not collision then StopObject(mo) return end
+    local check = collision(mo, obstmo, thrustx, thrusty)
+    if not check then StopObject(mo) return end
+  end
   mo.momx = thrustx
   mo.momy = thrusty
   mo.lastaxis = (thrustx ~= 0 and "x") or "y"
