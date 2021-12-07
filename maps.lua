@@ -249,6 +249,7 @@ function LoadEditorMap(mapname)
   end
   objects = {}
   voids = {}
+  player = nil
   if oldtileset ~= tilesetname then
     enemysprite = GetImage(path.."Enemies/"..tilesetname)
     tileset = GetImage(path.."Tiles/"..tilesetname)
