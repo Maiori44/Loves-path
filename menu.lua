@@ -449,7 +449,7 @@ function LoadSettings()
     end
   end
   if menu.settings[2].value == 1 then
-    love.window.setMode(800, 600, {fullscreen = numtobool[menu.settings[2].value], resizable = true, minwidth = 600, minheight = 500})
+    love.window.setMode(800, 600, {fullscreen = true, resizable = true, minwidth = 600, minheight = 500})
     screenwidth = love.graphics.getWidth()
     screenheight = love.graphics.getHeight()
   end
