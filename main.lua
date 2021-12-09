@@ -1,4 +1,4 @@
-VERSION = "Version 123 BETA 1.4"
+VERSION = "Version 124 BETA 1.4"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -166,7 +166,6 @@ local negativeshader = love.graphics.newShader("Shaders/negative.glsl")
 local updateModes = {
   ingame = function(dt)
     if not player then darkness = math.min(darkness+0.2, 70) end
-    particles.update(dt)
     leveltime = leveltime+1
     frames = frames+1
     seconds, frames = DoTime(seconds, frames)
@@ -732,6 +731,7 @@ local tileDescriptions = {
 
 local drawModes = {
   ingame = function()
+    particles.update(love.timer.getDelta())
     DrawTilemap()
     if not customEnv and gamemap == 0 then
       love.graphics.print("CONTROLS:\nWASD/ARROWS: Move\nR: Reset map\nSPACE: Show position\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nESC: Pause", math.min((leveltime*1.5)-100, 10), 100)
