@@ -298,6 +298,7 @@ local function DrawTilemap()
   local flags = tilesets[tilesetname]
   local centerx = GetStartX()
   local centery = GetStartY()
+  scale = scale * GetScaleByScreen()
   if player then
     mouse.speed = math.max(mouse.speed - 1, 1)
     local offset = math.floor(32*scale)
@@ -339,7 +340,6 @@ local function DrawTilemap()
   if #shaders > 0 then
     love.graphics.setShader(unpack(shaders))
   end
-  scale = scale * GetScaleByScreen()
   for i,row in ipairs(tilemap) do
     for j,tile in ipairs(row) do
       if tile ~= 0 then
@@ -387,6 +387,19 @@ local function DrawTilemap()
     local x = (centerx+help.x*math.floor(32*scale))+(16*scale)
     local y = (centery+help.y*math.floor(32*scale))+(16*scale)
     love.graphics.draw(help.particle, x, y, 0, scale)
+  end
+  if debugmode and debugmode["Camera info"] and player then
+    local offset = math.floor(32*scale)
+    local playerx = centerx + player.x * offset
+    local playery = centery + player.y * offset
+    love.graphics.setColor(1, 0, 0, 1)
+    love.graphics.rectangle("line", playerx, playery, offset, offset)
+    love.graphics.rectangle("fill", playerx + offset / 2, playery + offset / 2, 1, 1)
+    love.graphics.line(100, 0, 100, screenheight)
+    love.graphics.line(screenwidth - 100, 0, screenwidth - 100, screenheight)
+    love.graphics.line(0, 100, screenwidth, 100)
+    love.graphics.line(0, screenheight - 100, screenwidth, screenheight - 100)
+    love.graphics.setColor(1, 1, 1, 1)
   end
   scale = scale / GetScaleByScreen()
   if gamestate ~= "pause" and gamestate ~= "map settings" then

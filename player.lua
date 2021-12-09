@@ -26,13 +26,14 @@ function love.keypressed(key)
     customEnv.KeyPressed(key)
   end
   if key == "f3" and debugmode then
-    local options = {"Noclip", "Slowdown", "Map info", "Graphic info", "Game info", "Cancel", escapebutton = 1}
+    local options = {"Camera info", "Noclip", "Slowdown", "Map info", "Graphic info", "Game info", "Cancel", escapebutton = 1}
     local text = "Choose which option to toggle:\n"..
     "Game info = "..tostring(debugmode["Game info"] or false).."\n"..
     "Graphic info = "..tostring(debugmode["Graphic info"] or false).."\n"..
     "Map info = "..tostring(debugmode["Map info"] or false).."\n"..
     "Slowdown = "..tostring(debugmode["Slowdown"] or false).."\n"..
-    "Noclip = "..tostring(debugmode["Noclip"] or false).."\n"
+    "Noclip = "..tostring(debugmode["Noclip"] or false).."\n"..
+    "Camera info = "..tostring(debugmode["Camera info"] or false)
     local button = love.window.showMessageBox("Debug mode settings", text, options, "info")
     if button < #options then
       debugmode[options[button]] = (debugmode[options[button]] == nil and true) or (not debugmode[options[button]]) 
