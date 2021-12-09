@@ -1,4 +1,4 @@
-VERSION = "Version 121 BETA 1.3"
+VERSION = "Version 122 BETA 1.4"
 
 if love.filesystem.isFused() then
   love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -126,6 +126,7 @@ function love.load(args)
       notification.setMessage("Map saved")
     end})
   end
+  love.graphics.setDefaultFilter("nearest", "nearest")
   font = love.graphics.newFont("editundo.ttf", 24, "mono")
   leveltime = 0
   frametime = 0
