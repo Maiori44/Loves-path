@@ -428,10 +428,16 @@ AddObjectType("key", {
 
 --ENEMY
 AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject}, function(mo)
-  if (leveltime%100 > 0) or not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
-  FacePlayer(mo)
-  DashObject(mo)
-  particles.spawnSmoke(mo.x, mo.y)
+  if not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
+  local time = leveltime % 100
+  if time == 40 then
+    FacePlayer(mo)
+    local tx, ty = DirectionMomentum(mo.direction)
+    particles.spawnWarning(mo.x + tx, mo.y + ty)
+  elseif time == 0 then
+    DashObject(mo)
+    particles.spawnSmoke(mo.x, mo.y)
+  end
 end)
 
 --BULLET
