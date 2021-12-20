@@ -452,6 +452,9 @@ AddObjectType("bullet", {
   bullet = function(mo, obstmo) RemoveObject(mo) RemoveObject(obstmo) end,
 }, RemoveStandingObject)
 
+--DUMMY
+AddObjectType("dummy")
+
 ---CHAPTER 2
 
 --SNOWBALL
@@ -519,9 +522,6 @@ AddObjectType("box", {
 end)
 
 ---BONUS LEVELS
-
---DUMMY
-AddObjectType("dummy")
 
 --BRAINFUCK MONITOR
 AddObjectType("bfmonitor")
