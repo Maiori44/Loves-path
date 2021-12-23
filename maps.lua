@@ -96,6 +96,7 @@ function LoadMap(mapname)
 	timer = 0
 	voids = {}
 	for k, _ in pairs(objects) do objects[k] = nil end
+	objects = {}
 	local mapdata = GetMapData(mapname)
 	if not mapdata then
 		messagebox.setMessage("Failed to load "..mapname.."!", "Map not found.", true)
