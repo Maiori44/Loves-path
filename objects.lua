@@ -515,9 +515,9 @@ AddObjectType("box", {
   [TILE_BLUEWALLOFF] = StopObject,
   [TILE_AFLOOR1] = StopObject,
   [TILE_AFLOOR2] = StopObject,
-  [TILE_SPIKEON] = DamageObject,
+  [TILE_SPIKEON] = false,
   [TILE_SPIKEOFF] = StopObject,
-  [TILE_SPIKE] = DamageObject,
+  [TILE_SPIKE] = false,
   [TILE_ENEMY] = StopObject,
 }, function(mo)
   if leveltime % 10 > 0 then return end
