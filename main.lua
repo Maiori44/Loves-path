@@ -208,16 +208,15 @@ local updateModes = {
 			if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
 				sound.playSound("spikes.wav")
 			end
-			if tilesets[tilesetname].thunder and menu.settings[7].value == 1 and flash == 0 and (math.floor(love.math.random(1, 28)) % 14) == 0 then
-				flash = 0.7
-				sound.playSound("thunder.wav")
-			end
 			if timer > 0 and player then
 				timer = timer - 1
 				if timer <= 0 then
 					RemoveObject(player)
 				end
 			end
+		elseif (leveltime % 620) == 0 and tilesets[tilesetname].thunder and menu.settings[7].value == 1 and flash == 0 then
+			flash = 0.7
+			sound.playSound("thunder.wav")
 		end
 	end,
 	editing = function(dt)
