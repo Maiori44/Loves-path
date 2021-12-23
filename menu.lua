@@ -90,20 +90,14 @@ menu = {
         pointer = 1
       end
     end},
-    {name = "Addons", func = function()
-      ChangeGamestate("addons")
-      pointer = 1
-    end},
-    {name = "Extras", func = function()
-      ChangeGamestate("extras")
-      pointer = 1
-    end},
-    {name = "Settings", func = function() ChangeGamestate("settings") pointer = 1 end},
-    {name = "Credits", func = function() ChangeGamestate("credits") pointer = 1 end},
+    {name = "Addons", state = "addons"},
+    {name = "Extras", state = "extras"},
+    {name = "Settings", state = "settings"},
+    {name = "Credits", state = "credits"},
     {name = "Quit", func = function() love.event.quit(0) end}
   },
   pause = {
-    {name = "Resume", func = function() ChangeGamestate("ingame") end},
+    {name = "Resume", state = "ingame"},
     {name = "Restart", func = function() love.keypressed("r") end},
     {name = "Return to title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},
     {name = "Quit", func = function() love.event.quit(0) end}
@@ -178,7 +172,7 @@ menu = {
       menu["create map"][7].name = "Create map"
       pointer = 1
     end},
-    {name = "back", func = function() ChangeGamestate("addons") pointer = 1 end},
+    {name = "back", state = "addons"},
   },
   ["create map"] = {
     {name = "Map num: ", int = ""},

@@ -124,7 +124,14 @@ function love.keypressed(key)
     gamestate = "ingame"
   elseif key == "escape" then
     local pback = menu[gamestate][#menu[gamestate]]
-    if pback.name == "back" then pback.func() end
+    if pback.name == "back" then
+      if pback.state then
+        ChangeGamestate(pback.state)
+        pointer = 1
+      elseif pback.func then
+        pback.func()
+      end
+    end
   elseif gamestate == "select level" then
     local max = math.min((debugmode and 255) or lastmap, #menu["select level"]-1)
     if key == "left" then
@@ -171,8 +178,14 @@ function love.keypressed(key)
           menu[gamestate][pointer].func(setting)
         end
       end
-    elseif (key == "space" or key == "return") and menu[gamestate][pointer].func then
-      menu[gamestate][pointer].func(menu[gamestate][pointer])
+    elseif key == "return" then
+      local selected = menu[gamestate][pointer]
+      if selected.state then
+        ChangeGamestate(selected.state)
+        pointer = 1
+      elseif selected.func then
+        selected.func(menu[gamestate][pointer])
+      end
     elseif gamestate == "sound test" and pointer == 1 then
       if key == "right" then
         repeat
