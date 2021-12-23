@@ -127,6 +127,7 @@ function LoadMap(mapname)
       local tile = tonumber(ReadTile() or 0)
       tilemap[y][x] = tile or TILE_EMPTY
       if tile == TILE_START then
+        tilemap[y][x] = TILE_FLOOR1
         playerx = x
         playery = y
       elseif tile == TILE_KEY then
