@@ -86,11 +86,13 @@ function love.keypressed(key)
     gamestate = "editing"
   elseif gamestate == "ingame" then
     if key == "r" then
+      local oldscale = scale
       if gamemap < 0 then
         menu["bonus levels"][math.abs(gamemap)].func()
       else
         LoadMap("map"..GetMapNum(gamemap)..".map")
       end
+      scale = oldscale
     elseif key == "escape" then
       gamestate = "pause"
       pointer = 1
