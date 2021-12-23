@@ -78,10 +78,10 @@ tilemap = {}
 
 quads = {}
 for i=0,15 do
-  for j=0,2 do
-    local quad = love.graphics.newQuad(1+j*(32+2), 1+i*(32+2), 32, 32, 102, 544)
-    table.insert(quads, quad)
-  end
+	for j=0,2 do
+		local quad = love.graphics.newQuad(1+j*(32+2), 1+i*(32+2), 32, 32, 102, 544)
+		table.insert(quads, quad)
+	end
 end
 
 local playersprite = GetImage("Sprites/player.png")
@@ -89,234 +89,234 @@ local keysprite = love.graphics.newImage("Sprites/key.png")
 local enemysprite = GetImage("Sprites/Enemies/forest.png")
 
 local function GetMapData(mapname)
-  return love.filesystem.read(mapspath..mapname)
+	return love.filesystem.read(mapspath..mapname)
 end
 
 function LoadMap(mapname)
-  timer = 0
-  voids = {}
-  for k, _ in pairs(objects) do objects[k] = nil end
-  local mapdata = GetMapData(mapname)
-  if not mapdata then
-    messagebox.setMessage("Failed to load "..mapname.."!", "Map not found.", true)
-    return "error"
-  end
-  local oldtileset = tilesetname
-  local ReadLine = string.gmatch(mapdata, "[^\r\n]+")
-  gamemapname = ReadLine()
-  tilesetname = ReadLine()
-  local path = GetTilesetPath()
-  local musicname = ReadLine()
-  sound.setMusic(musicname)
-  mapwidth = tonumber(ReadLine())
-  mapheight = tonumber(ReadLine())
-  if not mapwidth or not mapheight or tilesetname == "" then
-    messagebox.setMessage("Failed to load "..mapname.."!", "The map is corrupted.", true)
-    return "error"
-  end
-  if oldtileset ~= tilesetname then
-    enemysprite = GetImage(path.."Enemies/"..tilesetname)
-    tileset = GetImage(path.."Tiles/"..tilesetname)
-  end
-  local playerx, playery
-  tilemap = {}
-  local ReadTile = string.gmatch(ReadLine(), "..")
-  for y = 1,mapheight do
-    tilemap[y] = {}
-    for x = 1,mapwidth do
-      local tile = tonumber(ReadTile() or 0)
-      tilemap[y][x] = tile or TILE_EMPTY
-      if tile == TILE_START then
-        tilemap[y][x] = TILE_FLOOR1
-        playerx = x
-        playery = y
-      elseif tile == TILE_KEY then
-        SpawnObject(keysprite, x, y, "key")
-        tilemap[y][x] = TILE_FLOOR1
-      elseif tile == TILE_ENEMY then
-        SpawnObject(enemysprite, x, y, "enemy", GetDirectionalQuads(enemysprite), tilesets[tilesetname].enemyquadtype or "directions")
-        tilemap[y][x] = TILE_FLOOR1
-      elseif (tile == TILE_CUSTOM1 or tile == TILE_CUSTOM2 or tile == TILE_CUSTOM3)
-      and type(tilesets[tilesetname].tile[tile]) == "function" then
-        tilesets[tilesetname].tile[tile](x, y)
-      end
-    end
-  end
-  local loadedmap = tonumber(mapname:match("%d+%d"))
-  if coins[loadedmap] and not coins[loadedmap].got then
-    SpawnObject(coins.sprite, coins[loadedmap].x, coins[loadedmap].y, "coin", coins.quads, "default")
-  end
-  if customEnv then customEnv.tilemap = tilemap end
-  if playerx and playery then
-    player = SpawnObject(tilesets[tilesetname].playersprite or playersprite, playerx, playery, "player")
-    player.fmomx = 0
-    player.fmomy = 0
-    player.ftime = 0
-    if customEnv then customEnv.player = player end
-  end
-  statetimer = 1
-  leveltime = 0
-  frametime = 0
-  flash = 1
-  darkness = 0
-  gamestate = "ingame"
-  mouse.camerax = 0
-  mouse.cameray = 0
-  mouse.mode = "camera"
-  local longside = math.max(mapwidth, mapheight)
-  scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale(longside)) or 1
-  love.window.requestAttention()
-  if customEnv and customEnv.MapLoad and type(customEnv.MapLoad) == "function" then
-    customEnv.MapLoad(gamemap, tilesetname)
-  end
-  particles.reset()
-  particles.reset(PARTICLE_HELP)
-  if tilesets[tilesetname].snow and not particles.list[PARTICLE_SNOW] and menu.settings[6].value == 1 then
-    particles.spawnSnow()
-  elseif not tilesets[tilesetname].snow or menu.settings[6].value == 0 then
-    particles.reset(PARTICLE_SNOW)
-  end
-  if tilesets[tilesetname].rain and not particles.list[PARTICLE_RAIN] and menu.settings[6].value == 1 then
-    particles.spawnRain()
-  elseif not tilesets[tilesetname].rain or menu.settings[6].value == 0 then
-    particles.reset(PARTICLE_RAIN)
-  end
+	timer = 0
+	voids = {}
+	for k, _ in pairs(objects) do objects[k] = nil end
+	local mapdata = GetMapData(mapname)
+	if not mapdata then
+		messagebox.setMessage("Failed to load "..mapname.."!", "Map not found.", true)
+		return "error"
+	end
+	local oldtileset = tilesetname
+	local ReadLine = string.gmatch(mapdata, "[^\r\n]+")
+	gamemapname = ReadLine()
+	tilesetname = ReadLine()
+	local path = GetTilesetPath()
+	local musicname = ReadLine()
+	sound.setMusic(musicname)
+	mapwidth = tonumber(ReadLine())
+	mapheight = tonumber(ReadLine())
+	if not mapwidth or not mapheight or tilesetname == "" then
+		messagebox.setMessage("Failed to load "..mapname.."!", "The map is corrupted.", true)
+		return "error"
+	end
+	if oldtileset ~= tilesetname then
+		enemysprite = GetImage(path.."Enemies/"..tilesetname)
+		tileset = GetImage(path.."Tiles/"..tilesetname)
+	end
+	local playerx, playery
+	tilemap = {}
+	local ReadTile = string.gmatch(ReadLine(), "..")
+	for y = 1,mapheight do
+		tilemap[y] = {}
+		for x = 1,mapwidth do
+			local tile = tonumber(ReadTile() or 0)
+			tilemap[y][x] = tile or TILE_EMPTY
+			if tile == TILE_START then
+				tilemap[y][x] = TILE_FLOOR1
+				playerx = x
+				playery = y
+			elseif tile == TILE_KEY then
+				SpawnObject(keysprite, x, y, "key")
+				tilemap[y][x] = TILE_FLOOR1
+			elseif tile == TILE_ENEMY then
+				SpawnObject(enemysprite, x, y, "enemy", GetDirectionalQuads(enemysprite), tilesets[tilesetname].enemyquadtype or "directions")
+				tilemap[y][x] = TILE_FLOOR1
+			elseif (tile == TILE_CUSTOM1 or tile == TILE_CUSTOM2 or tile == TILE_CUSTOM3)
+			and type(tilesets[tilesetname].tile[tile]) == "function" then
+				tilesets[tilesetname].tile[tile](x, y)
+			end
+		end
+	end
+	local loadedmap = tonumber(mapname:match("%d+%d"))
+	if coins[loadedmap] and not coins[loadedmap].got then
+		SpawnObject(coins.sprite, coins[loadedmap].x, coins[loadedmap].y, "coin", coins.quads, "default")
+	end
+	if customEnv then customEnv.tilemap = tilemap end
+	if playerx and playery then
+		player = SpawnObject(tilesets[tilesetname].playersprite or playersprite, playerx, playery, "player")
+		player.fmomx = 0
+		player.fmomy = 0
+		player.ftime = 0
+		if customEnv then customEnv.player = player end
+	end
+	statetimer = 1
+	leveltime = 0
+	frametime = 0
+	flash = 1
+	darkness = 0
+	gamestate = "ingame"
+	mouse.camerax = 0
+	mouse.cameray = 0
+	mouse.mode = "camera"
+	local longside = math.max(mapwidth, mapheight)
+	scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale(longside)) or 1
+	love.window.requestAttention()
+	if customEnv and customEnv.MapLoad and type(customEnv.MapLoad) == "function" then
+		customEnv.MapLoad(gamemap, tilesetname)
+	end
+	particles.reset()
+	particles.reset(PARTICLE_HELP)
+	if tilesets[tilesetname].snow and not particles.list[PARTICLE_SNOW] and menu.settings[6].value == 1 then
+		particles.spawnSnow()
+	elseif not tilesets[tilesetname].snow or menu.settings[6].value == 0 then
+		particles.reset(PARTICLE_SNOW)
+	end
+	if tilesets[tilesetname].rain and not particles.list[PARTICLE_RAIN] and menu.settings[6].value == 1 then
+		particles.spawnRain()
+	elseif not tilesets[tilesetname].rain or menu.settings[6].value == 0 then
+		particles.reset(PARTICLE_RAIN)
+	end
 end
 
 function CheckMap(...)
-  local args = {...}
-  local dosmoke = false
-  if args[#args] == true then
-    dosmoke = true
-    args[#args] = nil
-  end
-  local replaced = false
-  for y = 1, mapheight do
-    for x = 1, mapwidth do
-      for i = 1, #args, 2 do
-        local tocheck = args[i]
-        local change = args[i+1]
-        if not tocheck or not args then break end
-        if tilemap[y][x] == tocheck then
-          tilemap[y][x] = change
-          replaced = true
-          if dosmoke then
-            particles.spawnSmoke(x, y)
-          end
-          break
-        end
-      end
-    end
-  end
-  return replaced
+	local args = {...}
+	local dosmoke = false
+	if args[#args] == true then
+		dosmoke = true
+		args[#args] = nil
+	end
+	local replaced = false
+	for y = 1, mapheight do
+		for x = 1, mapwidth do
+			for i = 1, #args, 2 do
+				local tocheck = args[i]
+				local change = args[i+1]
+				if not tocheck or not args then break end
+				if tilemap[y][x] == tocheck then
+					tilemap[y][x] = change
+					replaced = true
+					if dosmoke then
+						particles.spawnSmoke(x, y)
+					end
+					break
+				end
+			end
+		end
+	end
+	return replaced
 end
 
 function IterateMap(tile, func)
-  for y = 1, mapheight do
-    for x = 1, mapwidth do
-      if tilemap[y][x] == tile then
-        local check = func(x, y)
-        if check then return end
-      end
-    end
-  end
+	for y = 1, mapheight do
+		for x = 1, mapwidth do
+			if tilemap[y][x] == tile then
+				local check = func(x, y)
+				if check then return end
+			end
+		end
+	end
 end
 
 function LoadEditorMap(mapname)
-  local mapdata = GetMapData(mapname)
-  if not mapdata then return false end
-  local oldtileset = tilesetname
-  local ReadLine = string.gmatch(mapdata, "[^\r\n]+")
-  gamemapname = ReadLine()
-  tilesetname = ReadLine()
-  local path = GetTilesetPath()
-  local musicname = ReadLine()
-  sound.setMusic(musicname)
-  mapwidth = tonumber(ReadLine())
-  mapheight = tonumber(ReadLine())
-  if not mapwidth or not mapheight or tilesetname == "" then
-    messagebox.setMessage("Failed to load "..mapname.."!", "The map is corrupted.", true)
-    love.event.quit(0)
-    return false
-  end
-  tilemap = {}
-  local ReadTile = string.gmatch(ReadLine(), "..")
-  for y = 1,mapheight do
-    tilemap[y] = {}
-    for x = 1,mapwidth do
-      tile = tonumber(ReadTile() or 0)
-      tilemap[y][x] = tile or TILE_EMPTY
-    end
-  end
-  objects = {}
-  voids = {}
-  player = nil
-  if oldtileset ~= tilesetname then
-    enemysprite = GetImage(path.."Enemies/"..tilesetname)
-    tileset = GetImage(path.."Tiles/"..tilesetname)
-  end
-  wheelmoved = 0
-  statetimer = 1
-  flash = 1
-  darkness = 0
-  mouse.mode = "editing"
-  love.window.requestAttention()
-  particles.reset()
-  particles.reset(PARTICLE_SNOW)
-  particles.reset(PARTICLE_RAIN)
-  return true
+	local mapdata = GetMapData(mapname)
+	if not mapdata then return false end
+	local oldtileset = tilesetname
+	local ReadLine = string.gmatch(mapdata, "[^\r\n]+")
+	gamemapname = ReadLine()
+	tilesetname = ReadLine()
+	local path = GetTilesetPath()
+	local musicname = ReadLine()
+	sound.setMusic(musicname)
+	mapwidth = tonumber(ReadLine())
+	mapheight = tonumber(ReadLine())
+	if not mapwidth or not mapheight or tilesetname == "" then
+		messagebox.setMessage("Failed to load "..mapname.."!", "The map is corrupted.", true)
+		love.event.quit(0)
+		return false
+	end
+	tilemap = {}
+	local ReadTile = string.gmatch(ReadLine(), "..")
+	for y = 1,mapheight do
+		tilemap[y] = {}
+		for x = 1,mapwidth do
+			tile = tonumber(ReadTile() or 0)
+			tilemap[y][x] = tile or TILE_EMPTY
+		end
+	end
+	objects = {}
+	voids = {}
+	player = nil
+	if oldtileset ~= tilesetname then
+		enemysprite = GetImage(path.."Enemies/"..tilesetname)
+		tileset = GetImage(path.."Tiles/"..tilesetname)
+	end
+	wheelmoved = 0
+	statetimer = 1
+	flash = 1
+	darkness = 0
+	mouse.mode = "editing"
+	love.window.requestAttention()
+	particles.reset()
+	particles.reset(PARTICLE_SNOW)
+	particles.reset(PARTICLE_RAIN)
+	return true
 end
 
 function GetAllMaps()
-  menu["select level"] = {}
-  local mapn = 1
-  local possiblemaps = love.filesystem.getDirectoryItems(mapspath:sub(1, -2))
-  for k, mapname in ipairs(possiblemaps) do
-    if mapname:match("map%d%d%.map") == mapname then
-      menu["select level"][mapn] = {
-        name = tostring(mapn),
-        func = function()
-          LoadMap(mapname)
-          gamemap = tonumber(mapname:match("%d%d"))
-          frames = 0
-          seconds = 0
-          minutes = 0
-          hours = 0
-        end
-      }
-      mapn = mapn+1
-    end
-  end
-  if #menu["select level"] > 255 then
-    love.window.showMessageBox("Loaded too many maps!", "Saving data may fail.", "warning")
-  end
-  table.insert(menu["select level"], {name = "back", func = function() ChangeGamestate("title") pointer = 1 end})
+	menu["select level"] = {}
+	local mapn = 1
+	local possiblemaps = love.filesystem.getDirectoryItems(mapspath:sub(1, -2))
+	for k, mapname in ipairs(possiblemaps) do
+		if mapname:match("map%d%d%.map") == mapname then
+			menu["select level"][mapn] = {
+				name = tostring(mapn),
+				func = function()
+					LoadMap(mapname)
+					gamemap = tonumber(mapname:match("%d%d"))
+					frames = 0
+					seconds = 0
+					minutes = 0
+					hours = 0
+				end
+			}
+			mapn = mapn+1
+		end
+	end
+	if #menu["select level"] > 255 then
+		love.window.showMessageBox("Loaded too many maps!", "Saving data may fail.", "warning")
+	end
+	table.insert(menu["select level"], {name = "back", func = function() ChangeGamestate("title") pointer = 1 end})
 end
 
 
 function SaveMap(map, mapname, tilesetname, musicname, width, height, reset)
-  if map:sub(1, 7) == "Source/" then
-    map = map:sub(8)
-  end
-  local file = io.open(map, "w+")
-  if not file then
-    messagebox.setMessage("Failed to save map!", "Check if the Map folder exists in your mod folder", true)
-    return false
-  end
-  file:write((#mapname == 1 and "unnamed\n") or mapname)
-  file:write((#tilesetname == 1 and "forest.png\n") or tilesetname)
-  file:write((#musicname == 1 and "none\n") or musicname)
-  local awidth = (width ~= "\n") and (width ~= "0\n") and ((tonumber(width:sub(1, width:len()-1)) > 35) and "35\n" or width) or "10\n"
-  file:write(awidth)
-  local aheight = (height ~= "\n") and (height ~= "0\n") and ((tonumber(height:sub(1, height:len()-1)) > 35) and "35\n" or height) or "10\n"
-  file:write(aheight)
-  for y = 1, tonumber(aheight) do
-    for x = 1, tonumber(awidth) do
-      local tile = (tilemap[y] and tilemap[y][x]) or 0
-      file:write((reset and "00") or ((tile < 10 and "0"..tile) or tostring(tile)))
-    end
-  end
-  file:close()
-  GetAllMaps()
-  return true
+	if map:sub(1, 7) == "Source/" then
+		map = map:sub(8)
+	end
+	local file = io.open(map, "w+")
+	if not file then
+		messagebox.setMessage("Failed to save map!", "Check if the Map folder exists in your mod folder", true)
+		return false
+	end
+	file:write((#mapname == 1 and "unnamed\n") or mapname)
+	file:write((#tilesetname == 1 and "forest.png\n") or tilesetname)
+	file:write((#musicname == 1 and "none\n") or musicname)
+	local awidth = (width ~= "\n") and (width ~= "0\n") and ((tonumber(width:sub(1, width:len()-1)) > 35) and "35\n" or width) or "10\n"
+	file:write(awidth)
+	local aheight = (height ~= "\n") and (height ~= "0\n") and ((tonumber(height:sub(1, height:len()-1)) > 35) and "35\n" or height) or "10\n"
+	file:write(aheight)
+	for y = 1, tonumber(aheight) do
+		for x = 1, tonumber(awidth) do
+			local tile = (tilemap[y] and tilemap[y][x]) or 0
+			file:write((reset and "00") or ((tile < 10 and "0"..tile) or tostring(tile)))
+		end
+	end
+	file:close()
+	GetAllMaps()
+	return true
 end
