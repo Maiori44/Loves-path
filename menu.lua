@@ -51,30 +51,6 @@ function ChangeGamestate(newgamestate)
 	statetimer = 0
 end
 
-local function ResetData()
-	menu.settings[1].value = 1
-	if menu.settings[2].value == 1 then
-		love.window.setMode(800, 600, {fullscreen = false})
-		screenwidth = love.graphics.getWidth()
-		screenheight = love.graphics.getHeight()
-	end
-	for i = 1,#menu.settings-2 do
-		menu.settings[i].value = menu.settings[i].oldvalue
-		if menu.settings[i].valuename then
-			menu.settings[i].valuename = valuesnames[menu.settings[i].value]
-		end
-	end
-	lastmap = 1
-	for k, v in pairs(coins) do
-		if type(k) == "number" then
-			coins[k].got = false
-		end
-	end
-	sound.setMusic("menu.ogg")
-	SaveSettings()
-	SaveData()
-end
-
 menu = {
 	title = {
 		{name = "Start Game", func = function()
@@ -124,9 +100,15 @@ menu = {
 		{name = "Erase Data", func = function(this)
 			if this.name == "Erase Data" then
 				this.name = "Are you sure?"
-				messagebox.setMessage("Are you sure?", "This button will erase the save file and settings file\nyou will lose all your progress\nif you're sure you want to do this, select the button again")
+				messagebox.setMessage("Are you sure?", "This option will reset the save file\nall collected coins, cleared levels and more will be lost\npress the option again to confirm")
 			elseif this.name == "Are you sure?" then
-				ResetData()
+				lastmap = 1
+				for k, _ in pairs(coins) do
+					if type(k) == "number" then
+						coins[k].got = false
+					end
+				end
+				SaveData()
 				this.name = "Erase Data"
 				notification.setMessage("Data erased")
 			end
