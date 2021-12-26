@@ -258,3 +258,18 @@ function love.mousemoved(x, y, dx, dy)
 		sound.music:pause()
 	end
 end
+
+local gamepadToKeyboard = {
+	dpup = "up",
+	dpdown = "down",
+	dpleft = "left",
+	dpright = "right",
+	a = "return",
+	b = "escape"
+}
+
+function love.gamepadpressed(_, button)
+	local key = gamepadToKeyboard[button]
+	if not key then return end
+	love.keypressed(key)
+end
