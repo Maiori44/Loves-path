@@ -1,4 +1,4 @@
-VERSION = "Version 131 BETA 1.4"
+VERSION = "Version 132 BETA 1.4"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -373,7 +373,7 @@ local function DrawTilemap()
 		local y = centery+mo.y*math.floor(32*scale)
 		local drawingMethod = quadDrawingMethods[ffi.string(mo.quadtype)]
 		if not drawingMethod then error('object "'..ffi.string(mo.type)..'"('..k..') has an invalid quad type!') end
-		drawingMethod(mo, x, y, GetImage(mo.sprite), GetQuadArray(mo.quads))
+		drawingMethod(mo, x, y, GetImage(ffi.string(mo.sprite)), GetQuadArray(mo.quads))
 	end
 	local snow = particles.list[PARTICLE_SNOW]
 	if snow then
@@ -528,8 +528,9 @@ tilesets = {
 				for x = 10, 14 do
 					SearchObject(x, 4).hp = 1
 				end
-				local readersprite = GetImage("Sprites/Bonuses/reader.png")
-				SpawnObject(readersprite, 4, 12, "bfreader", nil, nil, nil, 0).posmo = SpawnObject(readersprite, 10, 4, "dummy")
+				local readersprite = "Sprites/Bonuses/reader.png"
+				local posmo = SpawnObject(readersprite, 10, 4, "dummy")
+				SpawnObject(readersprite, 4, 12, "bfreader", nil, nil, nil, 0).var1 = posmo.key
 			end,
 			[TILE_CUSTOM2] = function()
 				gamestate = "bonus level complete!"
@@ -653,8 +654,8 @@ tilesets = {
 			[TILE_CUSTOM1] = true,
 			[TILE_CUSTOM2] = true,
 			[TILE_CUSTOM3] = function(mo)
-				if mo.type == "box" and mo.var then
-					mo.var = false
+				if mo.type == "box" and mo.var2 then
+					mo.var2 = false
 					sound.playSound("box.wav")
 					local all = true
 					IterateMap(TILE_CUSTOM3, function(x, y)
@@ -953,7 +954,7 @@ function debug.collectInfo()
 		"\nStart Y: "..GetStartY().."\n"
 		local objectsinfo = "\nObjects:\n"
 		for k, mo in pairs(objects) do
-			objectsinfo = objectsinfo..mo.type.." hp: "..mo.hp.." x:"..mo.x.."("..mo.momx..") y:"..mo.y.."("..mo.momy..") d:"..mo.direction.."("..mo.quadtype..") k:"..mo.key.."("..k..")\n"
+			objectsinfo = objectsinfo..ffi.string(mo.type).." hp: "..mo.hp.." x:"..mo.x.."("..mo.momx..") y:"..mo.y.."("..mo.momy..") d:"..mo.direction.."("..ffi.string(mo.quadtype)..") k:"..mo.key.."("..k..")\n"
 		end
 		if objectsinfo == "\nObjects:\n" then objectsinfo = "" end
 		debuginfo = debuginfo..objectsinfo

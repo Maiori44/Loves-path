@@ -301,7 +301,7 @@ menu = {
 			seconds = 0
 			minutes = 0
 			hours = 0
-			local bfmonitor, nummonitor = GetImage("Sprites/Bonuses/brainfuck monitor.png"), GetImage("Sprites/Bonuses/number monitor.png")
+			local bfmonitor, nummonitor = "Sprites/Bonuses/brainfuck monitor.png", "Sprites/Bonuses/number monitor.png"
 			for x = 5, 19 do
 				SpawnObject(bfmonitor, x, 12, "bfmonitor", GetQuads(7, bfmonitor), "hp", nil, 1)
 			end
@@ -316,10 +316,10 @@ menu = {
 			seconds = 0
 			minutes = 0
 			hours = 0
-			objects[1] = SpawnObject(GetImage("Sprites/player.png"), 8, 19, "player clone")
-			objects[2] = player
-			objects[1].key = 1
-			player.key = 2
+			objects = {}
+			SpawnObject("Sprites/player.png", 8, 19, "player clone")
+			SpawnObject("Sprites/player.png", player.x, player.y, "player")
+			player = objects[2]
 		end},
 		{name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
 	},

@@ -142,7 +142,7 @@ function LoadMap(mapname)
 	end
 	local loadedmap = tonumber(mapname:match("%d+%d"))
 	if coins[loadedmap] and not coins[loadedmap].got then
-		SpawnObject(coins.sprite, coins[loadedmap].x, coins[loadedmap].y, "coin", coins.quads, "default")
+		SpawnObject(coins.path, coins[loadedmap].x, coins[loadedmap].y, "coin", coins.quads, "default")
 	end
 	if customEnv then customEnv.tilemap = tilemap end
 	if playerx and playery then
@@ -250,7 +250,7 @@ function LoadEditorMap(mapname)
 	voids = {}
 	player = nil
 	if oldtileset ~= tilesetname then
-		enemysprite = GetImage(path.."Enemies/"..tilesetname)
+		enemysprite = path.."Enemies/"..tilesetname
 		tileset = GetImage(path.."Tiles/"..tilesetname)
 	end
 	wheelmoved = 0

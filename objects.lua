@@ -27,7 +27,7 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
 	if not collisions[type] then error('object type "'..type..'" does not exist!') end
 	quadtype = (quadtype and quadtype) or (not quads and "none") or (hp and "hp") or (#quads == 1 and "single") or (#quads == 8 and "directions") or "default"
 	local key = (#voids > 0 and table.remove(voids) or #objects + 1)
-	local newobject = (type == "player" and MakePlayerObject or MakeObject)(quads and CacheQuadArray(quads) or 0, hp or 1, x, y, direction or DIR_LEFT, 0, key, 0, 0, sprite, quadtype, type)
+	local newobject = (type == "player" and MakePlayerObject or MakeObject)(quads and CacheQuadArray(quads) or 0, hp or 1, x, y, direction or DIR_LEFT, 0, false, key, 0, 0, sprite, quadtype, type)
 	objects[key] = newobject
 	return newobject
 end
@@ -378,7 +378,7 @@ AddObjectType("player", {
 		if check == false then
 			return DamageObject(obstmo)
 		elseif tilemap[obstmo.y][obstmo.x] == TILE_CUSTOM3 then
-			obstmo.var = true
+			obstmo.var2 = true
 		end
 		return check
 	end,
@@ -426,7 +426,7 @@ AddObjectType("key", {
 })
 
 --ENEMY
-AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject}, function(mo)
+AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject, box = PusherCheck}, function(mo)
 	if not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
 	local time = leveltime % 100
 	if time == 40 then
@@ -532,8 +532,8 @@ end)
 AddObjectType("bfmonitor")
 
 --BRAINFUCK READER
-local function EndBrainfuck(mo)
-	EraseObject(mo.posmo)
+local function EndBrainfuck(mo, posmo)
+	EraseObject(posmo)
 	EraseObject(mo)
 	player.momy = -1
 	if SearchObject(10, 4).hp == 1 and SearchObject(11, 4).hp == 8 and SearchObject(12, 4).hp == 8 and SearchObject(13, 4).hp == 8 and SearchObject(14, 4).hp == 8 then
@@ -554,15 +554,15 @@ local brainfuckOptions = {
 		local monitor = SearchObject(10 + pos, 4)
 		monitor.hp = monitor.hp == 1 and 10 or monitor.hp - 1
 	end,
-	function(pos, mo)
+	function(pos, mo, posmo)
 		mo.hp = (pos - 1) % 5
-		mo.posmo.x = 10 + mo.hp
+		posmo.x = 10 + mo.hp
 	end,
-	function(pos, mo)
+	function(pos, mo, posmo)
 		mo.hp = (pos + 1) % 5
-		mo.posmo.x = 10 + mo.hp
+		posmo.x = 10 + mo.hp
 	end,
-	function(pos, mo)
+	function(pos, mo, posmo)
 		if SearchObject(10 + pos, 4).hp == 1 then
 			local scope = 0
 			while mo.x < 18 do
@@ -573,10 +573,10 @@ local brainfuckOptions = {
 					if scope == -1 then return end
 				elseif symbol == 6 then scope = scope + 1 end
 			end
-			EndBrainfuck(mo)
+			EndBrainfuck(mo, posmo)
 		end
 	end,
-	function(pos, mo)
+	function(pos, mo, posmo)
 		if SearchObject(10 + pos, 4).hp ~= 1 then
 			local scope = 0
 			while mo.x > 5 do
@@ -587,7 +587,7 @@ local brainfuckOptions = {
 					if scope == -1 then return end
 				elseif symbol == 7 then scope = scope + 1 end
 			end
-			EndBrainfuck(mo)
+			EndBrainfuck(mo, posmo)
 		end
 	end,
 }
@@ -600,11 +600,12 @@ AddObjectType("bfreader", nil, function(mo)
 	player.y = 6
 	if leveltime % 10 > 0 then return end
 	mo.x = mo.x + 1
+	local posmo = objects[mo.var1]
 	if mo.x == 20 then
-		EndBrainfuck(mo)
+		EndBrainfuck(mo, posmo)
 		return
 	end
-	brainfuckOptions[SearchObject(mo.x, mo.y).hp](mo.hp, mo)
+	brainfuckOptions[SearchObject(mo.x, mo.y).hp](mo.hp, mo, posmo)
 end)
 
 --PLAYER CLONE
@@ -632,9 +633,9 @@ AddObjectType("player clone", {
 	[TILE_ENEMY] = true,
 }, function(mo)
 	if not player then RemoveObject(mo) return end
-	if mo.playerstands and player.ftime > 0 and (player.fmomx ~= 0 or player.fmomy ~= 0) and mo.momx == 0 and mo.momy == 0 then
+	if mo.var2 and player.ftime > 0 and (player.fmomx ~= 0 or player.fmomy ~= 0) and mo.momx == 0 and mo.momy == 0 then
 		mo.momx, mo.momy = player.fmomx * -1, player.fmomy
 		particles.spawnSmoke(mo.x, mo.y)
 	end
-	mo.playerstands = (player.momx == 0 and player.momy == 0)
+	mo.var2 = (player.momx == 0 and player.momy == 0)
 end)

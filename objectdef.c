@@ -1,10 +1,7 @@
 typedef struct gameobject {
 	const int quads;
-	uint8_t hp, x, y, direction;
-	union {
-		bool var;
-		uint8_t var;
-	};
+	uint8_t hp, x, y, direction, var1;
+	bool var2;
 	const int8_t key;
 	float momx, momy;
 	const char *sprite, *quadtype, *type;
