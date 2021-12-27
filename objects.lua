@@ -19,7 +19,6 @@ voids = {}
 local collisions = {}
 thinkers = {}
 
-ffi.cdef((love.filesystem.read("objectdef.c")))
 local MakeObject = ffi.typeof("gameobject")
 local MakePlayerObject = ffi.typeof("playerobject")
 

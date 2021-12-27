@@ -66,6 +66,9 @@ notification = {
 	end
 }
 
+local ffi = require "ffi"
+ffi.cdef((love.filesystem.read("cdef.c")))
+
 require "cache"
 require "customhandler"
 require "maps"
@@ -73,7 +76,6 @@ require "objects"
 require "menu"
 require "player"
 utf8 = require "utf8"
-local ffi = require "ffi"
 local sound = require "music"
 local particles = require "particles"
 local coins = require "coins"
