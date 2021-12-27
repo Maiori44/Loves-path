@@ -84,9 +84,7 @@ for i=0,15 do
 	end
 end
 
-local playersprite = GetImage("Sprites/player.png")
-local keysprite = love.graphics.newImage("Sprites/key.png")
-local enemysprite = GetImage("Sprites/Enemies/forest.png")
+local enemysprite = "Sprites/Enemies/forest.png"
 
 local function GetMapData(mapname)
 	return love.filesystem.read(mapspath..mapname)
@@ -116,7 +114,7 @@ function LoadMap(mapname)
 		return "error"
 	end
 	if oldtileset ~= tilesetname then
-		enemysprite = GetImage(path.."Enemies/"..tilesetname)
+		enemysprite = path.."Enemies/"..tilesetname
 		tileset = GetImage(path.."Tiles/"..tilesetname)
 	end
 	local playerx, playery
@@ -132,13 +130,12 @@ function LoadMap(mapname)
 				playerx = x
 				playery = y
 			elseif tile == TILE_KEY then
-				SpawnObject(keysprite, x, y, "key")
+				SpawnObject("Sprites/key.png", x, y, "key")
 				tilemap[y][x] = TILE_FLOOR1
 			elseif tile == TILE_ENEMY then
 				SpawnObject(enemysprite, x, y, "enemy", GetDirectionalQuads(enemysprite), tilesets[tilesetname].enemyquadtype or "directions")
 				tilemap[y][x] = TILE_FLOOR1
-			elseif (tile == TILE_CUSTOM1 or tile == TILE_CUSTOM2 or tile == TILE_CUSTOM3)
-			and type(tilesets[tilesetname].tile[tile]) == "function" then
+			elseif (tile == TILE_CUSTOM1 or tile == TILE_CUSTOM2 or tile == TILE_CUSTOM3) and type(tilesets[tilesetname].tile[tile]) == "function" then
 				tilesets[tilesetname].tile[tile](x, y)
 			end
 		end
@@ -149,7 +146,7 @@ function LoadMap(mapname)
 	end
 	if customEnv then customEnv.tilemap = tilemap end
 	if playerx and playery then
-		player = SpawnObject(tilesets[tilesetname].playersprite or playersprite, playerx, playery, "player")
+		player = SpawnObject(tilesets[tilesetname].playersprite or "Sprites/player.png", playerx, playery, "player")
 		player.fmomx = 0
 		player.fmomy = 0
 		player.ftime = 0

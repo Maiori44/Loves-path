@@ -1,6 +1,7 @@
 local sound = require "music"
 local particles = require "particles"
 local coins = require "coins"
+local ffi = require "ffi"
 
 -- DIRECTIONAL OBJECT SPRITE STRUCTURE
 -- 1 2 LEFT
@@ -18,22 +19,15 @@ voids = {}
 local collisions = {}
 thinkers = {}
 
+ffi.cdef((love.filesystem.read("objectdef.c")))
+local MakeObject = ffi.typeof("gameobject")
+local MakePlayerObject = ffi.typeof("playerobject")
+
 function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
 	if not collisions[type] then error('object type "'..type..'" does not exist!') end
-	local newobject = {
-		sprite = sprite,
-		quads = quads,
-		quadtype = (quadtype and quadtype) or (not quads and "none") or (hp and "hp") or (#quads == 1 and "single") or (#quads == 8 and "directions") or "default",
-		hp = hp or 1,
-		x = x,
-		y = y,
-		momx = 0,
-		momy = 0,
-		direction = direction or DIR_LEFT,
-		type = type,
-	}
+	quadtype = (quadtype and quadtype) or (not quads and "none") or (hp and "hp") or (#quads == 1 and "single") or (#quads == 8 and "directions") or "default"
 	local key = (#voids > 0 and table.remove(voids) or #objects + 1)
-	newobject.key = key
+	local newobject = (type == "player" and MakePlayerObject or MakeObject)(ffi.cast("void *", quads) and tonumber(tostring(quads):sub(7)) or nil, hp or 1, x, y, direction or DIR_LEFT, key, 0, 0, sprite, quadtype, type)
 	objects[key] = newobject
 	return newobject
 end
@@ -157,21 +151,25 @@ function TryMove(mo, momx, momy)
 	if not mo then return end
 	momx = GetTrueMomentum(momx)
 	momy = GetTrueMomentum(momy)
-	collisions[mo.type][TILE_CUSTOM1] = tilesets[tilesetname].collision[TILE_CUSTOM1]
-	collisions[mo.type][TILE_CUSTOM2] = tilesets[tilesetname].collision[TILE_CUSTOM2]
-	collisions[mo.type][TILE_CUSTOM3] = tilesets[tilesetname].collision[TILE_CUSTOM3]
+	local moCollisions = collisions[ffi.string(mo.type)]
+	local tilesetCollisions = tilesets[tilesetname].collision
+	moCollisions[TILE_CUSTOM1] = tilesetCollisions[TILE_CUSTOM1]
+	moCollisions[TILE_CUSTOM2] = tilesetCollisions[TILE_CUSTOM2]
+	moCollisions[TILE_CUSTOM3] = tilesetCollisions[TILE_CUSTOM3]
 	local sgamemap = gamemap
-	if collisions[mo.type] and tilemap[mo.y+momy] and collisions[mo.type][tilemap[mo.y+momy][mo.x+momx]] then
+	if tilemap[mo.y+momy] and moCollisions[tilemap[mo.y+momy][mo.x+momx]] then
 		local obstmo = SearchObject(mo.x+momx, mo.y+momy)
 		if (debugmode and debugmode["Noclip"]) or predicting or obstmo == mo then obstmo = nil end
 		if obstmo then
-			collisions[obstmo.type][TILE_CUSTOM1] = tilesets[tilesetname].collision[TILE_CUSTOM1]
-			collisions[obstmo.type][TILE_CUSTOM2] = tilesets[tilesetname].collision[TILE_CUSTOM2]
-			collisions[obstmo.type][TILE_CUSTOM3] = tilesets[tilesetname].collision[TILE_CUSTOM3]
-			if not collisions[mo.type][obstmo.type] then return false end
+			local obstmoType = ffi.string(obstmo.type)
+			local obstmoCollisions = collisions[obstmoType]
+			obstmoCollisions[TILE_CUSTOM1] = tilesetCollisions[TILE_CUSTOM1]
+			obstmoCollisions[TILE_CUSTOM2] = tilesetCollisions[TILE_CUSTOM2]
+			obstmoCollisions[TILE_CUSTOM3] = tilesetCollisions[TILE_CUSTOM3]
+			if not moCollisions[obstmoType] then return false end
 			local check
-			if type(collisions[mo.type][obstmo.type]) == "function" then
-				check = collisions[mo.type][obstmo.type](mo, obstmo, momx, momy)
+			if type(moCollisions[obstmoType]) == "function" then
+				check = moCollisions[obstmoType](mo, obstmo, momx, momy)
 			else
 				check = true
 			end
@@ -185,8 +183,8 @@ function TryMove(mo, momx, momy)
 		if sgamemap ~= gamemap then return false end
 		mo.y = mo.y+momy
 		mo.x = mo.x+momx
-		if type(collisions[mo.type][tilemap[mo.y][mo.x]]) == "function" and not predicting then
-			local check = collisions[mo.type][tilemap[mo.y][mo.x]](mo, momx, momy)
+		if type(moCollisions[tilemap[mo.y][mo.x]]) == "function" and not predicting then
+			local check = moCollisions[tilemap[mo.y][mo.x]](mo, momx, momy)
 			if check == false and mo then
 				mo.y = mo.y-momy
 				mo.x = mo.x-momx

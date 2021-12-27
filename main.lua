@@ -1,4 +1,4 @@
-VERSION = "Version 129 BETA 1.4"
+VERSION = "Version 130 BETA 1.4"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -73,6 +73,7 @@ require "objects"
 require "menu"
 require "player"
 utf8 = require "utf8"
+local ffi = require "ffi"
 local sound = require "music"
 local particles = require "particles"
 local coins = require "coins"
@@ -183,7 +184,8 @@ local updateModes = {
 		if (leveltime%2) == 0 then
 			local sgamemap = gamemap
 			for _, mo in pairs(objects) do
-				if thinkers[mo.type] then thinkers[mo.type](mo) end
+				local thinker = thinkers[ffi.string(mo.type)]
+				if thinker then thinker(mo) end
 				TryMove(mo, 0, 0)
 				if mo.momx and mo.momy and (mo.momx ~= 0 or mo.momy ~= 0) then
 					local movingmom = (mo.momx ~= 0 and mo.momx) or mo.momy
@@ -256,27 +258,27 @@ local tileAnimations = {
 }
 
 local quadDrawingMethods = {
-	none = function(mo, x, y)
-		love.graphics.draw(mo.sprite, x, y, 0, scale)
+	none = function(mo, x, y, sprite)
+		love.graphics.draw(sprite, x, y, 0, scale)
 	end,
-	single = function(mo, x, y)
-		love.graphics.draw(mo.sprite, mo.quads[1], x, y, 0, scale)
+	single = function(mo, x, y, sprite)
+		love.graphics.draw(sprite, mo.quads[1], x, y, 0, scale)
 	end,
-	directions = function(mo, x, y)
-		love.graphics.draw(mo.sprite, mo.quads[math.floor((leveltime%20)/10)+mo.direction], x, y, 0, scale)
+	directions = function(mo, x, y, sprite)
+		love.graphics.draw(sprite, mo.quads[math.floor((leveltime%20)/10)+mo.direction], x, y, 0, scale)
 	end,
-	movement = function(mo, x, y)
-		love.graphics.draw(mo.sprite, mo.quads[mo.direction+(((mo.momx == 0 and mo.momy == 0) and 0) or 1)], x, y, 0, scale)
+	movement = function(mo, x, y, sprite)
+		love.graphics.draw(sprite, mo.quads[mo.direction+(((mo.momx == 0 and mo.momy == 0) and 0) or 1)], x, y, 0, scale)
 	end,
-	position = function(mo, x, y)
+	position = function(mo, x, y, sprite)
 		local movingaxis = mo[mo.lastaxis or "x"]
-		love.graphics.draw(mo.sprite, mo.quads[(movingaxis%#mo.quads)+1], x, y, 0, scale)
+		love.graphics.draw(sprite, mo.quads[(movingaxis%#mo.quads)+1], x, y, 0, scale)
 	end,
-	hp = function(mo, x, y)
-		love.graphics.draw(mo.sprite, mo.quads[mo.hp], x, y, 0, scale)
+	hp = function(mo, x, y, sprite)
+		love.graphics.draw(sprite, mo.quads[mo.hp], x, y, 0, scale)
 	end,
-	default = function(mo, x, y)
-		love.graphics.draw(mo.sprite, mo.quads[math.floor((leveltime%(#mo.quads*10))/10)+1], x, y, 0, scale)
+	default = function(mo, x, y, sprite)
+		love.graphics.draw(sprite, mo.quads[math.floor((leveltime%(#mo.quads*10))/10)+1], x, y, 0, scale)
 	end
 }
 
@@ -369,8 +371,9 @@ local function DrawTilemap()
 	for k, mo in pairs(objects) do
 		local x = centerx+mo.x*math.floor(32*scale)
 		local y = centery+mo.y*math.floor(32*scale)
-		if not quadDrawingMethods[mo.quadtype] then error('object "'..mo.type..'"('..k..') has an invalid quad type!') end
-		quadDrawingMethods[mo.quadtype](mo, x, y)
+		local drawingMethod = quadDrawingMethods[ffi.string(mo.quadtype)]
+		if not drawingMethod then error('object "'..ffi.string(mo.type)..'"('..k..') has an invalid quad type!') end
+		drawingMethod(mo, x, y, GetImage(mo.sprite))
 	end
 	local snow = particles.list[PARTICLE_SNOW]
 	if snow then

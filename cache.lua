@@ -8,6 +8,7 @@ end
 
 function GetDirectionalQuads(image)
 	local quads = {}
+	image = GetImage(image)
 	local imagewidth = image:getWidth()
 	local imageheight = image:getHeight()
 	quads[1] = CacheQuad(1, 1, 32, 32, imagewidth, imageheight)
@@ -37,7 +38,11 @@ end
 
 local imagecache = {}
 
+local ffiString = require("ffi").string
+
 function GetImage(path)
+	local _, cpath = pcall(ffiString, path)
+	path = cpath or path
 	if not imagecache[path] then imagecache[path] = love.graphics.newImage(path) end
 	return imagecache[path]
 end
