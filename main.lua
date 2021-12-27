@@ -277,6 +277,9 @@ local quadDrawingMethods = {
 	hp = function(mo, x, y, sprite, quads)
 		love.graphics.draw(sprite, quads[mo.hp], x, y, 0, scale)
 	end,
+	frame = function(mo, x, y, sprite, quads)
+		love.graphics.draw(sprite, quads[mo.frame], x, y, 0, scale)
+	end,
 	default = function(_, x, y, sprite, quads)
 		love.graphics.draw(sprite, quads[math.floor((leveltime%(#quads*10))/10)+1], x, y, 0, scale)
 	end

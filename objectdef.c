@@ -3,6 +3,7 @@ typedef struct gameobject {
 	uint8_t hp, x, y, direction, var1;
 	bool var2;
 	const int8_t key;
+	int8_t frame;
 	float momx, momy;
 	const char *sprite, *quadtype, *type;
 	char lastaxis[2];
