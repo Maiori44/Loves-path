@@ -27,7 +27,7 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
 	if not collisions[type] then error('object type "'..type..'" does not exist!') end
 	quadtype = (quadtype and quadtype) or (not quads and "none") or (hp and "hp") or (#quads == 1 and "single") or (#quads == 8 and "directions") or "default"
 	local key = (#voids > 0 and table.remove(voids) or #objects + 1)
-	local newobject = (type == "player" and MakePlayerObject or MakeObject)(ffi.cast("void *", quads) and tonumber(tostring(quads):sub(7)) or nil, hp or 1, x, y, direction or DIR_LEFT, key, 0, 0, sprite, quadtype, type)
+	local newobject = (type == "player" and MakePlayerObject or MakeObject)(quads and CacheQuadArray(quads) or 0, hp or 1, x, y, direction or DIR_LEFT, 0, key, 0, 0, sprite, quadtype, type)
 	objects[key] = newobject
 	return newobject
 end
@@ -212,7 +212,7 @@ local function ThrustObject(mo, thrustx, thrusty)
 	if not PredictMove(mo, thrustx, thrusty) then StopObject(mo) return end
 	local obstmo = SearchObject(mo.x + GetTrueMomentum(thrustx), mo.y + GetTrueMomentum(thrusty))
 	if obstmo then
-		local collision = collisions[mo.type][obstmo.type]
+		local collision = collisions[ffi.string(mo.type)][ffi.string(obstmo.type)]
 		if not collision then StopObject(mo) return end
 		local check = collision(mo, obstmo, thrustx, thrusty)
 		if not check then StopObject(mo) return end
@@ -264,8 +264,9 @@ function FacePlayer(mo)
 	local distx, disty = GetDistance(mo, player)
 	local py = (disty/math.abs(disty))*-1
 	local px = (distx/math.abs(distx))*-1
-	if ((distx ~= 0 and distx < disty and collisions[mo.type][tilemap[mo.y][mo.x-distx]])
-	or (disty == 0 or not collisions[mo.type][tilemap[mo.y+py][mo.x]])) and collisions[mo.type][tilemap[mo.y][mo.x+px]] then
+	local moCollisions = collisions[ffi.string(mo.type)]
+	if ((distx ~= 0 and distx < disty and moCollisions[tilemap[mo.y][mo.x-distx]])
+	or (disty == 0 or not moCollisions[tilemap[mo.y+py][mo.x]])) and moCollisions[tilemap[mo.y][mo.x+px]] then
 		mo.direction = MomentumDirection(px, 0) or DIR_LEFT
 	else
 		mo.direction = MomentumDirection(0, py) or DIR_LEFT
@@ -377,7 +378,7 @@ AddObjectType("player", {
 		if check == false then
 			return DamageObject(obstmo)
 		elseif tilemap[obstmo.y][obstmo.x] == TILE_CUSTOM3 then
-			obstmo.active = true
+			obstmo.var = true
 		end
 		return check
 	end,

@@ -203,21 +203,26 @@ function SearchCustom(modname)
 			UpdateFrame = nil,
 			MapLoad = nil,
 			
-			--SPRITES LIBRARY--
-			GetImage = function(filepath)
-				return GetImage(path.."/"..filepath)
+			--QUADS LIBRARY--
+			GetDirectionalQuads = function(image)
+				return GetDirectionalQuads(path.."/"..image)
 			end,
-			GetDirectionalQuads = GetDirectionalQuads,
-			GetQuads = GetQuads,
-			GetExtraQuad = GetExtraQuad,
-			
+			GetQuads = function(n, image)
+				return GetQuads(n, path.."/"..image)
+			end,
+			GetExtraQuad = function(image)
+				return GetExtraQuad(path.."/"..image)
+			end,
+
 			--OBJECTS LIBRARY--
 			DIR_LEFT = 1,
 			DIR_RIGHT = 3,
 			DIR_UP = 5,
 			DIR_DOWN = 7,
 			player = player,
-			SpawnObject = SpawnObject,
+			SpawnObject = function(sprite, ...)
+				return SpawnObject(path.."/"..sprite, ...)
+			end,
 			RemoveObject = RemoveObject,
 			RemoveMovingObject = RemoveMovingObject,
 			RemoveStandingObject = RemoveStandingObject,
@@ -248,6 +253,7 @@ function SearchCustom(modname)
 				end
 				collisions[motype][collidedmotype] = collision
 			end,
+			GetString = require("ffi").string,
 			
 			--TILESET LIBRARY--
 			wallDesc = "\nMost objects can't walk in this tile",

@@ -24,6 +24,9 @@ end
 
 function GetQuads(neededquads, image)
 	local quads = {}
+	if type(image) == "string" then
+		image = GetImage(image)
+	end
 	local imagewidth = image:getWidth()
 	local imageheight = image:getHeight()
 	for i = 0,neededquads-1 do
@@ -33,7 +36,18 @@ function GetQuads(neededquads, image)
 end
 
 function GetExtraQuad(image)
+	image = GetImage(image)
 	return {CacheQuad(69, 1, 32, 32, image:getWidth(), image:getHeight())}
+end
+
+function CacheQuadArray(quads)
+	local key = tonumber(tostring(quads):sub(7))
+	quadcache[key] = quads
+	return key
+end
+
+function GetQuadArray(key)
+	return quadcache[key]
 end
 
 local imagecache = {}

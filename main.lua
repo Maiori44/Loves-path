@@ -1,4 +1,4 @@
-VERSION = "Version 130 BETA 1.4"
+VERSION = "Version 131 BETA 1.4"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -258,27 +258,27 @@ local tileAnimations = {
 }
 
 local quadDrawingMethods = {
-	none = function(mo, x, y, sprite)
+	none = function(_, x, y, sprite)
 		love.graphics.draw(sprite, x, y, 0, scale)
 	end,
-	single = function(mo, x, y, sprite)
-		love.graphics.draw(sprite, mo.quads[1], x, y, 0, scale)
+	single = function(_, x, y, sprite, quads)
+		love.graphics.draw(sprite, quads[1], x, y, 0, scale)
 	end,
-	directions = function(mo, x, y, sprite)
-		love.graphics.draw(sprite, mo.quads[math.floor((leveltime%20)/10)+mo.direction], x, y, 0, scale)
+	directions = function(mo, x, y, sprite, quads)
+		love.graphics.draw(sprite, quads[math.floor((leveltime%20)/10)+mo.direction], x, y, 0, scale)
 	end,
-	movement = function(mo, x, y, sprite)
-		love.graphics.draw(sprite, mo.quads[mo.direction+(((mo.momx == 0 and mo.momy == 0) and 0) or 1)], x, y, 0, scale)
+	movement = function(mo, x, y, sprite, quads)
+		love.graphics.draw(sprite, quads[mo.direction+(((mo.momx == 0 and mo.momy == 0) and 0) or 1)], x, y, 0, scale)
 	end,
-	position = function(mo, x, y, sprite)
-		local movingaxis = mo[mo.lastaxis or "x"]
-		love.graphics.draw(sprite, mo.quads[(movingaxis%#mo.quads)+1], x, y, 0, scale)
+	position = function(mo, x, y, sprite, quads)
+		local movingaxis = mo.lastaxis == "y" and mo.y or mo.x
+		love.graphics.draw(sprite, quads[(movingaxis%#quads)+1], x, y, 0, scale)
 	end,
-	hp = function(mo, x, y, sprite)
-		love.graphics.draw(sprite, mo.quads[mo.hp], x, y, 0, scale)
+	hp = function(mo, x, y, sprite, quads)
+		love.graphics.draw(sprite, quads[mo.hp], x, y, 0, scale)
 	end,
-	default = function(mo, x, y, sprite)
-		love.graphics.draw(sprite, mo.quads[math.floor((leveltime%(#mo.quads*10))/10)+1], x, y, 0, scale)
+	default = function(_, x, y, sprite, quads)
+		love.graphics.draw(sprite, quads[math.floor((leveltime%(#quads*10))/10)+1], x, y, 0, scale)
 	end
 }
 
@@ -373,7 +373,7 @@ local function DrawTilemap()
 		local y = centery+mo.y*math.floor(32*scale)
 		local drawingMethod = quadDrawingMethods[ffi.string(mo.quadtype)]
 		if not drawingMethod then error('object "'..ffi.string(mo.type)..'"('..k..') has an invalid quad type!') end
-		drawingMethod(mo, x, y, GetImage(mo.sprite))
+		drawingMethod(mo, x, y, GetImage(mo.sprite), GetQuadArray(mo.quads))
 	end
 	local snow = particles.list[PARTICLE_SNOW]
 	if snow then
@@ -627,13 +627,13 @@ tilesets = {
 		},
 		tile = {
 			[TILE_CUSTOM1] = function(x, y)
-				local snowsprite = GetImage("Sprites/Chapter 2/snowball.png")
+				local snowsprite = "Sprites/Chapter 2/snowball.png"
 				SpawnObject(snowsprite, x, y, "snowball", GetQuads(4, snowsprite), "position")
 				tilemap[y][x] = TILE_FLOOR3
 			end,
 			[TILE_CUSTOM2] = nil,
 			[TILE_CUSTOM3] = function(x, y)
-				local snowmansprite = GetImage("Sprites/Chapter 2/snowman.png")
+				local snowmansprite = "Sprites/Chapter 2/snowman.png"
 				SpawnObject(snowmansprite, x, y, "snowman", GetDirectionalQuads(snowmansprite))
 				tilemap[y][x] = TILE_FLOOR3
 			end,
@@ -653,8 +653,8 @@ tilesets = {
 			[TILE_CUSTOM1] = true,
 			[TILE_CUSTOM2] = true,
 			[TILE_CUSTOM3] = function(mo)
-				if mo.type == "box" and mo.active then
-					mo.active = false
+				if mo.type == "box" and mo.var then
+					mo.var = false
 					sound.playSound("box.wav")
 					local all = true
 					IterateMap(TILE_CUSTOM3, function(x, y)
@@ -671,7 +671,7 @@ tilesets = {
 				tilemap[y][x] = TILE_FLOOR1
 			end,
 			[TILE_CUSTOM2] = function(x, y)
-				local boxsprite = GetImage("Sprites/Chapter 3/box.png")
+				local boxsprite = "Sprites/Chapter 3/box.png"
 				SpawnObject(boxsprite, x, y, "box", GetQuads(5, boxsprite), "hp", nil, 5)
 				tilemap[y][x] = TILE_FLOOR2
 			end,
