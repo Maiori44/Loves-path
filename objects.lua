@@ -27,7 +27,7 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
 	if not collisions[type] then error('object type "'..type..'" does not exist!') end
 	quadtype = (quadtype and quadtype) or (not quads and "none") or (hp and "hp") or (#quads == 1 and "single") or (#quads == 8 and "directions") or "default"
 	local key = (#voids > 0 and table.remove(voids) or #objects + 1)
-	local newobject = (type == "player" and MakePlayerObject or MakeObject)(quads and CacheQuadArray(quads) or 0, hp or 1, x, y, direction or DIR_LEFT, 0, false, key, 0, 0, sprite, quadtype, type)
+	local newobject = (type == "player" and MakePlayerObject or MakeObject)(quads and CacheQuadArray(quads) or 0, hp or 1, x, y, direction or DIR_LEFT, 0, false, key, 1, 0, 0, sprite, quadtype, type)
 	objects[key] = newobject
 	return newobject
 end
