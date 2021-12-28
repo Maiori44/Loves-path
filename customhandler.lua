@@ -108,8 +108,6 @@ function SearchCustom(modname)
 				end
 			end
 		end
-		local ffi = require "ffi"
-		local MakeCoin = ffi.typeof("coindef")
 		customEnv = {
 			--MISCELLANEOUS LIBRARY--
 			VERSION = VERSION,
@@ -199,7 +197,7 @@ function SearchCustom(modname)
 				CheckArgument(1, "AddCustomCoin", map, "number")
 				CheckArgument(2, "AddCustomCoin", x, "number")
 				CheckArgument(3, "AddCustomCoin", y, "number")
-				coins[map] = MakeCoin(x, y, false)
+				coins[map] = {x = x, y = y, got = false}
 				LoadData()
 			end,
 			UpdateFrame = nil,
@@ -255,7 +253,7 @@ function SearchCustom(modname)
 				end
 				collisions[motype][collidedmotype] = collision
 			end,
-			GetString = ffi.string,
+			GetString = require("ffi").string,
 			
 			--TILESET LIBRARY--
 			wallDesc = "\nMost objects can't walk in this tile",

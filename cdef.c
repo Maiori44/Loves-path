@@ -15,8 +15,3 @@ typedef struct playerobject {
 	float fmomx, fmomy;
 	int8_t bosskey;
 } playerobject;
-
-typedef struct coindef {
-	uint8_t x, y;
-	bool got;
-} coindef;
