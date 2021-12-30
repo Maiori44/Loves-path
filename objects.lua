@@ -390,7 +390,13 @@ AddObjectType("player", {
 	bfmonitor = function(_, obstmo)
 		obstmo.hp = math.max((obstmo.hp + 1) % 8, 1)
 		return true
-	end
+	end,
+	biylove = function(mo, obstmo, momx, momy)
+		PushObject(nil, obstmo, momx, momy)
+		player = nil
+		mo.momx = 0
+		mo.momy = 0
+	end,
 }, function(mo)
 	if mo.momx == 0 and mo.momy == 0 and (mo.fmomx ~= 0 or mo.fmomy ~= 0) and mo.ftime > 0 then
 		mo.momx = mo.fmomx
@@ -641,3 +647,24 @@ AddObjectType("player clone", {
 	end
 	mo.var2 = (player.momx == 0 and player.momy == 0)
 end)
+
+local BIYCollision = {
+	[TILE_EMPTY] = StopObject,
+	[TILE_FLOOR1] = StopObject,
+	[TILE_FLOOR2] = StopObject,
+	[TILE_FLOOR3] = StopObject,
+	[TILE_KEY] = StopObject,
+	[TILE_START] = StopObject,
+	[TILE_GOAL] = StopObject,
+	[TILE_REDWALLOFF] = StopObject,
+	[TILE_BLUEWALLOFF] = StopObject,
+	[TILE_AFLOOR1] = StopObject,
+	[TILE_AFLOOR2] = StopObject,
+	[TILE_SPIKEOFF] = StopObject,
+	[TILE_ENEMY] = StopObject,
+	[TILE_CHASM1] = StopObject,
+	[TILE_CHASM2] = StopObject
+}
+
+--biylove
+AddObjectType("biylove", BIYCollision)

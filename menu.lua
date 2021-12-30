@@ -321,6 +321,38 @@ menu = {
 			SpawnObject("Sprites/player.png", player.x, player.y, "player")
 			player = objects[2]
 		end},
+		{name = "love is you", func = function()
+			LoadMap("bonus03.map")
+			gamemap = -3
+			frames = 0
+			seconds = 0
+			minutes = 0
+			hours = 0
+			local is = "Sprites/Bonuses/is.png"
+			local bridge = "Sprites/Bonuses/bridge.png"
+			local slime = "Sprites/Bonuses/slime.png"
+			local sprs1 = {
+				"Sprites/Bonuses/void.png",
+				bridge,
+				"Sprites/Bonuses/lock.png",
+				slime
+			}
+			local sprs2 = {
+				"Sprites/Bonuses/defeat.png",
+				"Sprites/Bonuses/crumble.png",
+				"Sprites/Bonuses/stop.png",
+				"Sprites/Bonuses/sticky.png"
+			}
+			local quads = GetQuads(3, is)
+			for y = 15, 18 do
+				SpawnObject(sprs1[y - 14], 25, y, "dummy", quads)
+				SpawnObject(is, 26, y, "dummy", quads)
+				SpawnObject(sprs2[y - 14], 27, y, "dummy", quads)
+			end
+			SpawnObject("Sprites/Bonuses/love.png", 7, 5, "biylove", quads)
+			SpawnObject(is, 8, 5, "biylove", quads)
+			SpawnObject("Sprites/Bonuses/you.png", 9, 5, "biylove", quads)
+		end},
 		{name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
 	},
 	["bonus level complete!"] = {
