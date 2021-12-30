@@ -230,6 +230,7 @@ function SearchCustom(modname)
 			EraseObject = EraseObject,
 			DamageObject = DamageObject,
 			StopObject = StopObject,
+			PusherCheck = PusherCheck,
 			PushObject = PushObject,
 			SlowPushObject = SlowPushObject,
 			SearchObject = SearchObject,
