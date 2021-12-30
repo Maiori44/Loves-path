@@ -117,11 +117,12 @@ function StopObject(mo, momx, momy)
 	mo.momy = 0
 end
 
-local function PusherCheck(mo)
+function PusherCheck(mo)
 	local mopos = tilemap[mo.y][mo.x]
 	if mopos == TILE_EMPTY or mopos == TILE_CHASM1 or mopos == TILE_CHASM2 then
 		RemoveObject(mo)
 	end
+	return false
 end
 
 function PushObject(_, obstmo, momx, momy)
@@ -370,6 +371,7 @@ AddObjectType("player", {
 				menu.extras[3].name = "Bonus levels"
 			end
 		end
+		SaveData()
 	end,
 	key = PushObject,
 	box = function(_, obstmo, momx, momy)
@@ -472,6 +474,7 @@ AddObjectType("snowball", {
 	[TILE_WALL7] = RemoveObject,
 	[TILE_WALL8] = RemoveObject,
 	[TILE_WALL9] = RemoveObject,
+	[TILE_LOCK] = RemoveObject,
 	[TILE_REDWALLON] = RemoveObject,
 	[TILE_BLUEWALLON] = RemoveObject,
 	[TILE_RIGHTPUSHER1] = function(mo) ThrustObject(mo, 0.95, 0) return true end,
