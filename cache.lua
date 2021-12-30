@@ -55,6 +55,6 @@ local imagecache = {}
 local ffiString = require("ffi").string
 
 function GetImage(path)
-	if not imagecache[path] then imagecache[path] = love.graphics.newImage(path) end
+	if not imagecache[path] then imagecache[path] = love.graphics.newImage(ffiString(path)) end
 	return imagecache[path]
 end
