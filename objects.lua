@@ -397,6 +397,25 @@ AddObjectType("player", {
 		mo.momx = 0
 		mo.momy = 0
 	end,
+	biylock = function(_, obstmo, momx, momy)
+		PushObject(nil, obstmo, momx, momy)
+		if obstmo.x == 24 and obstmo.y == 6 then
+			CheckMap(TILE_LOCK, TILE_SLIME)
+			sound.playSound("box.wav")
+		end
+	end,
+	biyword = PushObject,
+	biywin = function(_, obstmo, momx, momy)
+		local check = PushObject(nil, obstmo, momx, momy)
+		local key = objects[1]
+		if obstmo.x == 2 and obstmo.y == 5 and key then
+			EraseObject(key)
+			tilemap[12][17] = TILE_CUSTOM2
+			sound.playSound("box.wav")
+		end
+		return check
+	end,
+	biybridge = PushObject,
 }, function(mo)
 	if mo.momx == 0 and mo.momy == 0 and (mo.fmomx ~= 0 or mo.fmomy ~= 0) and mo.ftime > 0 then
 		mo.momx = mo.fmomx
@@ -648,6 +667,7 @@ AddObjectType("player clone", {
 	mo.var2 = (player.momx == 0 and player.momy == 0)
 end)
 
+--BIY STUFF
 local BIYCollision = {
 	[TILE_EMPTY] = StopObject,
 	[TILE_FLOOR1] = StopObject,
@@ -660,11 +680,39 @@ local BIYCollision = {
 	[TILE_BLUEWALLOFF] = StopObject,
 	[TILE_AFLOOR1] = StopObject,
 	[TILE_AFLOOR2] = StopObject,
+	[TILE_SPIKEON] = StopObject,
 	[TILE_SPIKEOFF] = StopObject,
+	[TILE_SPIKE] = StopObject,
 	[TILE_ENEMY] = StopObject,
 	[TILE_CHASM1] = StopObject,
-	[TILE_CHASM2] = StopObject
+	[TILE_CHASM2] = StopObject,
+	biyword = PushObject,
+	biybridge = PushObject,
 }
 
---biylove
 AddObjectType("biylove", BIYCollision)
+AddObjectType("biylock", BIYCollision)
+AddObjectType("biyword", BIYCollision)
+AddObjectType("biywin", BIYCollision)
+
+AddObjectType("biybridge", BIYCollision, function(mo)
+	if mo.var2 or not player then return end
+	local is = objects[29]
+	if is.x ~= 14 or is.y ~= 16 then return end
+	local slime = objects[28]
+	print(mo.x, mo.y, slime.x, slime.y)
+	if mo.x == 13 and mo.y == 16 and slime.x == 15 and slime.y == 16 then
+		tilemap[11][4] = TILE_SLIME
+		tilemap[11][5] = TILE_SLIME
+		tilemap[12][4] = TILE_SLIME
+		tilemap[12][5] = TILE_SLIME
+		tilemap[13][4] = TILE_CHASM1
+		tilemap[13][5] = TILE_CHASM1
+		sound.playSound("box.wav")
+		mo.var2 = true
+	elseif slime.x == 13 and slime.y == 16 and mo.x == 15 and mo.y == 16 then
+		CheckMap(TILE_SLIME, TILE_CRACKEDBRIDGE)
+		sound.playSound("box.wav")
+		mo.var2 = true
+	end
+end)

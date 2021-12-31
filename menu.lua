@@ -331,16 +331,18 @@ menu = {
 			local is = "Sprites/Bonuses/is.png"
 			local bridge = "Sprites/Bonuses/bridge.png"
 			local slime = "Sprites/Bonuses/slime.png"
+			local lock = "Sprites/Bonuses/lock.png"
+			local kand = "Sprites/Bonuses/and.png"
 			local sprs1 = {
 				"Sprites/Bonuses/void.png",
+				lock,
 				bridge,
-				"Sprites/Bonuses/lock.png",
 				slime
 			}
 			local sprs2 = {
 				"Sprites/Bonuses/defeat.png",
-				"Sprites/Bonuses/crumble.png",
 				"Sprites/Bonuses/stop.png",
+				"Sprites/Bonuses/crumble.png",
 				"Sprites/Bonuses/sticky.png"
 			}
 			local quads = GetQuads(3, is)
@@ -349,9 +351,22 @@ menu = {
 				SpawnObject(is, 26, y, "dummy", quads)
 				SpawnObject(sprs2[y - 14], 27, y, "dummy", quads)
 			end
+			SpawnObject("Sprites/Bonuses/spike.png", 23, 15, "dummy", quads)
+			SpawnObject(kand, 24, 15, "dummy", quads)
+			SpawnObject("Sprites/Bonuses/pipe.png", 23, 16, "dummy", quads)
+			SpawnObject(kand, 24, 16, "dummy", quads)
 			SpawnObject("Sprites/Bonuses/love.png", 7, 5, "biylove", quads)
 			SpawnObject(is, 8, 5, "biylove", quads)
 			SpawnObject("Sprites/Bonuses/you.png", 9, 5, "biylove", quads)
+			SpawnObject(lock, 14, 7, "biylock", quads)
+			SpawnObject(is, 25, 6, "biyword", quads)
+			SpawnObject(slime, 26, 6, "biyword", quads)
+			SpawnObject("Sprites/Bonuses/win.png", 13, 8, "biywin", quads)
+			SpawnObject("Sprites/Bonuses/key.png", 2, 3, "biyword", quads)
+			SpawnObject(is, 2, 4, "biyword", quads)
+			SpawnObject(slime, 13, 17, "biyword", quads)
+			SpawnObject(is, 14, 16, "biyword", quads)
+			SpawnObject(bridge, 15, 17, "biybridge", quads)
 		end},
 		{name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
 	},
