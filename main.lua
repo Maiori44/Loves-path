@@ -1,4 +1,4 @@
-VERSION = "Version 134 BETA 1.4"
+VERSION = "Version 135 BETA 1.4"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -539,6 +539,7 @@ tilesets = {
 			end,
 			[TILE_CUSTOM2] = function()
 				gamestate = "bonus level complete!"
+				pointer = 1
 				sound.playSound("win.wav")
 			end,
 			[TILE_CUSTOM3] = function(mo)
