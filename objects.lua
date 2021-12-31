@@ -688,6 +688,12 @@ local BIYCollision = {
 	[TILE_CHASM2] = StopObject,
 	biyword = PushObject,
 	biybridge = PushObject,
+	biylove = function(_, obstmo, momx, momy)
+		PushObject(nil, obstmo, momx, momy)
+		if not player then return end
+		player = nil
+		sound.playSound("box.wav")
+	end,
 }
 
 AddObjectType("biylove", BIYCollision)
