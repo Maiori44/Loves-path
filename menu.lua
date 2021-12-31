@@ -355,7 +355,7 @@ menu = {
 				"Sprites/Bonuses/crumble.png",
 				"Sprites/Bonuses/sticky.png"
 			}
-			local quads = GetQuads(3, is)
+			local quads = GetQuads(4, is)
 			for y = 15, 18 do
 				SpawnObject(sprs1[y - 14], 25, y, "dummy", quads)
 				SpawnObject(is, 26, y, "dummy", quads)
