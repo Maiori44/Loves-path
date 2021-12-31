@@ -259,7 +259,8 @@ local gamepadToKeyboard = {
 	dpleft = "left",
 	dpright = "right",
 	a = "return",
-	b = "escape"
+	b = "escape",
+	start = "r"
 }
 
 function love.gamepadpressed(_, button)
