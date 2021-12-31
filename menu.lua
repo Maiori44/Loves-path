@@ -51,6 +51,16 @@ function ChangeGamestate(newgamestate)
 	statetimer = 0
 end
 
+function RestartMap()
+	local oldscale = scale
+	if gamemap < 0 then
+		menu["bonus levels"][math.abs(gamemap)].func()
+	else
+		LoadMap("map"..GetMapNum(gamemap)..".map")
+	end
+	scale = oldscale
+end
+
 menu = {
 	title = {
 		{name = "Start Game", func = function()
@@ -74,7 +84,7 @@ menu = {
 	},
 	pause = {
 		{name = "Resume", state = "ingame"},
-		{name = "Restart", func = function() love.keypressed("r") end},
+		{name = "Restart", func = RestartMap},
 		{name = "Return to title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},
 		{name = "Quit", func = function() love.event.quit(0) end}
 	},
