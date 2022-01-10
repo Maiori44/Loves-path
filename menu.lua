@@ -65,12 +65,16 @@ menu = {
 	title = {
 		{name = "Start Game", func = function()
 			if lastmap == 1 then
-				gamemap = 0
-				LoadMap("map00.map")
-				frames = 0
-				seconds = 0
-				minutes = 0
-				hours = 0
+				if customEnv then
+					gamemap = 0
+					LoadMap("map00.map")
+					frames = 0
+					seconds = 0
+					minutes = 0
+					hours = 0
+				else
+					ChangeGamestate("name him")
+				end
 			else
 				ChangeGamestate("select level")
 				pointer = 1
@@ -387,6 +391,23 @@ menu = {
 			pointer = math.abs(gamemap)
 			sound.setMusic("menu.ogg")
 		end}
+	},
+	["name him"] = {
+		{name = "his name: ", string = "", func = function(self)
+			local newname = self.string
+			if newname:gsub("%s+", "") == "" then
+				messagebox.setMessage("Invalid name!", "Nothing can't be his name.")
+				return
+			end
+			hisname = newname:match("^%s*(.-)%s*$")
+			gamemap = 0
+			LoadMap("map00.map")
+			frames = 0
+			seconds = 0
+			minutes = 0
+			hours = 0
+		end},
+		{name = "back", state = "main"}
 	}
 }
 
@@ -412,12 +433,12 @@ savefile = "save.dat"
 
 function SaveData()
 	local file = io.open(savefile, "w+b")
-	file:write(string.char(math.min(lastmap, 255)))
-	file:write(string.char(math.min(lastmap, 255)))
+	local l = string.char(math.min(lastmap, 255))
+	file:write(l..l)
+	if not customEnv then file:write(hisname.."\0") end
 	for k, coin in pairs(coins) do
 		if type(k) == "number" then
-			file:write(string.char(k))
-			file:write(string.char((coin.got and 1) or 0))
+			file:write(string.char(k)..string.char((coin.got and 1) or 0))
 		end
 	end
 	file:close()
@@ -444,6 +465,14 @@ function LoadData()
 		lastmap = 1
 	end
 	pcall(function()
+		if not customEnv then
+			hisname = ""
+			local char = savefile:read(1)
+			while char ~= "\0" do
+				hisname = hisname..char
+				char = savefile:read(1)
+			end
+		end
 		repeat
 			local mapnum = savefile:read(1):byte()
 			local coingot = savefile:read(1):byte()

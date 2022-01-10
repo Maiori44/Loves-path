@@ -1,4 +1,4 @@
-VERSION = "Version 137 BETA 1.4"
+VERSION = "Version b6.0.139"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -131,6 +131,7 @@ function love.load(args)
 	end
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	font = love.graphics.newFont("editundo.ttf", 24, "mono")
+	hisname = ""
 	leveltime = 0
 	frametime = 0
 	seconds = 0
@@ -948,11 +949,12 @@ Artist]], 0, 360, screenwidth, "center")
 		local tminutes = (minutes < 10 and "0"..minutes) or tostring(minutes)
 		love.graphics.printf("Completed in "..hours..":"..tminutes.."."..tseconds, 0, 90, screenwidth, "center")
 	end,
+	["name him"] = DrawMenu
 }
 
 function debug.collectInfo()
 	local count = collectgarbage("count")
-	local debuginfo = "FPS: "..tostring(love.timer.getFPS()).."\nMemory: "..count..
+	local debuginfo = "FPS: "..tostring(love.timer.getFPS()).."\nMemory: "..count.."\nhis name: "..hisname..
 	"\nGamemap: "..gamemap.."\nLastmap: "..lastmap.."\nGamestate: "..gamestate.."\nLaststate: "..laststate.."\nModded: "..(customEnv and "true" or "false").."\n"
 	debuginfo = debuginfo.."\ntile: "..tostring(mouse.tile).."\n"..
 	"mode: "..tostring(mouse.mode).."\n"..
