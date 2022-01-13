@@ -131,6 +131,8 @@ function love.load(args)
 	end
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	font = love.graphics.newFont("editundo.ttf", 24, "mono")
+	love.graphics.setFont(font)
+	font:setFilter("nearest", "nearest", 1)
 	hisname = ""
 	leveltime = 0
 	frametime = 0
@@ -1043,8 +1045,6 @@ end
 
 function love.draw()
 	love.graphics.setColor(1, 1, 1, 1)
-	love.graphics.setFont(font)
-	font:setFilter("nearest", "nearest", 1)
 	if drawModes[gamestate] then
 		drawModes[gamestate]()
 		love.graphics.origin()
