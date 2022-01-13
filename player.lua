@@ -78,12 +78,14 @@ function love.keypressed(key)
 					break
 				end
 			end
+			sound.playSound("menu_back.wav")
 		elseif key == "tab" then
 			mouse.mode = (mouse.mode == "camera" and "editing") or "camera"
 			wheelmoved = 0
 		end
 	elseif gamestate == "map settings" and key == "escape" then
 		gamestate = "editing"
+		sound.playSound("menu_select.wav")
 	elseif gamestate == "ingame" then
 		if key == "r" then
 			RestartMap()
@@ -91,6 +93,7 @@ function love.keypressed(key)
 			gamestate = "pause"
 			pointer = 1
 			sound.reset()
+			sound.playSound("menu_back.wav")
 		elseif key == "space" then
 			if not player then return end
 			particles.spawnHelp(player.x, player.y)
@@ -116,6 +119,7 @@ function love.keypressed(key)
 		end
 	elseif gamestate == "pause" and key == "escape" then
 		gamestate = "ingame"
+		sound.playSound("menu_select.wav")
 	elseif key == "escape" then
 		local pback = menu[gamestate][#menu[gamestate]]
 		if pback.name == "back" then
@@ -125,19 +129,25 @@ function love.keypressed(key)
 			elseif pback.func then
 				pback.func()
 			end
+			sound.playSound("menu_back.wav")
 		end
 	elseif gamestate == "select level" then
 		local max = math.min((debugmode and 255) or lastmap, #menu["select level"]-1)
 		if key == "left" then
 			pointer = (pointer-1 <= max and pointer-1) or max
+			sound.playSound("menu_move.wav")
 		elseif key == "right" then
 			pointer = (pointer+1 <= max and pointer+1) or (pointer == #menu["select level"] and 1) or #menu["select level"]
+			sound.playSound("menu_move.wav")
 		elseif key == "up" then
 			pointer = (pointer-10 <= max and pointer ~= #menu["select level"] and pointer-10) or max
+			sound.playSound("menu_move.wav")
 		elseif key == "down" then
 			pointer = (pointer+10 <= max and pointer+10) or (pointer == #menu["select level"] and 1) or #menu["select level"]
+			sound.playSound("menu_move.wav")
 		elseif key == "return" then
 			menu["select level"][pointer].func()
+			sound.playSound("menu_select.wav")
 		end
 		if pointer < 1 or pointer > #menu["select level"] or pointer > max then
 			pointer = #menu["select level"]
@@ -156,9 +166,11 @@ function love.keypressed(key)
 		if key == "up" then
 			pointer = pointer-1
 			if pointer == 0 then pointer = #menu[gamestate] end
+			sound.playSound("menu_move.wav")
 		elseif key == "down" then
 			pointer = pointer+1
 			if pointer > #menu[gamestate] then pointer = 1 end
+			sound.playSound("menu_move.wav")
 		elseif menu[gamestate][pointer].values then
 			local setting = menu[gamestate][pointer]
 			if key == "right" then
@@ -166,19 +178,23 @@ function love.keypressed(key)
 				if menu[gamestate][pointer].func then 
 					menu[gamestate][pointer].func(setting)
 				end
+				sound.playSound("menu_move.wav")
 			elseif key == "left" then
 				setting.value = (setting.value == 0 and #setting.values) or setting.value - 1
 				if menu[gamestate][pointer].func then 
 					menu[gamestate][pointer].func(setting)
 				end
+				sound.playSound("menu_move.wav")
 			end
 		elseif key == "return" then
 			local selected = menu[gamestate][pointer]
 			if selected.state then
 				ChangeGamestate(selected.state)
 				pointer = 1
+				sound.playSound("menu_select.wav")
 			elseif selected.func then
 				selected.func(menu[gamestate][pointer])
+				sound.playSound("menu_select.wav")
 			end
 		elseif gamestate == "sound test" and pointer == 1 then
 			if key == "right" then
@@ -187,12 +203,14 @@ function love.keypressed(key)
 					if sound.soundtestpointer > #sound.soundtest then sound.soundtestpointer = 1 end
 				until lastmap >= (sound.soundtest[sound.soundtestpointer].require or 0)
 				menu["sound test"][1].name = "< "..sound.soundtest[sound.soundtestpointer].name.." >"
+				sound.playSound("menu_move.wav")
 			elseif key == "left" then
 				repeat
 					sound.soundtestpointer = sound.soundtestpointer-1
 					if sound.soundtestpointer < 1 then sound.soundtestpointer = #sound.soundtest end
 				until lastmap >= (sound.soundtest[sound.soundtestpointer].require or 0)
 				menu["sound test"][1].name = "< "..sound.soundtest[sound.soundtestpointer].name.." >"
+				sound.playSound("menu_move.wav")
 			end
 		end
 	end
