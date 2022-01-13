@@ -1,4 +1,4 @@
-local sound = {list = {}, soundtestpointer = 1}
+local sound = {list = {}, soundtestpointer = 1, sounds = {}}
 
 function sound.stopMusic()
 	if not sound.music then return end
@@ -29,14 +29,30 @@ function sound.setMusic(filename)
 	sound.music:play()
 end
 
+function sound.getSounds(dirpath, modded)
+	local iter = love.filesystem.getDirectoryItems(dirpath)
+	if not iter then return end
+	for _, filename in ipairs(iter) do
+		sound.sounds[filename] = modded
+	end
+end
+
+sound.getSounds("Sounds", false)
+
 function sound.playSound(filename)
 	if menu.settings[5].value == 0 then return end
+	local isFromMod = sound.sounds[filename]
+	if isFromMod == nil then
+		messagebox.setMessage("Sound file not found!", "Sound \""..filename.."\" does not exist.\n(Sound files are searched on mod load,\nif you added the file later restart the game!)")
+		return
+	end
+	local path = isFromMod and path.."/Sounds/" or "Sounds/"
 	for i = 1,20 do
 		if not sound.list[i] then
-			sound.list[i] = love.audio.newSource("Sounds/"..filename, "static")
+			sound.list[i] = love.audio.newSource(path..filename, "static")
 			sound.list[i]:play()
 			sound.list[i]:setVolume(menu.settings[5].value / 10)
-			break
+			return
 		end
 	end
 end

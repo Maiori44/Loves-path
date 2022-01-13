@@ -275,6 +275,7 @@ menu = {
 			nativefs.createDirectory(modpath.."/Tiles")
 			nativefs.createDirectory(modpath.."/Enemies")
 			nativefs.createDirectory(modpath.."/Music")
+			nativefs.createDirectory(modpath.."/Sound")
 			nativefs.write(modpath.."/custom.lua", "--Files generated automatically by the game\n--More info about them in readme.txt")
 			messagebox.setMessage("Mod successfully created!", "The mod can be found at "..modpath)
 		end},

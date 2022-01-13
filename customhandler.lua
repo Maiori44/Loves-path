@@ -1,7 +1,7 @@
 local sound = require "music"
 local coins = require "coins"
 
-local path = (love.filesystem.isFused() and "Source/Custom/") or "Custom/"
+path = (love.filesystem.isFused() and "Source/Custom/") or "Custom/"
 
 local readOnlyValues = {
 	VERSION = "constant",
@@ -93,6 +93,7 @@ function SearchCustom(modname)
 	path = path..modname
 	coins.reset()
 	sound.soundtest = {{name = "Love's path", subtitle = "Main menu", creator = "MAKYUNI", filename = "menu.ogg"}}
+	sound.getSounds(path.."/Sounds", true)
 	lastmap = 1
 	mapspath = path.."/Maps/"
 	GetAllMaps()
