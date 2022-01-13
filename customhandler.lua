@@ -85,217 +85,220 @@ function CheckArgument(n, funcname, arg, ctype, bad)
 end
 
 function SearchCustom(modname)
+	local modtype = love.filesystem.getInfo(path..modname, "directory")
+	if not modtype then
+		messagebox.setMessage("Mod not found", "could not find folder named \""..modname.."\" in the Custom folder")
+		return false
+	end
 	path = path..modname
-	if love.filesystem.getInfo(path, "directory") then
-		coins.reset()
-		sound.soundtest = {{name = "Love's path", subtitle = "Main menu", creator = "MAKYUNI", filename = "menu.ogg"}}
-		lastmap = 1
-		mapspath = path.."/Maps/"
-		GetAllMaps()
-		savefile = modname..".dat"
-		LoadData()
-		local ok, CustomInfo = pcall(love.filesystem.load, path.."/custom.lua")
-		if not CustomInfo then
-			customEnv = {}
-			return
-		end
-		if not ok then love.window.showMessageBox("Failed to load custom.lua!", CustomInfo, "error") return end
-		local musics = love.filesystem.getDirectoryItems(path.."/Music")
-		if musics then
-			for _, musicname in ipairs(musics) do
-				if musicname:sub(#musicname - 3) == ".ogg" then
-					table.insert(possibleMusic, musicname)
-				end
+	coins.reset()
+	sound.soundtest = {{name = "Love's path", subtitle = "Main menu", creator = "MAKYUNI", filename = "menu.ogg"}}
+	lastmap = 1
+	mapspath = path.."/Maps/"
+	GetAllMaps()
+	savefile = modname..".dat"
+	LoadData()
+	local ok, CustomInfo = pcall(love.filesystem.load, path.."/custom.lua")
+	if not CustomInfo then
+		customEnv = {}
+		return
+	end
+	if not ok then love.window.showMessageBox("Failed to load custom.lua!", CustomInfo, "error") return true end
+	local musics = love.filesystem.getDirectoryItems(path.."/Music")
+	if musics then
+		for _, musicname in ipairs(musics) do
+			if musicname:sub(#musicname - 3) == ".ogg" then
+				table.insert(possibleMusic, musicname)
 			end
 		end
-		customEnv = {
-			--MISCELLANEOUS LIBRARY--
-			VERSION = VERSION,
-			print = print,
-			error = error,
-			type = type,
-			tostring = tostring,
-			tonumber = tonumber,
-			ipairs = ipairs,
-			pairs = pairs,
-			KeyPressed = nil,
-			SetMessageBox = function(title, text)
-				messagebox.setMessage(tostring(title), tostring(text))
-			end,
-			SetNotifcation = function(text)
-				notification.setMessage(tostring(text))
-			end,
-
+	end
+	customEnv = {
+		--MISCELLANEOUS LIBRARY--
+		VERSION = VERSION,
+		print = print,
+		error = error,
+		type = type,
+		tostring = tostring,
+		tonumber = tonumber,
+		ipairs = ipairs,
+		pairs = pairs,
+		KeyPressed = nil,
+		SetMessageBox = function(title, text)
+			messagebox.setMessage(tostring(title), tostring(text))
+		end,
+		SetNotifcation = function(text)
+			notification.setMessage(tostring(text))
+		end,
 			--SOUND LIBRARY--
-			PlaySound = sound.playSound,
-			AddSoundTestEntry = function(name, subtitle, creator, filename, required)
-				CheckArgument(1, "AddSoundTestEntry", name, "string")
-				CheckArgument(4, "AddSoundTestEntry", filename, "string")
-				table.insert(sound.soundtest,
-				{name = name, subtitle = subtitle or "", creator = creator or "", filename = filename, require = tonumber(required)})
-			end,
-			
-			--MAP LIBRARY--
-			TILE_EMPTY = 0,
-			TILE_WALL1 = 1,
-			TILE_WALL2 = 2,
-			TILE_WALL3 = 3,
-			TILE_WALL4 = 4,
-			TILE_WALL5 = 5,
-			TILE_WALL6 = 6,
-			TILE_WALL7 = 7,
-			TILE_WALL8 = 8,
-			TILE_WALL9 = 9,
-			TILE_FLOOR1 = 10,
-			TILE_FLOOR2 = 11,
-			TILE_FLOOR3 = 12,
-			TILE_LOCK = 13,
-			TILE_KEY = 14,
-			TILE_REDSWITCH = 15,
-			TILE_BLUESWITCH = 16,
-			TILE_START = 17,
-			TILE_GOAL = 18,
-			TILE_REDWALLON = 19,
-			TILE_BLUEWALLON = 20,
-			TILE_REDWALLOFF = 21,
-			TILE_BLUEWALLOFF = 22,
-			TILE_AFLOOR1 = 23,
-			TILE_AFLOOR2 = 24,
-			TILE_RIGHTPUSHER1 = 25,
-			TILE_RIGHTPUSHER2 = 26,
-			TILE_RIGHTPUSHER3 = 27,
-			TILE_LEFTPUSHER1 = 28,
-			TILE_LEFTPUSHER2 = 29,
-			TILE_LEFTPUSHER3 = 30,
-			TILE_UPPUSHER1 = 31,
-			TILE_UPPUSHER2 = 32,
-			TILE_UPPUSHER3 = 33,
-			TILE_DOWNPUSHER1 = 34,
-			TILE_DOWNPUSHER2 = 35,
-			TILE_DOWNPUSHER3 = 36,
-			TILE_SPIKEON = 37,
-			TILE_SPIKEOFF = 38,
-			TILE_SPIKE = 39,
-			TILE_BRIDGE = 40,
-			TILE_CRACKEDBRIDGE = 41,
-			TILE_SLIME = 42,
-			TILE_CHASM1 = 43,
-			TILE_CHASM2 = 44,
-			TILE_ENEMY = 45,
-			TILE_CUSTOM1 = 46,
-			TILE_CUSTOM2 = 47,
-			TILE_CUSTOM3 = 48,
-			tilemap = tilemap,
-			leveltime = nil,
-			timer = nil,
-			SetTimer = function(time)
-				timer = time
-			end,
-			CheckMap = CheckMap,
-			IterateMap = IterateMap,
-			AddCustomCoin = function(map, x, y)
-				CheckArgument(1, "AddCustomCoin", map, "number")
-				CheckArgument(2, "AddCustomCoin", x, "number")
-				CheckArgument(3, "AddCustomCoin", y, "number")
-				coins[map] = {x = x, y = y, got = false}
-				LoadData()
-			end,
-			UpdateFrame = nil,
-			MapLoad = nil,
-			
+		PlaySound = sound.playSound,
+		AddSoundTestEntry = function(name, subtitle, creator, filename, required)
+			CheckArgument(1, "AddSoundTestEntry", name, "string")
+			CheckArgument(4, "AddSoundTestEntry", filename, "string")
+			table.insert(sound.soundtest,
+			{name = name, subtitle = subtitle or "", creator = creator or "", filename = filename, require = tonumber(required)})
+		end,
+		
+		--MAP LIBRARY--
+		TILE_EMPTY = 0,
+		TILE_WALL1 = 1,
+		TILE_WALL2 = 2,
+		TILE_WALL3 = 3,
+		TILE_WALL4 = 4,
+		TILE_WALL5 = 5,
+		TILE_WALL6 = 6,
+		TILE_WALL7 = 7,
+		TILE_WALL8 = 8,
+		TILE_WALL9 = 9,
+		TILE_FLOOR1 = 10,
+		TILE_FLOOR2 = 11,
+		TILE_FLOOR3 = 12,
+		TILE_LOCK = 13,
+		TILE_KEY = 14,
+		TILE_REDSWITCH = 15,
+		TILE_BLUESWITCH = 16,
+		TILE_START = 17,
+		TILE_GOAL = 18,
+		TILE_REDWALLON = 19,
+		TILE_BLUEWALLON = 20,
+		TILE_REDWALLOFF = 21,
+		TILE_BLUEWALLOFF = 22,
+		TILE_AFLOOR1 = 23,
+		TILE_AFLOOR2 = 24,
+		TILE_RIGHTPUSHER1 = 25,
+		TILE_RIGHTPUSHER2 = 26,
+		TILE_RIGHTPUSHER3 = 27,
+		TILE_LEFTPUSHER1 = 28,
+		TILE_LEFTPUSHER2 = 29,
+		TILE_LEFTPUSHER3 = 30,
+		TILE_UPPUSHER1 = 31,
+		TILE_UPPUSHER2 = 32,
+		TILE_UPPUSHER3 = 33,
+		TILE_DOWNPUSHER1 = 34,
+		TILE_DOWNPUSHER2 = 35,
+		TILE_DOWNPUSHER3 = 36,
+		TILE_SPIKEON = 37,
+		TILE_SPIKEOFF = 38,
+		TILE_SPIKE = 39,
+		TILE_BRIDGE = 40,
+		TILE_CRACKEDBRIDGE = 41,
+		TILE_SLIME = 42,
+		TILE_CHASM1 = 43,
+		TILE_CHASM2 = 44,
+		TILE_ENEMY = 45,
+		TILE_CUSTOM1 = 46,
+		TILE_CUSTOM2 = 47,
+		TILE_CUSTOM3 = 48,
+		tilemap = tilemap,
+		leveltime = nil,
+		timer = nil,
+		SetTimer = function(time)
+			timer = time
+		end,
+		CheckMap = CheckMap,
+		IterateMap = IterateMap,
+		AddCustomCoin = function(map, x, y)
+			CheckArgument(1, "AddCustomCoin", map, "number")
+			CheckArgument(2, "AddCustomCoin", x, "number")
+			CheckArgument(3, "AddCustomCoin", y, "number")
+			coins[map] = {x = x, y = y, got = false}
+			LoadData()
+		end,
+		UpdateFrame = nil,
+		MapLoad = nil,
+		
 			--QUADS LIBRARY--
-			GetDirectionalQuads = function(image)
-				return GetDirectionalQuads(path.."/"..image)
-			end,
-			GetQuads = function(n, image)
-				return GetQuads(n, path.."/"..image)
-			end,
-			GetExtraQuad = function(image)
-				return GetExtraQuad(path.."/"..image)
-			end,
-
+		GetDirectionalQuads = function(image)
+			return GetDirectionalQuads(path.."/"..image)
+		end,
+		GetQuads = function(n, image)
+			return GetQuads(n, path.."/"..image)
+		end,
+		GetExtraQuad = function(image)
+			return GetExtraQuad(path.."/"..image)
+		end,
+		
 			--OBJECTS LIBRARY--
-			DIR_LEFT = 1,
-			DIR_RIGHT = 3,
-			DIR_UP = 5,
-			DIR_DOWN = 7,
-			player = player,
-			SpawnObject = function(sprite, ...)
-				return SpawnObject(path.."/"..sprite, ...)
-			end,
-			RemoveObject = RemoveObject,
-			RemoveMovingObject = RemoveMovingObject,
-			RemoveStandingObject = RemoveStandingObject,
-			RemoveCollidedObject = RemoveCollidedObject,
-			EraseObject = EraseObject,
-			DamageObject = DamageObject,
-			StopObject = StopObject,
-			PusherCheck = PusherCheck,
-			PushObject = PushObject,
-			SlowPushObject = SlowPushObject,
-			SearchObject = SearchObject,
-			TryMove = TryMove,
-			PredictMove = PredictMove,
-			DirectionMomentum = DirectionMomentum,
-			MomentumDirection = MomentumDirection,
-			GetDistance = GetDistance,
-			DashObject = DashObject,
-			FireShot = FireShot,
-			FacePlayer = FacePlayer,
-			EndLevel = EndLevel,
-			AddObjectType = AddObjectType,
-			AddObjectCollision = function(motype, collidedmotype, collision)
-				CheckArgument(1, "AddObjectCollision", motype, "string")
-				CheckArgument(2, "AddObjectCollision", collidedmotype, "string")
-				if not collisions[motype] then error('object type "'..motype..'" does not exist!') end
-				if not collisions[collidedmotype] then error('object type "'..collidedmotype..'" does not exist!') end
-				if collisions[motype][collidedmotype] then
+		DIR_LEFT = 1,
+		DIR_RIGHT = 3,
+		DIR_UP = 5,
+		DIR_DOWN = 7,
+		player = player,
+		SpawnObject = function(sprite, ...)
+			return SpawnObject(path.."/"..sprite, ...)
+		end,
+		RemoveObject = RemoveObject,
+		RemoveMovingObject = RemoveMovingObject,
+		RemoveStandingObject = RemoveStandingObject,
+		RemoveCollidedObject = RemoveCollidedObject,
+		EraseObject = EraseObject,
+		DamageObject = DamageObject,
+		StopObject = StopObject,
+		PusherCheck = PusherCheck,
+		PushObject = PushObject,
+		SlowPushObject = SlowPushObject,
+		SearchObject = SearchObject,
+		TryMove = TryMove,
+		PredictMove = PredictMove,
+		DirectionMomentum = DirectionMomentum,
+		MomentumDirection = MomentumDirection,
+		GetDistance = GetDistance,
+		DashObject = DashObject,
+		FireShot = FireShot,
+		FacePlayer = FacePlayer,
+		EndLevel = EndLevel,
+		AddObjectType = AddObjectType,
+		AddObjectCollision = function(motype, collidedmotype, collision)
+			CheckArgument(1, "AddObjectCollision", motype, "string")
+			CheckArgument(2, "AddObjectCollision", collidedmotype, "string")
+			if not collisions[motype] then error('object type "'..motype..'" does not exist!') end
+			if not collisions[collidedmotype] then error('object type "'..collidedmotype..'" does not exist!') end
+			if collisions[motype][collidedmotype] then
 					error('object type "'..motype..'" arleady has collisions defined for "'..collidedmotype..'"!')
-				end
-				collisions[motype][collidedmotype] = collision
-			end,
-			GetString = require("ffi").string,
-			
+			end
+			collisions[motype][collidedmotype] = collision
+		end,
+		GetString = require("ffi").string,
+		
 			--TILESET LIBRARY--
-			wallDesc = "\nMost objects can't walk in this tile",
-			floorDesc = "\nObjects can walk in this tile",
-			spikeDesc = "\nObjects in this tile will be destroyed",
-			AddCustomTileset = function(tilesetname, description, collision, tile, flags)
-				CheckArgument(1, "AddCustomTileset", tilesetname, "string")
-				if tilesets[tilesetname] then error('tileset "'..tilesetname..'" arleady exists!') end
-				tilesets[tilesetname] = {
-					description = setmetatable(description or {}, {__index = function() return "MISSING INFO!" end}),
-					collision = setmetatable(collision or {}, {__index = function() return true end}),
-					tile = setmetatable(tile or {}, {__index = function() return nil end})
-				}
-				if flags then
-					local num = 0
-					for k, v in pairs(flags) do
-						num = num + 1
-						if tilesetFlagsTypes[k] then
-							CheckArgument(num, k, v, tilesetFlagsTypes[k], "tileset flag value")
-							tilesets[tilesetname][k] = v
-						else
-							error("Unknown tileset flag \""..k.."\"")
-						end
+		wallDesc = "\nMost objects can't walk in this tile",
+		floorDesc = "\nObjects can walk in this tile",
+		spikeDesc = "\nObjects in this tile will be destroyed",
+		AddCustomTileset = function(tilesetname, description, collision, tile, flags)
+			CheckArgument(1, "AddCustomTileset", tilesetname, "string")
+			if tilesets[tilesetname] then error('tileset "'..tilesetname..'" arleady exists!') end
+			tilesets[tilesetname] = {
+				description = setmetatable(description or {}, {__index = function() return "MISSING INFO!" end}),
+				collision = setmetatable(collision or {}, {__index = function() return true end}),
+				tile = setmetatable(tile or {}, {__index = function() return nil end})
+			}
+			if flags then
+				local num = 0
+				for k, v in pairs(flags) do
+					num = num + 1
+					if tilesetFlagsTypes[k] then
+						CheckArgument(num, k, v, tilesetFlagsTypes[k], "tileset flag value")
+						tilesets[tilesetname][k] = v
+					else
+						error("Unknown tileset flag \""..k.."\"")
 					end
 				end
-				table.insert(possibleTilesets, tilesetname)
-			end,
-		}
-		setfenv(CustomInfo, setmetatable({}, {
-			__index = function(t, k) if customEnv[k] then return customEnv[k] end end,
-			__newindex = function(t, k, v)
-				if readOnlyValues[k] then
-					error('attempt to modify read-only value "'..k..'" ('..readOnlyValues[k]..')')
-					return
-				end
-				customEnv[k] = v
 			end
-		}))
-		local ok, errormsg2 = pcall(CustomInfo)
-		if not ok then love.window.showMessageBox("Error while loading custom.lua!", errormsg2, "error") return end
-	end
+			table.insert(possibleTilesets, tilesetname)
+		end,
+	}
+	setfenv(CustomInfo, setmetatable({}, {
+		__index = function(t, k) if customEnv[k] then return customEnv[k] end end,
+		__newindex = function(t, k, v)
+			if readOnlyValues[k] then
+				error('attempt to modify read-only value "'..k..'" ('..readOnlyValues[k]..')')
+				return
+			end
+			customEnv[k] = v
+		end
+	}))
+	local ok, errormsg2 = pcall(CustomInfo)
+	if not ok then love.window.showMessageBox("Error while loading custom.lua!", errormsg2, "error") end
+	return true
 end
 
 function GetTilesetPath()

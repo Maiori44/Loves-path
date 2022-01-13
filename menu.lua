@@ -242,10 +242,10 @@ menu = {
 		{name = "Load mod", func = function()
 			menu["select mod"] = {}
 			local path = (love.filesystem.isFused() and "Source/Custom") or "Custom"
-			for k, filename in ipairs(love.filesystem.getDirectoryItems(path)) do
+			for _, filename in ipairs(love.filesystem.getDirectoryItems(path)) do
 				if love.filesystem.getInfo(path.."/"..filename, "directory") then
 					table.insert(menu["select mod"], {name = filename, func = function()
-						SearchCustom(filename)
+						if not SearchCustom(filename) then return end
 						gamestate = "title"
 						pointer = 1
 						table.remove(menu.addons, 2)
@@ -407,7 +407,7 @@ menu = {
 			minutes = 0
 			hours = 0
 		end},
-		{name = "back", state = "main"}
+		{name = "back", state = "title"}
 	}
 }
 
