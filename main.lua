@@ -525,6 +525,7 @@ local spikeDesc = "\nObjects in this tile will be destroyed"
 tilesets = {
 	["bonus.png"] = { --BONUS LEVELS
 		vanilla = true,
+		enemyquadtype = "none",
 		description = {
 			[TILE_CUSTOM1] = "BUTTON\nyou aren't supposed to use this tileset btw",
 			[TILE_CUSTOM2] = "CUSTOM GOAL\nif you just like the tiles I suggest you copy\nthe .png file from the .exe",
