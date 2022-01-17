@@ -102,7 +102,7 @@ function SearchCustom(modname)
 	local ok, CustomInfo = pcall(love.filesystem.load, path.."/custom.lua")
 	if not CustomInfo then
 		customEnv = {}
-		return
+		return true
 	end
 	if not ok then love.window.showMessageBox("Failed to load custom.lua!", CustomInfo, "error") return true end
 	local musics = love.filesystem.getDirectoryItems(path.."/Music")
