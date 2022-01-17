@@ -2,8 +2,8 @@ typedef struct gameobject {
 	const int quads;
 	uint8_t hp, x, y, direction, var1;
 	bool var2;
-	const int8_t key;
-	int8_t frame;
+	const uint8_t key;
+	uint8_t frame;
 	float momx, momy;
 	const char *sprite, *quadtype, *type;
 	char lastaxis[2];
@@ -13,5 +13,5 @@ typedef struct playerobject {
 	struct gameobject;
 	uint8_t ftime;
 	float fmomx, fmomy;
-	int8_t bosskey;
+	uint8_t bosskey;
 } playerobject;
