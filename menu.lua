@@ -383,6 +383,17 @@ menu = {
 			SpawnObject(is, 14, 16, "biyword", quads)
 			SpawnObject(bridge, 15, 17, "biybridge", quads)
 		end},
+		{name = "pac love", func = function()
+			LoadMap("bonus04.map")
+			gamemap = -4
+			frames = 0
+			seconds = 0
+			minutes = 0
+			hours = 0
+			IterateMap(TILE_FLOOR3, function(x, y)
+				SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pac dot")
+			end)
+		end},
 		{name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
 	},
 	["bonus level complete!"] = {

@@ -547,6 +547,11 @@ tilesets = {
 				sound.playSound("win.wav")
 			end,
 			[TILE_CUSTOM3] = function(mo)
+				if gamemap == -4 then
+					mo.x = math.abs(mo.x - 22) + mo.momx
+					sound.playSound("box.wav")
+					return
+				end
 				if mo == player or (mo.momx == 0 and mo.momy == 0) then return end
 				IterateMap(TILE_CUSTOM3, function(x, y)
 					if SearchObject(x, y) == player then

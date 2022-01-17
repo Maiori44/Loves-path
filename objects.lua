@@ -416,6 +416,21 @@ AddObjectType("player", {
 		return check
 	end,
 	biybridge = PushObject,
+	["pac dot"] = function (_, obstmo)
+		RemoveObject(obstmo, "menu_move.wav")
+		local gotAll = true;
+		IterateMap(TILE_FLOOR3, function(x, y)
+			local mo = SearchObject(x, y)
+			if mo and mo.type == "pac dot" then
+				gotAll = false
+				return true
+			end
+		end)
+		if gotAll then
+			tilemap[10][11] = TILE_CUSTOM2
+			sound.playSound("box.wav")
+		end
+	end
 }, function(mo)
 	if mo.momx == 0 and mo.momy == 0 and (mo.fmomx ~= 0 or mo.fmomy ~= 0) and mo.ftime > 0 then
 		mo.momx = mo.fmomx
@@ -452,7 +467,7 @@ AddObjectType("key", {
 })
 
 --ENEMY
-AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject, box = PusherCheck}, function(mo)
+AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject, box = PusherCheck, ["pac dot"] = true}, function(mo)
 	if not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
 	local time = leveltime % 100
 	if time == 40 then
@@ -722,3 +737,22 @@ AddObjectType("biybridge", BIYCollision, function(mo)
 		mo.var2 = true
 	end
 end)
+
+--PAC DOT
+AddObjectType("pac dot", {
+	player = function (mo)
+		RemoveObject(mo, "menu_move.wav")
+		local gotAll = true;
+		IterateMap(TILE_FLOOR3, function(x, y)
+			local mo = SearchObject(x, y)
+			if mo and mo.type == "pac dot" then
+				gotAll = false
+				return true
+			end
+		end)
+		if gotAll then
+			tilemap[10][11] = TILE_CUSTOM2
+			sound.playSound("box.wav")
+		end
+	end
+})
