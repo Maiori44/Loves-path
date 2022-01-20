@@ -405,7 +405,7 @@ menu = {
 		end}
 	},
 	["name him"] = {
-		{name = "his name: ", string = "", func = function(self)
+		{name = "his name: ", string = "Brownie", func = function(self)
 			local newname = self.string
 			if newname:gsub("%s+", "") == "" then
 				messagebox.setMessage("Invalid name!", "Nothing can't be his name.")
