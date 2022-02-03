@@ -335,7 +335,7 @@ local function DrawTilemap()
 		deathshader:send("darkness", darkness)
 		table.insert(shaders, deathshader)
 	end
-	if true then--flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 and (math.ceil(love.timer.getTime() * 1000) % 4500 < 200) then
+	if flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 then
 		local lt = leveltime / 100
 		glitchshader:send("leveltime", lt)
 		glitchshader:send("line", leveltime % 25 * math.abs(math.floor(math.sin(lt))) * 100)
