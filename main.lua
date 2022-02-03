@@ -1,4 +1,4 @@
-VERSION = "Version b5.1.147"
+VERSION = "Version b6.0.149"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -335,12 +335,11 @@ local function DrawTilemap()
 		deathshader:send("darkness", darkness)
 		table.insert(shaders, deathshader)
 	end
-	if flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 and (math.ceil(love.timer.getTime() * 1000) % 4500 < 200) then
-		glitchshader:send("random", love.math.random() - 0.5)
+	if true then--flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 and (math.ceil(love.timer.getTime() * 1000) % 4500 < 200) then
+		local lt = leveltime / 100
+		glitchshader:send("leveltime", lt)
+		glitchshader:send("line", leveltime % 25 * math.abs(math.floor(math.sin(lt))) * 100)
 		table.insert(shaders, glitchshader)
-		if sound.music then
-			sound.music:seek(math.max(sound.music:tell() - love.timer.getDelta(), 0))
-		end
 	end
 	if flags.negative and math.ceil((love.timer.getTime() + 500) * 1000) % 6000 < 1200 then
 		table.insert(shaders, negativeshader)
@@ -416,11 +415,7 @@ local function DrawTilemap()
 	else
 		love.graphics.setColor(1, 1, 1, 0)
 	end
-	if #shaders == 2 or shaders[1] == glitchshader then
-		love.graphics.setShader(glitchshader)
-	else
-		love.graphics.setShader()
-	end
+	love.graphics.setShader()
 	love.graphics.printf(gamemapname, 0, 50, screenwidth/2, "center", 0, 2, 2)
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.setShader()
