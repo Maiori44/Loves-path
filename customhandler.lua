@@ -74,6 +74,7 @@ local tilesetFlagsTypes = {
 	enemyquadtype = "string",
 	bridgeshardcolor = "table",
 	playersprite = "string",
+	keysprite = "string",
 	vanilla = "nil",
 }
 

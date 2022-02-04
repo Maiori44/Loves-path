@@ -120,6 +120,7 @@ function LoadMap(mapname)
 	local playerx, playery
 	tilemap = {}
 	local ReadTile = string.gmatch(ReadLine(), "..")
+	local flags = tilesets[tilesetname]
 	for y = 1,mapheight do
 		tilemap[y] = {}
 		for x = 1,mapwidth do
@@ -130,13 +131,13 @@ function LoadMap(mapname)
 				playerx = x
 				playery = y
 			elseif tile == TILE_KEY then
-				SpawnObject("Sprites/key.png", x, y, "key")
+				SpawnObject(flags.keysprite and flags.keysprite or "Sprites/key.png", x, y, "key")
 				tilemap[y][x] = TILE_FLOOR1
 			elseif tile == TILE_ENEMY then
-				SpawnObject(enemysprite, x, y, "enemy", GetDirectionalQuads(enemysprite), tilesets[tilesetname].enemyquadtype or "directions")
+				SpawnObject(enemysprite, x, y, "enemy", GetDirectionalQuads(enemysprite), flags.enemyquadtype or "directions")
 				tilemap[y][x] = TILE_FLOOR1
-			elseif (tile == TILE_CUSTOM1 or tile == TILE_CUSTOM2 or tile == TILE_CUSTOM3) and type(tilesets[tilesetname].tile[tile]) == "function" then
-				tilesets[tilesetname].tile[tile](x, y)
+			elseif (tile == TILE_CUSTOM1 or tile == TILE_CUSTOM2 or tile == TILE_CUSTOM3) and type(flags.tile[tile]) == "function" then
+				flags.tile[tile](x, y)
 			end
 		end
 	end
@@ -146,7 +147,7 @@ function LoadMap(mapname)
 	end
 	if customEnv then customEnv.tilemap = tilemap end
 	if playerx and playery then
-		player = SpawnObject(tilesets[tilesetname].playersprite or "Sprites/player.png", playerx, playery, "player")
+		player = SpawnObject(flags.playersprite or "Sprites/player.png", playerx, playery, "player")
 		player.fmomx = 0
 		player.fmomy = 0
 		player.ftime = 0
@@ -169,14 +170,14 @@ function LoadMap(mapname)
 	end
 	particles.reset()
 	particles.reset(PARTICLE_HELP)
-	if tilesets[tilesetname].snow and not particles.list[PARTICLE_SNOW] and menu.settings[6].value == 1 then
+	if flags.snow and not particles.list[PARTICLE_SNOW] and menu.settings[6].value == 1 then
 		particles.spawnSnow()
-	elseif not tilesets[tilesetname].snow or menu.settings[6].value == 0 then
+	elseif not flags.snow or menu.settings[6].value == 0 then
 		particles.reset(PARTICLE_SNOW)
 	end
-	if tilesets[tilesetname].rain and not particles.list[PARTICLE_RAIN] and menu.settings[6].value == 1 then
+	if flags.rain and not particles.list[PARTICLE_RAIN] and menu.settings[6].value == 1 then
 		particles.spawnRain()
-	elseif not tilesets[tilesetname].rain or menu.settings[6].value == 0 then
+	elseif not flags.rain or menu.settings[6].value == 0 then
 		particles.reset(PARTICLE_RAIN)
 	end
 end
