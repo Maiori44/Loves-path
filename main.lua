@@ -247,7 +247,6 @@ function love.update(dt)
 		if statetimer < 1 then
 			statetimer = statetimer + (1 - statetimer) / 10
 		end
-		if customEnv then customEnv.leveltime = leveltime end
 		if #sound.list >= 10 then sound.collectGarbage() end
 		if #particles.list >= 20 then particles.collectGarbage() end
 		if updateModes[gamestate] then updateModes[gamestate](dt) end
