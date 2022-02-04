@@ -719,8 +719,9 @@ AddObjectType("biywin", BIYCollision)
 AddObjectType("biybridge", BIYCollision, function(mo)
 	if mo.var2 or not player then return end
 	local is = objects[29]
-	if is.x ~= 14 or is.y ~= 16 then return end
+	if not is or is.x ~= 14 or is.y ~= 16 then return end
 	local slime = objects[28]
+	if not slime then return end
 	print(mo.x, mo.y, slime.x, slime.y)
 	if mo.x == 13 and mo.y == 16 and slime.x == 15 and slime.y == 16 then
 		tilemap[11][4] = TILE_SLIME
