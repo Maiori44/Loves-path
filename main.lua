@@ -432,7 +432,7 @@ local hudcoinquads = {
 	got = love.graphics.newQuad(11, 1, 8, 8, 20, 10),
 }
 local icons = love.graphics.newImage("Sprites/icons.png")
-local iconsquads = GetQuads(3, icons)
+local iconsquads = GetQuads(4, icons)
 
 local function DrawMenu(gs)
 	local gamestate = gs or gamestate
@@ -822,7 +822,7 @@ Artist]], 0, 360, screenwidth, "center")
 	["select level"] = function()
 		DrawMenu()
 		if not customEnv then
-			for i = 1, 3 do
+			for i = 1, 4 do
 				if lastmap > (i - 1) * 10 then
 					love.graphics.draw(icons, iconsquads[i], (screenwidth / 2) - 275, 135 + 50 * (i - 1))
 				end
