@@ -309,35 +309,19 @@ menu = {
 		{name = "back", func = function() ChangeGamestate("title") pointer = 3 end}
 	},
 	["bonus levels"] = {
-		{name = "brain messer", func = function ()
+		{name = "pac love", func = function()
 			LoadMap("bonus01.map")
-			gamemap = -1
+			gamemap = -4
 			frames = 0
 			seconds = 0
 			minutes = 0
 			hours = 0
-			local bfmonitor, nummonitor = "Sprites/Bonuses/brainfuck monitor.png", "Sprites/Bonuses/number monitor.png"
-			for x = 5, 19 do
-				SpawnObject(bfmonitor, x, 12, "bfmonitor", GetQuads(7, bfmonitor), "hp", nil, 1)
-			end
-			for x = 10, 14 do
-				SpawnObject(nummonitor, x, 4, "dummy", GetQuads(10, nummonitor), "hp", nil, 1)
-			end
-		end},
-		{name = "mirrored plane", func = function()
-			LoadMap("bonus02.map")
-			gamemap = -2
-			frames = 0
-			seconds = 0
-			minutes = 0
-			hours = 0
-			objects = {}
-			SpawnObject("Sprites/player.png", 8, 19, "player clone")
-			SpawnObject("Sprites/player.png", player.x, player.y, "player")
-			player = objects[2]
+			IterateMap(TILE_FLOOR3, function(x, y)
+				SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pac dot")
+			end)
 		end},
 		{name = "love is you", func = function()
-			LoadMap("bonus03.map")
+			LoadMap("bonus02.map")
 			gamemap = -3
 			frames = 0
 			seconds = 0
@@ -383,16 +367,32 @@ menu = {
 			SpawnObject(is, 14, 16, "biyword", quads)
 			SpawnObject(bridge, 15, 17, "biybridge", quads)
 		end},
-		{name = "pac love", func = function()
-			LoadMap("bonus04.map")
-			gamemap = -4
+		{name = "mirrored plane", func = function()
+			LoadMap("bonus03.map")
+			gamemap = -2
 			frames = 0
 			seconds = 0
 			minutes = 0
 			hours = 0
-			IterateMap(TILE_FLOOR3, function(x, y)
-				SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pac dot")
-			end)
+			objects = {}
+			SpawnObject("Sprites/player.png", 8, 19, "player clone")
+			SpawnObject("Sprites/player.png", player.x, player.y, "player")
+			player = objects[2]
+		end},
+		{name = "brain messer", func = function ()
+			LoadMap("bonus04.map")
+			gamemap = -1
+			frames = 0
+			seconds = 0
+			minutes = 0
+			hours = 0
+			local bfmonitor, nummonitor = "Sprites/Bonuses/brainfuck monitor.png", "Sprites/Bonuses/number monitor.png"
+			for x = 5, 19 do
+				SpawnObject(bfmonitor, x, 12, "bfmonitor", GetQuads(7, bfmonitor), "hp", nil, 1)
+			end
+			for x = 10, 14 do
+				SpawnObject(nummonitor, x, 4, "dummy", GetQuads(10, nummonitor), "hp", nil, 1)
+			end
 		end},
 		{name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
 	},
