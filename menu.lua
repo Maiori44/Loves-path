@@ -61,6 +61,10 @@ function RestartMap()
 	scale = oldscale
 end
 
+local function SpawnDots(x, y)
+	SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pac dot")
+end
+
 menu = {
 	title = {
 		{name = "Start Game", func = function()
@@ -316,9 +320,7 @@ menu = {
 			seconds = 0
 			minutes = 0
 			hours = 0
-			IterateMap(TILE_FLOOR3, function(x, y)
-				SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pac dot")
-			end)
+			IterateMap(TILE_FLOOR3, SpawnDots)
 		end},
 		{name = "love is you", func = function()
 			LoadMap("bonus02.map")

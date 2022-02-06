@@ -1,4 +1,4 @@
-VERSION = "Version b6.0.150"
+VERSION = "Version b6.0.152"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -169,6 +169,8 @@ local deathshader = love.graphics.newShader("Shaders/death.glsl")
 local darkshader = love.graphics.newShader("Shaders/dark.glsl")
 local negativeshader = love.graphics.newShader("Shaders/negative.glsl")
 
+local function SpikesWarn(x, y) particles.spawnWarning(x, y, 0.4) end
+
 local updateModes = {
 	ingame = function(dt)
 		if not player then darkness = math.min(darkness+0.2, 70) end
@@ -210,7 +212,7 @@ local updateModes = {
 			end
 		end
 		if ((leveltime + 40) % 60) == 0 then
-			IterateMap(TILE_SPIKEOFF, function(x, y) particles.spawnWarning(x, y, 0.4) end)
+			IterateMap(TILE_SPIKEOFF, SpikesWarn)
 		elseif (leveltime % 60) == 0 then
 			if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
 				sound.playSound("spikes.wav")
@@ -516,6 +518,48 @@ local pushDesc = "\nObjects in this tile will be pushed to the "
 local falsepushDesc = "\nThis tile will do nothing, use the first frame of the pusher"
 local spikeDesc = "\nObjects in this tile will be destroyed"
 
+local function MirrorUpdate(x, y)
+	if SearchObject(x, y) == player then
+		sound.playSound("box.wav")
+		if y == 15 then
+			tilemap[15][30] = TILE_FLOOR1
+			tilemap[6][2] = TILE_FLOOR1
+			tilemap[6][30] = TILE_CUSTOM3
+			tilemap[15][14] = TILE_CUSTOM3
+			tilemap[15][2] = TILE_FLOOR1
+			tilemap[15][18] = TILE_BLUESWITCH
+			tilemap[6][18] = TILE_RIGHTPUSHER1
+			tilemap[11][5] = TILE_SPIKEOFF
+			tilemap[11][11] = TILE_SPIKEOFF
+			tilemap[11][21] = TILE_SPIKEOFF
+			tilemap[11][27] = TILE_SPIKEOFF
+			tilemap[6][14] = TILE_SLIME
+			tilemap[7][30] = TILE_UPPUSHER1
+			CheckMap(TILE_REDWALLON, TILE_REDWALLOFF, TILE_BLUEWALLOFF, TILE_BLUEWALLON)
+		elseif y == 6 then
+			tilemap[6][30] = TILE_FLOOR1
+			tilemap[15][14] = TILE_FLOOR1
+			tilemap[15][18] = TILE_FLOOR1
+			tilemap[6][18] = TILE_FLOOR1
+			tilemap[7][8] = TILE_SLIME
+			tilemap[6][14] = TILE_FLOOR1
+			tilemap[7][30] = TILE_FLOOR1
+			tilemap[7][14] = TILE_LEFTPUSHER1
+			tilemap[13][24] = TILE_CUSTOM3
+			tilemap[14][8] = TILE_CUSTOM3
+		elseif y == 13 then
+			tilemap[7][8] = TILE_FLOOR1
+			tilemap[7][14] = TILE_FLOOR1
+			tilemap[13][24] = TILE_FLOOR1
+			tilemap[14][8] = TILE_FLOOR1
+			tilemap[5][24] = TILE_FLOOR1
+			tilemap[5][8] = TILE_FLOOR1
+			sound.playSound("lock.wav")
+		end
+		return true
+	end
+end
+
 tilesets = {
 	["bonus.png"] = { --BONUS LEVELS
 		vanilla = true,
@@ -547,47 +591,7 @@ tilesets = {
 					return
 				end
 				if mo == player or (mo.momx == 0 and mo.momy == 0) then return end
-				IterateMap(TILE_CUSTOM3, function(x, y)
-					if SearchObject(x, y) == player then
-						sound.playSound("box.wav")
-						if y == 15 then
-							tilemap[15][30] = TILE_FLOOR1
-							tilemap[6][2] = TILE_FLOOR1
-							tilemap[6][30] = TILE_CUSTOM3
-							tilemap[15][14] = TILE_CUSTOM3
-							tilemap[15][2] = TILE_FLOOR1
-							tilemap[15][18] = TILE_BLUESWITCH
-							tilemap[6][18] = TILE_RIGHTPUSHER1
-							tilemap[11][5] = TILE_SPIKEOFF
-							tilemap[11][11] = TILE_SPIKEOFF
-							tilemap[11][21] = TILE_SPIKEOFF
-							tilemap[11][27] = TILE_SPIKEOFF
-							tilemap[6][14] = TILE_SLIME
-							tilemap[7][30] = TILE_UPPUSHER1
-							CheckMap(TILE_REDWALLON, TILE_REDWALLOFF, TILE_BLUEWALLOFF, TILE_BLUEWALLON)
-						elseif y == 6 then
-							tilemap[6][30] = TILE_FLOOR1
-							tilemap[15][14] = TILE_FLOOR1
-							tilemap[15][18] = TILE_FLOOR1
-							tilemap[6][18] = TILE_FLOOR1
-							tilemap[7][8] = TILE_SLIME
-							tilemap[6][14] = TILE_FLOOR1
-							tilemap[7][30] = TILE_FLOOR1
-							tilemap[7][14] = TILE_LEFTPUSHER1
-							tilemap[13][24] = TILE_CUSTOM3
-							tilemap[14][8] = TILE_CUSTOM3
-						elseif y == 13 then
-							tilemap[7][8] = TILE_FLOOR1
-							tilemap[7][14] = TILE_FLOOR1
-							tilemap[13][24] = TILE_FLOOR1
-							tilemap[14][8] = TILE_FLOOR1
-							tilemap[5][24] = TILE_FLOOR1
-							tilemap[5][8] = TILE_FLOOR1
-							sound.playSound("lock.wav")
-						end
-						return true
-					end
-				end)
+				IterateMap(TILE_CUSTOM3, MirrorUpdate)
 			end,
 		},
 		tile = {

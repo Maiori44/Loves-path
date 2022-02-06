@@ -530,7 +530,7 @@ AddObjectType("snowball", {
 })
 
 --SNOWMAN
-AddObjectType("snowman", {}, function(mo)
+AddObjectType("snowman", nil, function(mo)
 	if not player then return end
 	local time = leveltime%180
 	if time == 0 then
