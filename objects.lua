@@ -141,7 +141,7 @@ end
 
 function SearchObject(x, y, notmo)
 	for _, mo in pairs(objects) do
-		if mo.x == x and mo.y == y then return mo end
+		if mo.x == x and mo.y == y and mo ~= notmo then return mo end
 	end
 end
 
@@ -158,7 +158,7 @@ function TryMove(mo, momx, momy)
 	moCollisions[TILE_CUSTOM3] = tilesetCollisions[TILE_CUSTOM3]
 	local sgamemap = gamemap
 	if tilemap[mo.y+momy] and moCollisions[tilemap[mo.y+momy][mo.x+momx]] then
-		local obstmo = SearchObject(mo.x+momx, mo.y+momy)
+		local obstmo = SearchObject(mo.x+momx, mo.y+momy, mo)
 		if (debugmode and debugmode["Noclip"]) or predicting then obstmo = nil end
 		if obstmo then
 			local obstmoType = ffi.string(obstmo.type)
@@ -413,7 +413,7 @@ AddObjectType("player", {
 			if check then
 				CheckMap(TILE_LOCK, TILE_FLOOR2)
 				for _, button in ipairs(buttons) do button.frame = 3 end
-				sound.playSound("door.wav")
+				sound.playSound("lock.wav")
 			end
 		end
 	end,
@@ -617,7 +617,11 @@ AddObjectType("metalbox", {
 	[TILE_SPIKEON] = DestroySpikes,
 	[TILE_SPIKE] = DestroySpikes,
 	bullet = RemoveCollidedObject,
-	miniman = RemoveCollidedObject
+	miniman = function(mo, obstmo)
+		RemoveObject(obstmo)
+		local pmo = SearchObject(obstmo.x, obstmo.y)
+		if pmo then RemoveObject(pmo) end
+	end
 })
 
 --MINIMAN
