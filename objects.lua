@@ -139,8 +139,8 @@ function SlowPushObject(mo, obstmo, momx, momy)
 	return false
 end
 
-function SearchObject(x, y)
-	for k, mo in pairs(objects) do
+function SearchObject(x, y, notmo)
+	for _, mo in pairs(objects) do
 		if mo.x == x and mo.y == y then return mo end
 	end
 end
@@ -159,19 +159,20 @@ function TryMove(mo, momx, momy)
 	local sgamemap = gamemap
 	if tilemap[mo.y+momy] and moCollisions[tilemap[mo.y+momy][mo.x+momx]] then
 		local obstmo = SearchObject(mo.x+momx, mo.y+momy)
-		if (debugmode and debugmode["Noclip"]) or predicting or obstmo == mo then obstmo = nil end
+		if (debugmode and debugmode["Noclip"]) or predicting then obstmo = nil end
 		if obstmo then
 			local obstmoType = ffi.string(obstmo.type)
 			local obstmoCollisions = collisions[obstmoType]
 			obstmoCollisions[TILE_CUSTOM1] = tilesetCollisions[TILE_CUSTOM1]
 			obstmoCollisions[TILE_CUSTOM2] = tilesetCollisions[TILE_CUSTOM2]
 			obstmoCollisions[TILE_CUSTOM3] = tilesetCollisions[TILE_CUSTOM3]
-			if not moCollisions[obstmoType] then return false end
+			local collision = moCollisions[obstmoType]
+			if not collision then return false end
 			local check
-			if type(moCollisions[obstmoType]) == "function" then
-				check = moCollisions[obstmoType](mo, obstmo, momx, momy)
+			if type(collision) == "function" then
+				check = collision(mo, obstmo, momx, momy)
 			else
-				check = true
+				check = collision == nil and true or collision
 			end
 			if check == true then
 				mo.y = mo.y+momy
@@ -394,7 +395,6 @@ AddObjectType("player", {
 	snowman = RemoveObject,
 	masterbutton = function(mo, obstmo, momx, momy)
 		if (mo.momx == 0 and mo.momy == 0) or (momx == 0 and momy == 0) then return end
-		print(mo.x, mo.y, obstmo.x, obstmo.y)
 		local frame = obstmo.frame
 		if frame == 2 then
 			IterateMap(TILE_CUSTOM1, ResetButtons)
@@ -413,9 +413,11 @@ AddObjectType("player", {
 			if check then
 				CheckMap(TILE_LOCK, TILE_FLOOR2)
 				for _, button in ipairs(buttons) do button.frame = 3 end
+				sound.playSound("door.wav")
 			end
 		end
 	end,
+	metalbox = PushObject,
 	bfmonitor = function(_, obstmo)
 		obstmo.hp = math.max((obstmo.hp + 1) % 8, 1)
 		return true
@@ -525,7 +527,8 @@ AddObjectType("bullet", {
 	[TILE_CHASM2] = true,
 	player = RemoveCollidedObject,
 	bullet = function(mo, obstmo) RemoveObject(mo) RemoveObject(obstmo) end,
-	masterbutton = true
+	masterbutton = true,
+	metalbox = RemoveObject
 }, RemoveStandingObject)
 
 --DUMMY
@@ -603,12 +606,27 @@ end)
 --MASTER BUTTON
 AddObjectType("masterbutton")
 
+--METAL BOX
+local function DestroySpikes(mo)
+	tilemap[mo.y][mo.x] = TILE_FLOOR2
+	sound.playSound("boom.wav")
+	particles.spawnShards(mo.x, mo.y, 0.5)
+end
+
+AddObjectType("metalbox", {
+	[TILE_SPIKEON] = DestroySpikes,
+	[TILE_SPIKE] = DestroySpikes,
+	bullet = RemoveCollidedObject,
+	miniman = RemoveCollidedObject
+})
+
 --MINIMAN
-AddObjectType("miniman", nil, function(mo)
+AddObjectType("miniman", {metalbox = false}, function(mo)
 	if not player or (leveltime % 8) ~= 0 then return end
 	FacePlayer(mo)
 	if ((mo.direction == DIR_DOWN or mo.direction == DIR_UP) and mo.x == player.x
-	or (mo.direction == DIR_LEFT or mo.direction == DIR_RIGHT) and mo.y == player.y) then
+	or (mo.direction == DIR_LEFT or mo.direction == DIR_RIGHT) and mo.y == player.y)
+	and PredictMove(mo, DirectionMomentum(mo.direction)) then
 		FireShot(mo, mo.sprite, GetExtraQuad(mo.sprite))
 	end
 end)
@@ -767,7 +785,6 @@ AddObjectType("biybridge", BIYCollision, function(mo)
 	if not is or is.x ~= 14 or is.y ~= 16 then return end
 	local slime = objects[28]
 	if not slime then return end
-	print(mo.x, mo.y, slime.x, slime.y)
 	if mo.x == 13 and mo.y == 16 and slime.x == 15 and slime.y == 16 then
 		tilemap[11][4] = TILE_SLIME
 		tilemap[11][5] = TILE_SLIME
