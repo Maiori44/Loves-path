@@ -313,19 +313,21 @@ local function DrawTilemap()
 		local offset = math.floor(32*scale)
 		local playerx = centerx + player.x * offset + offset / 2
 		local playery = centery + player.y * offset + offset / 2
-		if playerx > screenwidth - 100 then
-			mouse.camerax = mouse.camerax - 2 * mouse.speed
-			mouse.speed = mouse.speed + 2
-		elseif playerx < 100 then
-			mouse.camerax = mouse.camerax + 2 * mouse.speed
-			mouse.speed = mouse.speed + 2
-		end
-		if playery > screenheight - 100 then
-			mouse.cameray = mouse.cameray - 2 * mouse.speed
-			mouse.speed = mouse.speed + 2
-		elseif playery < 100 then
-			mouse.cameray = mouse.cameray + 2 * mouse.speed
-			mouse.speed = mouse.speed + 2
+		if not debugmode["Free Camera"] then
+			if playerx > screenwidth - 100 then
+				mouse.camerax = mouse.camerax - 2 * mouse.speed
+				mouse.speed = mouse.speed + 2
+			elseif playerx < 100 then
+				mouse.camerax = mouse.camerax + 2 * mouse.speed
+				mouse.speed = mouse.speed + 2
+			end
+			if playery > screenheight - 100 then
+				mouse.cameray = mouse.cameray - 2 * mouse.speed
+				mouse.speed = mouse.speed + 2
+			elseif playery < 100 then
+				mouse.cameray = mouse.cameray + 2 * mouse.speed
+				mouse.speed = mouse.speed + 2
+			end
 		end
 		if flags.dark then
 			darkshader:send("pos", {playerx, playery})
