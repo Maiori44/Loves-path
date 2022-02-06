@@ -692,7 +692,34 @@ tilesets = {
 				tilemap[y][x] = TILE_FLOOR2
 			end,
 			[TILE_CUSTOM3] = nil
-			}
+		}
+	},
+	["factory.png"] = { --CHAPTER 4
+		vanilla = true,
+		dark = true,
+		bridgeshardcolor = {0.6, 0.6, 0.6},
+		description = {
+			[TILE_CUSTOM1] = "MASTER BUTTON\nPressing all of the red ones will open all locks\npressing a blue one will reset them all",
+			[TILE_CUSTOM2] = "UNUSED"..floorDesc,
+			[TILE_CUSTOM3] = "MINIMAN\nSpawns a miniman which will constantly fire when the player is in range"
+		},
+		collision = {
+			[TILE_CUSTOM1] = true,
+			[TILE_CUSTOM2] = true,
+			[TILE_CUSTOM3] = true
+		},
+		tile = {
+			[TILE_CUSTOM1] = function(x, y)
+				local masterbuttonsprite = "Sprites/Chapter 4/master button.png"
+				SpawnObject(masterbuttonsprite, x, y, "masterbutton", GetQuads(3, masterbuttonsprite), "frame")
+			end,
+			[TILE_CUSTOM2] = nil,
+			[TILE_CUSTOM3] = function(x, y)
+				local minimansprite = "Sprites/Chapter 4/miniman.png"
+				SpawnObject(minimansprite, x, y, "miniman", GetDirectionalQuads(minimansprite))
+				tilemap[y][x] = TILE_FLOOR1
+			end
+		}
 	},
 }
 

@@ -22,7 +22,8 @@ local percentuals = {
 possibleTilesets = {
 	[0] = "forest.png",
 	[1] = "frost.png",
-	[2] = "castle.png"
+	[2] = "castle.png",
+	[3] = "factory.png",
 }
 
 possibleMusic = {

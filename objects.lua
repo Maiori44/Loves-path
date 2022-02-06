@@ -355,6 +355,11 @@ end
 ---MISC
 
 --PLAYER
+local function ResetButtons(x, y)
+	local button = SearchObject(x, y)
+	button.frame = 1
+end
+
 AddObjectType("player", {
 	[TILE_GOAL] = EndLevel,
 	coin = function(_, obstmo)
@@ -387,6 +392,30 @@ AddObjectType("player", {
 	bullet = RemoveObject,
 	snowball = SlowPushObject,
 	snowman = RemoveObject,
+	masterbutton = function(mo, obstmo, momx, momy)
+		if (mo.momx == 0 and mo.momy == 0) or (momx == 0 and momy == 0) then return end
+		print(mo.x, mo.y, obstmo.x, obstmo.y)
+		local frame = obstmo.frame
+		if frame == 2 then
+			IterateMap(TILE_CUSTOM1, ResetButtons)
+		elseif frame == 1 then
+			obstmo.frame = 2
+			local check = true
+			local buttons = {}
+			IterateMap(TILE_CUSTOM1, function(x, y)
+				local button = SearchObject(x, y)
+				if button.frame == 1 then
+					check = false
+					return true
+				end
+				table.insert(buttons, button)
+			end)
+			if check then
+				CheckMap(TILE_LOCK, TILE_FLOOR2)
+				for _, button in ipairs(buttons) do button.frame = 3 end
+			end
+		end
+	end,
 	bfmonitor = function(_, obstmo)
 		obstmo.hp = math.max((obstmo.hp + 1) % 8, 1)
 		return true
@@ -496,6 +525,7 @@ AddObjectType("bullet", {
 	[TILE_CHASM2] = true,
 	player = RemoveCollidedObject,
 	bullet = function(mo, obstmo) RemoveObject(mo) RemoveObject(obstmo) end,
+	masterbutton = true
 }, RemoveStandingObject)
 
 --DUMMY
@@ -565,6 +595,21 @@ AddObjectType("box", {
 	local tile = tilemap[mo.y][mo.x]
 	if tile == TILE_SPIKEON or tile == TILE_SPIKE then
 		DamageObject(mo)
+	end
+end)
+
+---CHAPTER 4
+
+--MASTER BUTTON
+AddObjectType("masterbutton")
+
+--MINIMAN
+AddObjectType("miniman", nil, function(mo)
+	if not player or (leveltime % 8) ~= 0 then return end
+	FacePlayer(mo)
+	if ((mo.direction == DIR_DOWN or mo.direction == DIR_UP) and mo.x == player.x
+	or (mo.direction == DIR_LEFT or mo.direction == DIR_RIGHT) and mo.y == player.y) then
+		FireShot(mo, mo.sprite, GetExtraQuad(mo.sprite))
 	end
 end)
 
