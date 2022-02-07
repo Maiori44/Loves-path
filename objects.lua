@@ -618,8 +618,9 @@ end
 AddObjectType("metalbox", {
 	[TILE_SPIKEON] = DestroySpikes,
 	[TILE_SPIKE] = DestroySpikes,
+	enemy = RemoveCollidedObject,
 	bullet = RemoveCollidedObject,
-	miniman = function(mo, obstmo)
+	miniman = function(_, obstmo)
 		RemoveObject(obstmo)
 		local pmo = SearchObject(obstmo.x, obstmo.y)
 		if pmo then RemoveObject(pmo) end
