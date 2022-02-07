@@ -394,9 +394,11 @@ AddObjectType("player", {
 	snowball = SlowPushObject,
 	snowman = RemoveObject,
 	masterbutton = function(mo, obstmo, momx, momy)
-		if (mo.momx == 0 and mo.momy == 0) or (momx == 0 and momy == 0) then return end
 		local frame = obstmo.frame
+		if (mo.momx == 0 and mo.momy == 0) or (momx == 0 and momy == 0) or frame == 3 then return end
+		sound.playSound("button.wav")
 		if frame == 2 then
+			sound.playSound("button_off.wav")
 			IterateMap(TILE_CUSTOM1, ResetButtons)
 		elseif frame == 1 then
 			obstmo.frame = 2
