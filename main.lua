@@ -313,7 +313,7 @@ local function DrawTilemap()
 		local offset = math.floor(32*scale)
 		local playerx = centerx + player.x * offset + offset / 2
 		local playery = centery + player.y * offset + offset / 2
-		if not debugmode["Free Camera"] then
+		if debugmode and not debugmode["Free Camera"] or not debugmode then
 			if playerx > screenwidth - 100 then
 				mouse.camerax = mouse.camerax - 2 * mouse.speed
 				mouse.speed = mouse.speed + 2
