@@ -1,4 +1,4 @@
-VERSION = "Version b6.0.153"
+VERSION = "Version b6.0.154"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -700,6 +700,7 @@ tilesets = {
 		vanilla = true,
 		dark = true,
 		bridgeshardcolor = {0.6, 0.6, 0.6},
+		keysprite = "Sprites/chapter 4/key.png",
 		description = {
 			[TILE_CUSTOM1] = "MASTER BUTTON\nPressing all of the red ones will open all locks\npressing a blue one will reset them all",
 			[TILE_CUSTOM2] = "METAL BOX\nCan be pushed by the player and will break any miniman or spikes it finds.",
