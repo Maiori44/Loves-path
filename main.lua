@@ -1,4 +1,4 @@
-VERSION = "Version b6.0.154"
+VERSION = "Version b6.0.155"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -338,10 +338,10 @@ local function DrawTilemap()
 		deathshader:send("darkness", darkness)
 		table.insert(shaders, deathshader)
 	end
-	if flags.glitch and gamestate == "ingame" and menu.settings[7].value == 1 then
+	if flags.glitch and (gamestate == "ingame" or gamestate == "pause") and menu.settings[7].value == 1 then
 		local lt = leveltime / 100
 		glitchshader:send("leveltime", lt)
-		glitchshader:send("line", leveltime % 25 * math.abs(math.floor(math.sin(lt))) * 100)
+		glitchshader:send("intensity", math.abs(math.sin(leveltime / 700)))
 		table.insert(shaders, glitchshader)
 	end
 	if flags.negative and math.ceil((love.timer.getTime() + 500) * 1000) % 6000 < 1200 then
@@ -604,6 +604,7 @@ tilesets = {
 	},
 	["forest.png"] = { --CHAPTER 1
 		vanilla = true,
+		glitch = true,
 		bridgeshardcolor = {0.7, 0.4, 0.1},
 		description = {
 			[TILE_CUSTOM1] = "UNUSED"..floorDesc,
