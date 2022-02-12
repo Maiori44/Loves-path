@@ -66,6 +66,15 @@ local function SpawnDots(x, y)
 	SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pac dot")
 end
 
+local function LoadBonusMap(num)
+	LoadMap("bonus0"..num..".map")
+	gamemap = -num
+	frames = 0
+	seconds = 0
+	minutes = 0
+	hours = 0
+end
+
 menu = {
 	title = {
 		{name = "Start Game", func = function()
@@ -315,21 +324,11 @@ menu = {
 	},
 	["bonus levels"] = {
 		{name = "pac love", func = function()
-			LoadMap("bonus01.map")
-			gamemap = -4
-			frames = 0
-			seconds = 0
-			minutes = 0
-			hours = 0
+			LoadBonusMap(1)
 			IterateMap(TILE_FLOOR3, SpawnDots)
 		end},
 		{name = "love is you", func = function()
-			LoadMap("bonus02.map")
-			gamemap = -3
-			frames = 0
-			seconds = 0
-			minutes = 0
-			hours = 0
+			LoadBonusMap(2)
 			local is = "Sprites/Bonuses/is.png"
 			local bridge = "Sprites/Bonuses/bridge.png"
 			local slime = "Sprites/Bonuses/slime.png"
@@ -371,24 +370,14 @@ menu = {
 			SpawnObject(bridge, 15, 17, "biybridge", quads)
 		end},
 		{name = "mirrored plane", func = function()
-			LoadMap("bonus03.map")
-			gamemap = -2
-			frames = 0
-			seconds = 0
-			minutes = 0
-			hours = 0
+			LoadBonusMap(3)
 			objects = {}
 			SpawnObject("Sprites/player.png", 8, 19, "player clone")
 			SpawnObject("Sprites/player.png", player.x, player.y, "player")
 			player = objects[2]
 		end},
-		{name = "brain messer", func = function ()
-			LoadMap("bonus04.map")
-			gamemap = -1
-			frames = 0
-			seconds = 0
-			minutes = 0
-			hours = 0
+		{name = "brain messer", func = function()
+			LoadBonusMap(4)
 			local bfmonitor, nummonitor = "Sprites/Bonuses/brainfuck monitor.png", "Sprites/Bonuses/number monitor.png"
 			for x = 5, 19 do
 				SpawnObject(bfmonitor, x, 12, "bfmonitor", GetQuads(7, bfmonitor), "hp", nil, 1)
@@ -396,6 +385,25 @@ menu = {
 			for x = 10, 14 do
 				SpawnObject(nummonitor, x, 4, "dummy", GetQuads(10, nummonitor), "hp", nil, 1)
 			end
+		end},
+		{name = "simply riddles", func = function()
+			LoadBonusMap(5)
+			local bimonitor = "Sprites/Bonuses/binary monitor.png"
+			for x = 2, 5 do
+				SpawnObject(bimonitor, x, 7, "bimonitor", GetQuads(2, bimonitor), "frame")
+			end
+			for x = 7, 10 do
+				SpawnObject(bimonitor, x, 7, "bimonitor", GetQuads(2, bimonitor), "frame")
+			end
+			for x = 16, 19 do
+				SpawnObject(bimonitor, x, 7, "bimonitor", GetQuads(2, bimonitor), "frame")
+			end
+			for x = 21, 24 do
+				SpawnObject(bimonitor, x, 7, "bimonitor", GetQuads(2, bimonitor), "frame")
+			end
+			local numonitor = "Sprites/Bonuses/number monitor.png"
+			SpawnObject(numonitor, 22, 31, "numonitor", GetQuads(10, numonitor), "frame")
+			SpawnObject(numonitor, 4, 20, "numonitor", GetQuads(10, numonitor), "frame")
 		end},
 		{name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
 	},

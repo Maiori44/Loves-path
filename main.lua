@@ -572,14 +572,49 @@ tilesets = {
 			[TILE_CUSTOM3] = "BUTTON?\nbut you're probably reading this from the source code, aren't you?"
 		},
 		collision = {
-			[TILE_CUSTOM1] = function(_, momx, momy)
+			[TILE_CUSTOM1] = function(mo, momx, momy)
 				if momx == 0 and momy == 0 then return end
-				for x = 10, 14 do
-					SearchObject(x, 4).hp = 1
+				if gamemap == -4 then
+					for x = 10, 14 do
+						SearchObject(x, 4).hp = 1
+					end
+					local readersprite = "Sprites/Bonuses/reader.png"
+					local posmo = SpawnObject(readersprite, 10, 4, "dummy")
+					SpawnObject(readersprite, 4, 12, "bfreader", nil, nil, nil, 0).var1 = posmo.key
+				elseif gamemap == -5 then
+					if mo.x == 13 and mo.y == 5 then
+						local correct = {2, 2, 1, 2, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 2, 1}
+						for _, mmo in ipairs(objects) do
+							if ffi.string(mmo.type) == "bimonitor" then
+								local t = table.remove(correct)
+								if mmo.frame ~= t then
+									notification.setMessage("Wrong combination...")
+									return
+								end
+							end
+						end
+						tilemap[4][13] = TILE_FLOOR1
+						sound.playSound("lock.wav")
+					elseif mo.x == 4 and mo.y == 21 then
+						local monitor = SearchObject(4, 20)
+						if monitor.frame == 7 then
+							RemoveObject(monitor)
+							tilemap[21][4] = TILE_FLOOR1
+							messagebox.setMessage("Main riddle hint #1", "The first number is just half of this line's words.\nFor the second number just add 2 to this monitor.")
+						else
+							notification.setMessage("Wrong number...")
+						end
+					elseif mo.x == 22 and mo.y == 32 then
+						local monitor = SearchObject(22, 31)
+						if monitor.frame == 9 then
+							RemoveObject(monitor)
+							tilemap[32][22] = TILE_FLOOR1
+							messagebox.setMessage("Main riddle hint #2", "The last 2 numbers are both B.")
+						else
+							notification.setMessage("Wrong number...")
+						end
+					end
 				end
-				local readersprite = "Sprites/Bonuses/reader.png"
-				local posmo = SpawnObject(readersprite, 10, 4, "dummy")
-				SpawnObject(readersprite, 4, 12, "bfreader", nil, nil, nil, 0).var1 = posmo.key
 			end,
 			[TILE_CUSTOM2] = function()
 				gamestate = "bonus level complete!"
@@ -587,13 +622,20 @@ tilesets = {
 				sound.playSound("win.wav")
 			end,
 			[TILE_CUSTOM3] = function(mo)
-				if gamemap == -4 then
+				if gamemap == -1 then
 					mo.x = math.abs(mo.x - 22) + mo.momx
 					sound.playSound("box.wav")
-					return
+				elseif gamemap == -3 then
+					if mo == player or (mo.momx == 0 and mo.momy == 0) then return end
+					IterateMap(TILE_CUSTOM3, MirrorUpdate)
+				elseif gamemap == -5 then
+					if mo.x == 22 and mo.y == 20 then
+						messagebox.setMessage("Left riddle hint", "It blinks and doesn't stop\nSurely you have counted\nHow many times it's here?")
+					elseif mo.x == 4 and mo.y == 31 then
+						messagebox.setMessage("Right riddle hint", "It fades away every time\nbut only now changed shape\nyou'll have to run!")
+						gamemapname = "8"
+					end
 				end
-				if mo == player or (mo.momx == 0 and mo.momy == 0) then return end
-				IterateMap(TILE_CUSTOM3, MirrorUpdate)
 			end,
 		},
 		tile = {

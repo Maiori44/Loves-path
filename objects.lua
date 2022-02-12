@@ -420,7 +420,8 @@ AddObjectType("player", {
 		end
 	end,
 	metalbox = PushObject,
-	bfmonitor = function(_, obstmo)
+	bfmonitor = function(_, obstmo, momx, momy)
+		if momx == 0 and momy == 0 then return true end
 		obstmo.hp = math.max((obstmo.hp + 1) % 8, 1)
 		return true
 	end,
@@ -463,7 +464,17 @@ AddObjectType("player", {
 			tilemap[10][11] = TILE_CUSTOM2
 			sound.playSound("box.wav")
 		end
-	end
+	end,
+	bimonitor = function(_, obstmo, momx, momy)
+		if momx == 0 and momy == 0 then return true end
+		obstmo.frame = (obstmo.frame % 2) + 1
+		return true
+	end,
+	numonitor = function(_, obstmo, momx, momy)
+		if momx == 0 and momy == 0 then return true end
+		obstmo.frame = math.max((obstmo.frame + 1) % 11, 1)
+		return true
+	end,
 }, function(mo)
 	if mo.momx == 0 and mo.momy == 0 and (mo.fmomx ~= 0 or mo.fmomy ~= 0) and mo.ftime > 0 then
 		mo.momx = mo.fmomx
@@ -826,3 +837,7 @@ AddObjectType("pac dot", {
 		end
 	end
 })
+
+--RIDDLE MONITORS
+AddObjectType("bimonitor")
+AddObjectType("numonitor")
