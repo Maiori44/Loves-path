@@ -1,4 +1,4 @@
-VERSION = "Version b6.0.155"
+VERSION = "Version b6.0.156"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -604,7 +604,6 @@ tilesets = {
 	},
 	["forest.png"] = { --CHAPTER 1
 		vanilla = true,
-		glitch = true,
 		bridgeshardcolor = {0.7, 0.4, 0.1},
 		description = {
 			[TILE_CUSTOM1] = "UNUSED"..floorDesc,
