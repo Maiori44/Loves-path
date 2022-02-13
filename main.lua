@@ -167,7 +167,6 @@ end
 local glitchshader = love.graphics.newShader("Shaders/glitch.glsl")
 local deathshader = love.graphics.newShader("Shaders/death.glsl")
 local darkshader = love.graphics.newShader("Shaders/dark.glsl")
-local negativeshader = love.graphics.newShader("Shaders/negative.glsl")
 
 local function SpikesWarn(x, y) particles.spawnWarning(x, y, 0.4) end
 
@@ -343,9 +342,6 @@ local function DrawTilemap()
 		glitchshader:send("leveltime", lt)
 		glitchshader:send("intensity", math.abs(math.sin(leveltime / 700)))
 		table.insert(shaders, glitchshader)
-	end
-	if flags.negative and math.ceil((love.timer.getTime() + 500) * 1000) % 6000 < 1200 then
-		table.insert(shaders, negativeshader)
 	end
 	if #shaders > 0 then
 		love.graphics.setShader(unpack(shaders))
