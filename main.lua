@@ -1125,8 +1125,11 @@ end
 function love.draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	if gamestate ~= "ingame" and gamestate ~= "pause" and gamestate ~= "map settings" then
-		love.graphics.draw(girl, screenwidth / 4 - 200, 0)
-		love.graphics.draw(brownie, (screenwidth / 4 - 200) +  screenwidth / 2, 0)
+		local scale = math.max(screenwidth, screenheight) / 800
+		local x = screenwidth / (scale * 4) - 200
+		local y = screenheight / scale - 600
+		love.graphics.draw(girl, x, y, 0, scale)
+		love.graphics.draw(brownie, x + screenwidth / 2, y, 0, scale)
 	end
 	if drawModes[gamestate] then
 		drawModes[gamestate]()
