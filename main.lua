@@ -1,4 +1,4 @@
-VERSION = "Version b6.0.157"
+VERSION = "Version b6.0.158"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -665,7 +665,7 @@ tilesets = {
 		vanilla = true,
 		snow = true,
 		enemyquadtype = "movement",
-		keysprite = "Sprites/chapter 2/key.png",
+		keysprite = "Sprites/Chapter 2/key.png",
 		bridgeshardcolor = {0.7, 0.7, 0.7},
 		description = {
 			[TILE_CUSTOM1] = "SNOWBALL".."\nA Snowball will spawn in this tile",
@@ -701,7 +701,7 @@ tilesets = {
 		thunder = true,
 		rain = {0.3, 0.5, 0.54, 1},
 		enemyquadtype = "movement",
-		keysprite = "Sprites/chapter 3/key.png",
+		keysprite = "Sprites/Chapter 3/key.png",
 		description = {
 			[TILE_CUSTOM1] = "+15\nAdds 15 seconds to the timer",
 			[TILE_CUSTOM2] = "BOX\nWill spawn a pushable box in this tile",
@@ -740,7 +740,7 @@ tilesets = {
 		vanilla = true,
 		dark = true,
 		bridgeshardcolor = {0.6, 0.6, 0.6},
-		keysprite = "Sprites/chapter 4/key.png",
+		keysprite = "Sprites/Chapter 4/key.png",
 		description = {
 			[TILE_CUSTOM1] = "MASTER BUTTON\nPressing all of the red ones will open all locks\npressing a blue one will reset them all",
 			[TILE_CUSTOM2] = "METAL BOX\nCan be pushed by the player and will break any miniman or spikes it finds.",
