@@ -1,4 +1,4 @@
-VERSION = "Version b6.0.156"
+VERSION = "Version b6.0.157"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -433,6 +433,8 @@ local hudcoinquads = {
 }
 local icons = love.graphics.newImage("Sprites/icons.png")
 local iconsquads = GetQuads(4, icons)
+local brownie = love.graphics.newImage("Sprites/brownie.png")
+local girl = love.graphics.newImage("Sprites/girl.png")
 
 local function DrawMenu(gs)
 	local gamestate = gs or gamestate
@@ -443,9 +445,9 @@ local function DrawMenu(gs)
 		love.graphics.translate(0, (1 - statetimer) * screenwidth)
 	end
 	if gamestate == "title" then
-		love.graphics.draw(titlescreen, (screenwidth/2)-150, 50)
+		love.graphics.draw(titlescreen, (screenwidth / 2) - 150, 50)
 		love.graphics.setColor(1, 1, 1, math.abs(math.sin(os.clock())))
-		love.graphics.draw(titleglow, (screenwidth/2)-150, 50)
+		love.graphics.draw(titleglow, (screenwidth / 2) - 150, 50)
 		love.graphics.setColor(1, 1, 1, 1)
 	else
 		love.graphics.printf(gamestate, 0, 50, screenwidth/2, "center", 0, 2, 2)
@@ -1122,6 +1124,10 @@ end
 
 function love.draw()
 	love.graphics.setColor(1, 1, 1, 1)
+	if gamestate ~= "ingame" and gamestate ~= "pause" and gamestate ~= "map settings" then
+		love.graphics.draw(girl, screenwidth / 4 - 200, 0)
+		love.graphics.draw(brownie, (screenwidth / 4 - 200) +  screenwidth / 2, 0)
+	end
 	if drawModes[gamestate] then
 		drawModes[gamestate]()
 		love.graphics.origin()
