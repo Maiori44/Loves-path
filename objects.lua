@@ -420,6 +420,7 @@ AddObjectType("player", {
 		end
 	end,
 	metalbox = PushObject,
+	miniman = RemoveObject,
 	bfmonitor = function(_, obstmo, momx, momy)
 		if momx == 0 and momy == 0 then return true end
 		obstmo.hp = math.max((obstmo.hp + 1) % 8, 1)
