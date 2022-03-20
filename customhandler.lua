@@ -77,7 +77,6 @@ local tilesetFlagsTypes = {
 	rotatebridges = "boolean",
 	playersprite = "string",
 	keysprite = "string",
-	vanilla = "nil",
 }
 
 function CheckArgument(n, funcname, arg, ctype, bad)
@@ -275,6 +274,7 @@ function SearchCustom(modname)
 			CheckArgument(1, "AddCustomTileset", tilesetname, "string")
 			if tilesets[tilesetname] then error('tileset "'..tilesetname..'" arleady exists!') end
 			tilesets[tilesetname] = {
+				custom = true,
 				description = setmetatable(description or {}, {__index = function() return "MISSING INFO!" end}),
 				collision = setmetatable(collision or {}, {__index = function() return true end}),
 				tile = setmetatable(tile or {}, {__index = function() return nil end})
@@ -313,7 +313,7 @@ function GetTilesetPath()
 	if tilesetname == "" then tilesetname = "forest.png" end
 	local testpath = path
 	if tilesets[tilesetname] and type(tilesets[tilesetname]) == "table" then
-		testpath = (tilesets[tilesetname].vanilla and "Sprites") or path
+		testpath = (tilesets[tilesetname].custom and path) or "Sprites"
 	else
 		if tilesetname == "forest.png" then
 			error("the default tileset is missing.\n"..

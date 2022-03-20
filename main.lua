@@ -569,7 +569,6 @@ end
 
 tilesets = {
 	["bonus.png"] = { --BONUS LEVELS
-		vanilla = true,
 		enemyquadtype = "none",
 		rotatebridges = false,
 		description = {
@@ -651,7 +650,6 @@ tilesets = {
 		}
 	},
 	["forest.png"] = { --CHAPTER 1
-		vanilla = true,
 		bridgeshardcolor = {0.7, 0.4, 0.1},
 		description = {
 			[TILE_CUSTOM1] = "UNUSED"..floorDesc,
@@ -670,7 +668,6 @@ tilesets = {
 		}
 	},
 	["frost.png"] = { --CHAPTER 2
-		vanilla = true,
 		snow = true,
 		enemyquadtype = "movement",
 		keysprite = "Sprites/Chapter 2/key.png",
@@ -705,7 +702,6 @@ tilesets = {
 		}
 	},
 	["castle.png"] = { --CHAPTER 3
-		vanilla = true,
 		thunder = true,
 		rain = {0.3, 0.5, 0.54, 1},
 		enemyquadtype = "movement",
@@ -745,7 +741,6 @@ tilesets = {
 		}
 	},
 	["factory.png"] = { --CHAPTER 4
-		vanilla = true,
 		dark = true,
 		bridgeshardcolor = {0.6, 0.6, 0.6},
 		keysprite = "Sprites/Chapter 4/key.png",
