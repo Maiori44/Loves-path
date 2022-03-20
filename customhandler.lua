@@ -60,8 +60,8 @@ local readOnlyValues = {
 	DIR_RIGHT = "DIR_* constant",
 	DIR_UP = "DIR_* constant",
 	DIR_DOWN = "DIR_* constant",
-	player = "pointer",
-	tilemap = "pointer",
+	player = "reference",
+	tilemap = "reference",
 	leveltime = "checker",
 	timer = "checker",
 }
