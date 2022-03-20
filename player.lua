@@ -240,12 +240,18 @@ function mouse.think()
 	mouse.y = math.floor((love.mouse.getY() - GetStartY()) / math.floor(32 * scale * GetScaleByScreen()))
 	if mouse.mode == "editing" and mouse.boundsCheck() then
 		if love.mouse.isDown(1) then
-			tilemap[mouse.y][mouse.x] = mouse.tile
+			local tile = mouse.tile
+			local x = mouse.x
+			local y = mouse.y
+			if IsBridge(tilemap[y + 1][x]) or IsBridge(tilemap[y - 1][x]) then
+				tile = tile + 10
+			end
+			tilemap[y][x] = tile
 		elseif love.mouse.isDown(2) then
 			tilemap[mouse.y][mouse.x] = TILE_EMPTY
 		elseif love.mouse.isDown(3) then
 			local possibleTile = tilemap[mouse.y][mouse.x]
-			mouse.tile = (possibleTile > 0 and possibleTile) or mouse.tile
+			mouse.tile = (possibleTile >= 50 and possibleTile - 10) or (possibleTile > 0 and possibleTile) or mouse.tile
 		end
 	end
 end

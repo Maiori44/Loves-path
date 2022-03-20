@@ -307,11 +307,11 @@ local function DrawTilemap()
 	local centerx = GetStartX()
 	local centery = GetStartY()
 	scale = scale * GetScaleByScreen()
+	local tilesize = math.floor(32*scale)
 	if player then
 		mouse.speed = math.max(mouse.speed - 1, 1)
-		local offset = math.floor(32*scale)
-		local playerx = centerx + player.x * offset + offset / 2
-		local playery = centery + player.y * offset + offset / 2
+		local playerx = centerx + player.x * tilesize + tilesize / 2
+		local playery = centery + player.y * tilesize + tilesize / 2
 		if debugmode and not debugmode["Free Camera"] or not debugmode then
 			if playerx > screenwidth - 100 then
 				mouse.camerax = mouse.camerax - 2 * mouse.speed
@@ -349,15 +349,21 @@ local function DrawTilemap()
 	for i,row in ipairs(tilemap) do
 		for j,tile in ipairs(row) do
 			if tile ~= 0 then
+				local rotation = 0
 				local animationtime = tileAnimations[tile] or 1
-				local animationframe = math.floor((leveltime%animationtime)/10)
-				local x = centerx+j*math.floor(32*scale)
-				local y = centery+i*math.floor(32*scale)
+				local animationframe = math.floor((leveltime % animationtime) / 10)
+				local x = centerx + j * tilesize
+				local y = centery + i * tilesize
+				if tile >= 50 then
+					tile = tile - 10
+					rotation = math.pi / 2
+					x = x + tilesize
+				end
 				if quads[tile+animationframe] then
 					if debugmode and debugmode["Map info"] then
 						love.graphics.print(tile+animationframe, x, y, 0, scale)
 					else
-						love.graphics.draw(tileset, quads[tile+animationframe], x, y, 0, scale)
+						love.graphics.draw(tileset, quads[tile+animationframe], x, y, rotation, scale)
 					end
 				else
 					love.graphics.draw(errortile, x, y, 0, scale)
@@ -369,14 +375,14 @@ local function DrawTilemap()
 	for k = 1,40 do
 		local particle = particles.list[k]
 		if particle then
-			local x = (centerx+particle.x*math.floor(32*scale))+(16*scale)
-			local y = (centery+particle.y*math.floor(32*scale))+(16*scale)
+			local x = (centerx+particle.x*tilesize)+(16*scale)
+			local y = (centery+particle.y*tilesize)+(16*scale)
 			love.graphics.draw(particle.particle, x, y, 0, scale)
 		end
 	end
 	for k, mo in pairs(objects) do
-		local x = centerx+mo.x*math.floor(32*scale)
-		local y = centery+mo.y*math.floor(32*scale)
+		local x = centerx+mo.x*tilesize
+		local y = centery+mo.y*tilesize
 		local drawingMethod = quadDrawingMethods[ffi.string(mo.quadtype)]
 		if not drawingMethod then error('object "'..ffi.string(mo.type)..'"('..k..') has an invalid quad type!') end
 		drawingMethod(mo, x, y, GetImage(ffi.string(mo.sprite)), GetQuadArray(mo.quads))
@@ -391,17 +397,16 @@ local function DrawTilemap()
 	end
 	local help = particles.list[PARTICLE_HELP]
 	if help then
-		local x = (centerx+help.x*math.floor(32*scale))+(16*scale)
-		local y = (centery+help.y*math.floor(32*scale))+(16*scale)
+		local x = (centerx+help.x*tilesize)+(16*scale)
+		local y = (centery+help.y*tilesize)+(16*scale)
 		love.graphics.draw(help.particle, x, y, 0, scale)
 	end
 	if debugmode and debugmode["Camera info"] and player then
-		local offset = math.floor(32*scale)
-		local playerx = centerx + player.x * offset
-		local playery = centery + player.y * offset
+		local playerx = centerx + player.x * tilesize
+		local playery = centery + player.y * tilesize
 		love.graphics.setColor(1, 0, 0, 1)
-		love.graphics.rectangle("line", playerx, playery, offset, offset)
-		love.graphics.rectangle("fill", playerx + offset / 2, playery + offset / 2, 1, 1)
+		love.graphics.rectangle("line", playerx, playery, tilesize, tilesize)
+		love.graphics.rectangle("fill", playerx + tilesize / 2, playery + tilesize / 2, 1, 1)
 		love.graphics.line(100, 0, 100, screenheight)
 		love.graphics.line(screenwidth - 100, 0, screenwidth - 100, screenheight)
 		love.graphics.line(0, 100, screenwidth, 100)

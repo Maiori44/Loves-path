@@ -86,7 +86,13 @@ local function BlueSwitch(mo, momx, momy)
 end
 
 local function CrackBridge(mo)
-	tilemap[mo.y][mo.x] = TILE_CRACKEDBRIDGE
+	local row = tilemap[mo.y]
+	local x = mo.x
+	row[x] = row[x] == TILE_BRIDGE_ROTATED and TILE_CRACKEDBRIDGE_ROTATED or TILE_CRACKEDBRIDGE
+end
+
+function IsBridge(tile)
+	return tile == TILE_BRIDGE or tile == TILE_CRACKEDBRIDGE or tile == TILE_BRIDGE_ROTATED or tile == TILE_CRACKEDBRIDGE_ROTATED
 end
 
 local function DestroyBridge(mo, momx, momy)
@@ -102,9 +108,10 @@ local function DestroyBridge(mo, momx, momy)
 		end
 	end
 	local uppertile = tilemap[mo.y - 1][mo.x]
-	if uppertile and uppertile ~= TILE_EMPTY and uppertile ~= TILE_BRIDGE and uppertile ~= TILE_CRACKEDBRIDGE and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
+	local isBridge = IsBridge(uppertile)
+	if uppertile and uppertile ~= TILE_EMPTY and (not isBridge) and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
 		tilemap[mo.y][mo.x] = TILE_CHASM1
-	elseif uppertile and (uppertile == TILE_BRIDGE or uppertile == TILE_CRACKEDBRIDGE) then
+	elseif uppertile and isBridge then
 		tilemap[mo.y][mo.x] = TILE_CHASM2
 	end
 end
@@ -184,8 +191,10 @@ function TryMove(mo, momx, momy)
 		if sgamemap ~= gamemap then return false end
 		mo.y = mo.y+momy
 		mo.x = mo.x+momx
-		if type(moCollisions[tilemap[mo.y][mo.x]]) == "function" and not predicting then
-			local check = moCollisions[tilemap[mo.y][mo.x]](mo, momx, momy)
+		local tile = tilemap[mo.y][mo.x]
+		if tile >= 50 then tile = tile - 10 print(tile) end
+		if type(moCollisions[tile]) == "function" and not predicting then
+			local check = moCollisions[tile](mo, momx, momy)
 			if check == false and mo then
 				mo.y = mo.y-momy
 				mo.x = mo.x-momx
@@ -341,6 +350,8 @@ local defaultCollisions = {
 		[TILE_CHASM1] = RemoveMovingObject,
 		[TILE_CHASM2] = RemoveMovingObject,
 		[TILE_ENEMY] = true,
+		[TILE_BRIDGE_ROTATED] = CrackBridge, 
+		[TILE_CRACKEDBRIDGE_ROTATED] = DestroyBridge
 	}
 }
 
