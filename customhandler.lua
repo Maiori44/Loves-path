@@ -124,6 +124,8 @@ function SearchCustom(modname)
 		tonumber = tonumber,
 		ipairs = ipairs,
 		pairs = pairs,
+		table = table,
+		math = math,
 		KeyPressed = nil,
 		SetMessageBox = function(title, text)
 			messagebox.setMessage(tostring(title), tostring(text))
