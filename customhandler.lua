@@ -72,6 +72,7 @@ local tilesetFlagsTypes = {
 	glitch = "boolean",
 	enemyquadtype = "string",
 	bridgeshardcolor = "table",
+	rotatebridges = "boolean",
 	playersprite = "string",
 	keysprite = "string",
 	vanilla = "nil",

@@ -356,8 +356,10 @@ local function DrawTilemap()
 				local y = centery + i * tilesize
 				if tile >= 50 then
 					tile = tile - 10
-					rotation = math.pi / 2
-					x = x + tilesize
+					if flags.rotateBridges then
+						rotation = math.pi / 2
+						x = x + tilesize
+					end
 				end
 				if quads[tile+animationframe] then
 					if debugmode and debugmode["Map info"] then
