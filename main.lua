@@ -1,4 +1,4 @@
-VERSION = "Version b6.0.159"
+VERSION = "Version b6.0.160"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -1124,7 +1124,7 @@ end
 
 function love.draw()
 	love.graphics.setColor(1, 1, 1, 1)
-	if gamestate ~= "ingame" and gamestate ~= "pause" and gamestate ~= "map settings" then
+	if gamestate ~= "ingame" and gamestate ~= "pause" and gamestate ~= "map settings" and gamestate ~= "editing" then
 		local scale = math.max(screenwidth, screenheight) / 800
 		local x = screenwidth / (scale * 4) - 200
 		local y = screenheight / scale - 600
