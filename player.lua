@@ -245,7 +245,7 @@ function mouse.think()
 			local y = mouse.y
 			local nextRow = tilemap[y + 1]
 			local prevRow = tilemap[y - 1]
-			if IsBridge(tile) and (nextRow and IsBridge(nextRow[x])) or (prevRow and IsBridge(prevRow[x])) then
+			if IsBridge(tile) and ((nextRow and IsBridge(nextRow[x])) or (prevRow and IsBridge(prevRow[x]))) then
 				tile = tile + 10
 			end
 			tilemap[y][x] = tile
