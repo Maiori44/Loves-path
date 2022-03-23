@@ -639,8 +639,20 @@ local function DestroySpikes(mo)
 end
 
 AddObjectType("metalbox", {
+	[TILE_FLOOR1] = StopObject,
+	[TILE_FLOOR2] = StopObject,
+	[TILE_FLOOR3] = StopObject,
+	[TILE_KEY] = StopObject,
+	[TILE_START] = StopObject,
+	[TILE_GOAL] = StopObject,
+	[TILE_REDWALLOFF] = StopObject,
+	[TILE_BLUEWALLOFF] = StopObject,
+	[TILE_AFLOOR1] = StopObject,
+	[TILE_AFLOOR2] = StopObject,
 	[TILE_SPIKEON] = DestroySpikes,
+	[TILE_SPIKEOFF] = StopObject,
 	[TILE_SPIKE] = DestroySpikes,
+	[TILE_ENEMY] = StopObject,
 	enemy = RemoveCollidedObject,
 	bullet = RemoveCollidedObject,
 	miniman = function(mo, obstmo)
