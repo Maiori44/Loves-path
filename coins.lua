@@ -18,7 +18,8 @@ local coins = {
 	[25] = {x = 17, y = 9, got = false},
 	[26] = {x = 17, y = 11, got = false},
 	[28] = {x = 2, y = 2, got = false},
-	[30] = {x = 18, y = 18, got = false}
+	[30] = {x = 18, y = 18, got = false},
+	[33] = {x = 25, y = 12, got = false},
 }
 
 function coins.count()
