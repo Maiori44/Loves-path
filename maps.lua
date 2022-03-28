@@ -71,6 +71,7 @@ TILE_CUSTOM2 = 47
 TILE_CUSTOM3 = 48
 TILE_BRIDGE_ROTATED = 50
 TILE_CRACKEDBRIDGE_ROTATED = 51
+TILE_SUPERDARK = 99
 
 lastmap = 1
 
@@ -85,6 +86,7 @@ for i=0,15 do
 		table.insert(quads, quad)
 	end
 end
+quads[TILE_SUPERDARK] = quads[TILE_FLOOR1] 
 
 local enemysprite = "Sprites/Enemies/forest.png"
 

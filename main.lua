@@ -354,7 +354,7 @@ local function DrawTilemap()
 				local animationframe = math.floor((leveltime % animationtime) / 10)
 				local x = centerx + j * tilesize
 				local y = centery + i * tilesize
-				if tile >= 50 then
+				if tile >= 50 and tile ~= TILE_SUPERDARK then
 					tile = tile - 10
 					if flags.rotatebridges ~= false then
 						rotation = math.pi / 2
