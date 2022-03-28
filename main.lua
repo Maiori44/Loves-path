@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.163"
+VERSION = "Version b7.0.164"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -166,7 +166,8 @@ end
 
 local glitchshader = love.graphics.newShader("Shaders/glitch.glsl")
 local deathshader = love.graphics.newShader("Shaders/death.glsl")
-local darkshader = love.graphics.newShader("Shaders/dark.glsl")
+darkshader = love.graphics.newShader("Shaders/dark.glsl")
+darkshader:send("light", 200)
 
 local function SpikesWarn(x, y) particles.spawnWarning(x, y, 0.4) end
 
@@ -308,6 +309,7 @@ local function DrawTilemap()
 	local centery = GetStartY()
 	scale = scale * GetScaleByScreen()
 	local tilesize = math.floor(32*scale)
+	local superdark = menu.extras[4].value == 1
 	if player then
 		mouse.speed = math.max(mouse.speed - 1, 1)
 		local playerx = centerx + player.x * tilesize + tilesize / 2
@@ -328,12 +330,19 @@ local function DrawTilemap()
 				mouse.speed = mouse.speed + 2
 			end
 		end
-		if flags.dark then
+		if flags.dark or superdark then
 			darkshader:send("pos", {playerx, playery})
 			darkshader:send("scale", scale)
 			table.insert(shaders, darkshader)
 		end
 	else
+		if flags.dark or superdark then
+			local radius = scale - (darkness * scale / 2)
+			darkshader:send("scale", radius)
+			if radius > -6.3 * scale or superdark then
+				table.insert(shaders, darkshader)
+			end
+		end
 		deathshader:send("darkness", darkness)
 		table.insert(shaders, deathshader)
 	end
@@ -782,6 +791,38 @@ tilesets = {
 			end
 		}
 	},
+	["superdark.png"] = { --SUPERDARK SECRET ROOM
+		dark = true,
+		description = {
+			[TILE_CUSTOM1] = "You should not use this tileset.",
+			[TILE_CUSTOM2] = "Just use factory.png",
+			[TILE_CUSTOM3] = "But you're probably reading this from the source code though, right?"
+		},
+		collision = {
+			[TILE_CUSTOM1] = true,
+			[TILE_CUSTOM2] = true,
+			[TILE_CUSTOM3] = function()
+				local superdark = menu.extras[4]
+				if superdark.value then return end
+				superdark.value = 1
+				SaveData()
+				LoadData()
+				messagebox.setMessage("SuperDark mode unlocked!", [[
+When enabled superdark mode will make all levels much darker
+It will be impossible to see far away
+Good luck!
+(SuperDark mode can be enabled in the extras menu)]])
+			end
+		},
+		tile = {
+			[TILE_CUSTOM1] = function(x, y)
+				local masterbuttonsprite = "Sprites/Chapter 4/master button.png"
+				SpawnObject(masterbuttonsprite, x, y, "masterbutton", GetQuads(3, masterbuttonsprite), "frame")
+			end,
+			[TILE_CUSTOM2] = nil,
+			[TILE_CUSTOM3] = nil
+		}
+	}
 }
 
 local tileDescriptions = {

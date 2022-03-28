@@ -192,7 +192,7 @@ function TryMove(mo, momx, momy)
 		mo.y = mo.y+momy
 		mo.x = mo.x+momx
 		local tile = tilemap[mo.y][mo.x]
-		if tile >= 50 then tile = tile - 10 print(tile) end
+		if tile >= 50 and tile ~= TILE_SUPERDARK then tile = tile - 10 end
 		if type(moCollisions[tile]) == "function" and not predicting then
 			local check = moCollisions[tile](mo, momx, momy)
 			if check == false and mo then
@@ -374,6 +374,14 @@ end
 
 AddObjectType("player", {
 	[TILE_GOAL] = EndLevel,
+	[TILE_SUPERDARK] = function()
+		LoadMap("superdark.map")
+		gamemap = -99
+		frames = 0
+		seconds = 0
+		minutes = 0
+		hours = 0
+	end,
 	coin = function(_, obstmo)
 		coins.hudtimer = 160
 		coins[gamemap].got = true

@@ -55,7 +55,15 @@ end
 function RestartMap()
 	local oldscale = scale
 	if gamemap < 0 then
-		menu["bonus levels"][math.abs(gamemap)].func()
+		if gamemap == -99 then
+			LoadMap("superdark.map")
+			frames = 0
+			seconds = 0
+			minutes = 0
+			hours = 0
+		else
+			menu["bonus levels"][math.abs(gamemap)].func()
+		end
 	else
 		LoadMap("map"..GetMapNum(gamemap)..".map")
 	end
@@ -320,6 +328,13 @@ menu = {
 			ChangeGamestate("bonus levels")
 			pointer = 1
 		end},
+		{name = "???", func = function(this)
+			if not this.value then
+				messagebox.setMessage("This extra is locked...", "Look for a special yellow button hidden somewhere in the factory...")
+			else
+				darkshader:send("light", this.value == 1 and 160 or 200)
+			end
+		end},
 		{name = "back", func = function() ChangeGamestate("title") pointer = 3 end}
 	},
 	["bonus levels"] = {
@@ -458,13 +473,37 @@ function SaveData()
 	local file = io.open(savefile, "w+b")
 	local l = string.char(math.min(lastmap, 255))
 	file:write(l..l)
-	if not customEnv then file:write(hisname.."\0") end
+	if not customEnv then
+		file:write(hisname.."\0"..string.char(menu.extras[4].value and 1 or 0))
+	end
 	for k, coin in pairs(coins) do
 		if type(k) == "number" then
 			file:write(string.char(k)..string.char((coin.got and 1) or 0))
 		end
 	end
 	file:close()
+end
+
+local function TryLoadData(savefile)
+	if not customEnv then
+		hisname = ""
+		local char = savefile:read(1)
+		while char ~= "\0" do
+			hisname = hisname..char
+			char = savefile:read(1)
+		end
+		local superdark = savefile:read(1):byte()
+		if superdark == 1 then
+			menu.extras[4].name = "superdark"
+			menu.extras[4].value = 0
+			menu.extras[4].values = valuesnames
+		end
+	end
+	repeat
+		local mapnum = savefile:read(1):byte()
+		local coingot = savefile:read(1):byte()
+		if coins[mapnum] and coingot then coins[mapnum].got = (coingot == 1 and true) or false end
+	until not mapnum or not coingot
 end
 
 function LoadData()
@@ -487,21 +526,7 @@ function LoadData()
 		love.window.showMessageBox("Error while loading saved data!", errormsg, "warning")
 		lastmap = 1
 	end
-	pcall(function()
-		if not customEnv then
-			hisname = ""
-			local char = savefile:read(1)
-			while char ~= "\0" do
-				hisname = hisname..char
-				char = savefile:read(1)
-			end
-		end
-		repeat
-			local mapnum = savefile:read(1):byte()
-			local coingot = savefile:read(1):byte()
-			if coins[mapnum] and coingot then coins[mapnum].got = (coingot == 1 and true) or false end
-		until not mapnum or not coingot
-	end)
+	pcall(TryLoadData, savefile)
 end
 
 function LoadSettings()
