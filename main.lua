@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.162"
+VERSION = "Version b7.0.163"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -435,8 +435,10 @@ end
 
 local hudcoin = love.graphics.newImage("Sprites/hudcoin.png")
 local hudcoinquads = {
-	notgot = love.graphics.newQuad(1, 1, 8, 8, 20, 10),
-	got = love.graphics.newQuad(11, 1, 8, 8, 20, 10),
+	notgot = love.graphics.newQuad(1, 1, 8, 8, 40, 10),
+	got = love.graphics.newQuad(11, 1, 8, 8, 40, 10),
+	brightnotgot = love.graphics.newQuad(21, 1, 8, 8, 40, 10),
+	brightgot = love.graphics.newQuad(31, 1, 8, 8, 40, 10),
 }
 local icons = love.graphics.newImage("Sprites/icons.png")
 local iconsquads = GetQuads(4, icons)
@@ -451,9 +453,13 @@ local function DrawMenu(gs)
 		love.graphics.origin()
 		love.graphics.translate(0, (1 - statetimer) * screenwidth)
 	end
+	local wave
+	if gamestate == "title" or gamestate == "select level" then
+		wave = math.abs(math.sin(os.clock()))
+	end
 	if gamestate == "title" then
 		love.graphics.draw(titlescreen, (screenwidth / 2) - 150, 50)
-		love.graphics.setColor(1, 1, 1, math.abs(math.sin(os.clock())))
+		love.graphics.setColor(1, 1, 1, wave)
 		love.graphics.draw(titleglow, (screenwidth / 2) - 150, 50)
 		love.graphics.setColor(1, 1, 1, 1)
 	else
@@ -504,8 +510,14 @@ local function DrawMenu(gs)
 			else
 				local n = menu[gamestate][i].name
 				love.graphics.print(n, x, ly)
-				if coins[i-1] then
-					love.graphics.draw(hudcoin, hudcoinquads[((coins[i-1].got and "got") or "notgot")], x + font:getWidth(n), ly)
+				local coin = coins[i-1]
+				if coin then
+					local quad = (coin.got and "got") or "notgot"
+					local x = x + font:getWidth(n)
+					love.graphics.draw(hudcoin, hudcoinquads[quad], x, ly)
+					love.graphics.setColor(1, 1, 1, 1 - wave)
+					love.graphics.draw(hudcoin, hudcoinquads["bright" .. quad], x, ly)
+					love.graphics.setColor(1, 1, 1, 1)
 				end
 			end
 		end
