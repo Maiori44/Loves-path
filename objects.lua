@@ -375,12 +375,8 @@ end
 AddObjectType("player", {
 	[TILE_GOAL] = EndLevel,
 	[TILE_SUPERDARK] = function()
-		LoadMap("superdark.map")
 		gamemap = -99
-		frames = 0
-		seconds = 0
-		minutes = 0
-		hours = 0
+		RestartMap()
 	end,
 	coin = function(_, obstmo)
 		coins.hudtimer = 160

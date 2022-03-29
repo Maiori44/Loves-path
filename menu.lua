@@ -54,6 +54,7 @@ function RestartMap()
 			seconds = 0
 			minutes = 0
 			hours = 0
+			tilesets["factory.png"].tile[TILE_CUSTOM2](21, 12)
 		else
 			menu["bonus levels"][math.abs(gamemap)].func()
 		end
@@ -311,18 +312,18 @@ menu = {
 		{name = "Theater", func = function()
 			messagebox.setMessage("Coming Soon!", ":)")
 		end},
-		{name = "???", func = function()
+		{name = "????? ??????", func = function()
 			local coinsgot, coinstotal = coins.count()
 			if coinsgot ~= coinstotal then
-				messagebox.setMessage("The door is locked...", "It seems like you need "..coinstotal - coinsgot.." more coins to enter")
+				messagebox.setMessage("This extra is locked...", "It seems like you need "..coinstotal - coinsgot.." more coins to unlock it...")
 				return
 			end
 			ChangeGamestate("bonus levels")
 			pointer = 1
 		end},
-		{name = "???", func = function(this)
+		{name = "?????????", func = function(this)
 			if not this.value then
-				messagebox.setMessage("This extra is locked...", "Look for a special yellow button hidden somewhere in the factory...")
+				messagebox.setMessage("This extra is locked...", "Look for a yellow button hidden somewhere in chapter 4...")
 			else
 				darkshader:send("light", this.value == 1 and 160 or 200)
 			end
