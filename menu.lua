@@ -4,7 +4,6 @@ local nativefs = require "nativefs"
 
 pointer = 1
 local valuesnames = {[0] = "off", [1] = "on"}
-local numtobool = {[0] = false, [1] = true}
 local percentuals = {
 	[0] = "0%",
 	[1] = "10%",
@@ -39,12 +38,6 @@ possibleMusic = {
 	[9] = "mind.ogg",
 	[10] = "bonus.ogg",
 }
-
-local function ToggleValue()
-	local setting = menu.settings[pointer]
-	setting.value = (setting.value+1)%2
-	setting.valuename = valuesnames[setting.value]
-end
 
 function ChangeGamestate(newgamestate)
 	laststate = gamestate
@@ -115,14 +108,13 @@ menu = {
 		{name = "Quit", func = function() love.event.quit(0) end}
 	},
 	settings = {
-		{name = "Show FPS", value = 1, valuename = "on", func = ToggleValue},
-		{name = "Fullscreen", value = 0, valuename = "off", func = function(this)
-				ToggleValue()
-				love.window.setMode(800, 600, {fullscreen = numtobool[this.value], resizable = true, minwidth = 800, minheight = 600})
+		{name = "Show FPS", value = 1, values = valuesnames},
+		{name = "Fullscreen", value = 0, values = valuesnames, func = function(this)
+				love.window.setMode(800, 600, {fullscreen = this.value == 1, resizable = true, minwidth = 800, minheight = 600})
 				screenwidth = love.graphics.getWidth()
 				screenheight = love.graphics.getHeight()
 		end},
-		{name = "Timer", value = 0, valuename = "off", func = ToggleValue},
+		{name = "Timer", value = 0, values = valuesnames},
 		{name = "Music", value = 5, values = percentuals, func = function(this)
 			if not sound.music then
 				sound.setMusic("menu.ogg")
@@ -130,9 +122,9 @@ menu = {
 			sound.music:setVolume(this.value / 10)
 		end},
 		{name = "Sounds", value = 5, values = percentuals},
-		{name = "Particles", value = 1, valuename = "on", func = ToggleValue},
-		{name = "Flashing stuff", value = 1, valuename = "on", func = ToggleValue},
-		{name = "Cutscenes", value = 1, valuename = "on", func = ToggleValue},
+		{name = "Particles", value = 1, values = valuesnames},
+		{name = "Flashing stuff", value = 1, values = valuesnames},
+		{name = "Cutscenes", value = 1, values = valuesnames},
 		{name = "Erase Data", func = function(this)
 			if this.name == "Erase Data" then
 				this.name = "Are you sure?"
@@ -540,16 +532,10 @@ function LoadSettings()
 		local oldvalue = menu.settings[i].value
 		menu.settings[i].oldvalue = oldvalue
 		menu.settings[i].value = DataCheck(string.byte(file:read(1) or menu.settings[i].value))
-		if menu.settings[i].valuename then
-			menu.settings[i].valuename = valuesnames[menu.settings[i].value]
-		end
 		if not menu.settings[i].value or menu.settings[i].value > ((menu.settings[i].values and #menu.settings[i].values + 1) or 1) then
 			local errormsg = 'Value "'..menu.settings[i].name..'" has missing or invalid value\nIt will be set to default.'
 			love.window.showMessageBox("Error while loading saved data!", errormsg, "warning")
 			menu.settings[i].value = oldvalue
-			if menu.settings[i].valuename then
-				menu.settings[i].valuename = valuesnames[menu.settings[i].value]
-			end
 		end
 	end
 	if menu.settings[2].value == 1 then

@@ -492,8 +492,7 @@ local function DrawMenu(gs)
 		local value = menu[gamestate][i].value
 		if value then
 			rectangle = screenwidth-screenwidth/8
-			local text = menu[gamestate][i].valuename
-			text = (text and text) or (i == pointer and "< "..menu[gamestate][i].values[value].." >") or menu[gamestate][i].values[value]
+			local text = (i == pointer and "< "..menu[gamestate][i].values[value].." >") or menu[gamestate][i].values[value]
 			love.graphics.printf(text, 0, y, screenwidth+screenwidth/5, "center")
 		end
 		if gamestate ~= "select level" then
