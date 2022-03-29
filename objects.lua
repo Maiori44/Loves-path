@@ -384,15 +384,26 @@ AddObjectType("player", {
 		sound.playSound("coin.wav")
 		particles.spawnStars(obstmo.x, obstmo.y)
 		EraseObject(obstmo)
-		if not customEnv then
+		--[[if not customEnv then
 			local coinsgot, coinstotal = coins.count()
 			if coinsgot == coinstotal then
 				notification.setMessage("You hear a door open in the extras menu...\nUnlocked music:\nLovely Bonus")
 				sound.soundtest[#sound.soundtest] = coins.soundtest
 				menu.extras[3].name = "Bonus levels"
 			end
-		end
+		end]]
 		SaveData()
+		if not customEnv then
+			local coinsgot, coinstotal = coins.count()
+			if coinsgot == coinstotal then
+				LoadData()
+				notification.setMessage("Unlocked music:\nLovely Bonus")
+				messagebox.setMessage("Bonus levels unlocked!", [[
+Each bonus level has a special unique gimmick!
+They are ordered by difficulty, but can be cleared in any order
+Good luck!]])
+			end
+		end
 	end,
 	key = PushObject,
 	box = function(_, obstmo, momx, momy)

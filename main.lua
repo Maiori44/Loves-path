@@ -156,11 +156,6 @@ function love.load(args)
 	gamemapname = ""
 	musicname = ""
 	pcall(LoadSettings)
-	local coinsgot, coinstotal = coins.count()
-	if coinsgot == coinstotal then
-		sound.soundtest[#sound.soundtest] = coins.soundtest
-		menu.extras[3].name = "Bonus levels"
-	end
 	sound.setMusic("menu.ogg")
 end
 

@@ -315,7 +315,7 @@ menu = {
 		{name = "????? ??????", func = function()
 			local coinsgot, coinstotal = coins.count()
 			if coinsgot ~= coinstotal then
-				messagebox.setMessage("This extra is locked...", "It seems like you need "..coinstotal - coinsgot.." more coins to unlock it...")
+				messagebox.setMessage("This extra is locked...", "You need "..coinstotal - coinsgot.." more coins to unlock this extra!")
 				return
 			end
 			ChangeGamestate("bonus levels")
@@ -323,7 +323,7 @@ menu = {
 		end},
 		{name = "?????????", func = function(this)
 			if not this.value then
-				messagebox.setMessage("This extra is locked...", "Look for a yellow button hidden somewhere in chapter 4...")
+				messagebox.setMessage("This extra is locked...", "Look for a yellow button hidden somewhere in chapter 4!")
 			else
 				darkshader:send("light", this.value == 1 and 160 or 200)
 			end
@@ -520,6 +520,12 @@ function LoadData()
 		lastmap = 1
 	end
 	pcall(TryLoadData, savefile)
+	if customEnv then return end
+	local coinsgot, coinstotal = coins.count()
+	if coinsgot == coinstotal then
+		sound.soundtest[#sound.soundtest] = coins.soundtest
+		menu.extras[3].name = "Bonus levels"
+	end
 end
 
 function LoadSettings()
