@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.164"
+VERSION = "Version b7.0.166"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -335,7 +335,7 @@ local function DrawTilemap()
 			darkshader:send("scale", scale)
 			table.insert(shaders, darkshader)
 		end
-	else
+	elseif gamestate == "ingame" or gamestate == "pause" then
 		if flags.dark or superdark then
 			local radius = scale - (darkness * scale / 2)
 			darkshader:send("scale", radius)
