@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.166"
+VERSION = "Version b7.0.168"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -85,6 +85,8 @@ io.stdout:setvbuf("no")
 local titlescreen = love.graphics.newImage("Sprites/title1.png")
 local titleglow = love.graphics.newImage("Sprites/title2.png")
 local errortile = love.graphics.newImage("Sprites/error.png")
+
+local rotation = 0
 
 local function GetUnit(val)
 	local tval = tostring(val)
@@ -198,6 +200,18 @@ local updateModes = {
 						local check = TryMove(mo, momx, momy)
 						if gamemap ~= sgamemap then return end
 						if not check then
+							if mo.type == "player" then
+								local angley = math.floor(mapheight / 100 * 20)
+								local anglex = math.floor(mapwidth / 100 * 20)
+								if mo.y >= mapheight - angley then
+									rotation = math.pi / 16 / mapheight
+								elseif mo.y <= angley then
+									rotation = -(math.pi / 16 / mapheight)
+								end
+								if momy ~= 0 then rotation = -rotation end
+								if mo.x <= anglex then rotation = -rotation
+								elseif mo.x <= mapwidth - anglex then rotation = 0 end
+							end
 							mo.momx = 0
 							mo.momy = 0
 							sound.playSound("stop.wav")
@@ -305,6 +319,10 @@ local function DrawTilemap()
 	scale = scale * GetScaleByScreen()
 	local tilesize = math.floor(32*scale)
 	local superdark = menu.extras[4].value == 1
+	love.graphics.push()
+	love.graphics.translate(screenwidth/2, screenheight/2)
+	love.graphics.rotate(rotation)
+	love.graphics.translate(-screenwidth/2, -screenheight/2)
 	if player then
 		mouse.speed = math.max(mouse.speed - 1, 1)
 		local playerx = centerx + player.x * tilesize + tilesize / 2
@@ -326,7 +344,7 @@ local function DrawTilemap()
 			end
 		end
 		if flags.dark or superdark then
-			darkshader:send("pos", {playerx, playery})
+			darkshader:send("pos", {love.graphics.transformPoint(playerx, playery)})
 			darkshader:send("scale", scale)
 			table.insert(shaders, darkshader)
 		end
@@ -407,6 +425,7 @@ local function DrawTilemap()
 		local y = (centery+help.y*tilesize)+(16*scale)
 		love.graphics.draw(help.particle, x, y, 0, scale)
 	end
+	love.graphics.pop()
 	if debugmode and debugmode["Camera info"] and player then
 		local playerx = centerx + player.x * tilesize
 		local playery = centery + player.y * tilesize
