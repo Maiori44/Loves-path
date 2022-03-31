@@ -384,14 +384,6 @@ AddObjectType("player", {
 		sound.playSound("coin.wav")
 		particles.spawnStars(obstmo.x, obstmo.y)
 		EraseObject(obstmo)
-		--[[if not customEnv then
-			local coinsgot, coinstotal = coins.count()
-			if coinsgot == coinstotal then
-				notification.setMessage("You hear a door open in the extras menu...\nUnlocked music:\nLovely Bonus")
-				sound.soundtest[#sound.soundtest] = coins.soundtest
-				menu.extras[3].name = "Bonus levels"
-			end
-		end]]
 		SaveData()
 		if not customEnv then
 			local coinsgot, coinstotal = coins.count()
