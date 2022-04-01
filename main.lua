@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.168"
+VERSION = "Version b7.0.169"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -86,8 +86,6 @@ local titlescreen = love.graphics.newImage("Sprites/title1.png")
 local titleglow = love.graphics.newImage("Sprites/title2.png")
 local errortile = love.graphics.newImage("Sprites/error.png")
 
-local rotation = 0
-
 local function GetUnit(val)
 	local tval = tostring(val)
 	return tonumber(tval:sub(tval:len()))
@@ -150,6 +148,7 @@ function love.load(args)
 	timer = 0
 	flash = 0
 	darkness = 0
+	rotation = 0
 	screenwidth = love.graphics.getWidth()
 	screenheight = love.graphics.getHeight()
 	tileset = 0
@@ -168,10 +167,29 @@ darkshader:send("light", 200)
 
 local function SpikesWarn(x, y) particles.spawnWarning(x, y, 0.4) end
 
+--bumps structure:
+--[1] -> on the top of the map?
+--[2] -> of the left of the map?
+--[3] -> on the bottom of the map?
+--[4] -> on the right of the map?
+--[5] -> momx
+--[6] -> momy
+local bumps =  {
+	["truetruefalsefalse0-1"] = math.pi / 16,
+	["truetruefalsefalse-10"] = -math.pi / 16,
+	["truefalsefalsetrue10"] = math.pi / 16,
+	["truefalsefalsetrue0-1"] = -math.pi / 16,
+	["falsetruetruefalse-10"] = math.pi / 16,
+	["falsetruetruefalse01"] = -math.pi / 16,
+	["falsefalsetruetrue01"] = math.pi / 16,
+	["falsefalsetruetrue10"] = -math.pi / 16
+}
+
 local updateModes = {
 	ingame = function(dt)
 		if not player then darkness = math.min(darkness+0.2, 70) end
 		leveltime = leveltime+1
+		rotation = rotation / 2
 		frames = frames+1
 		seconds, frames = DoTime(seconds, frames)
 		minutes, seconds = DoTime(minutes, seconds)
@@ -201,16 +219,10 @@ local updateModes = {
 						if gamemap ~= sgamemap then return end
 						if not check then
 							if mo.type == "player" then
-								local angley = math.floor(mapheight / 100 * 20)
-								local anglex = math.floor(mapwidth / 100 * 20)
-								if mo.y >= mapheight - angley then
-									rotation = math.pi / 16 / mapheight
-								elseif mo.y <= angley then
-									rotation = -(math.pi / 16 / mapheight)
-								end
-								if momy ~= 0 then rotation = -rotation end
-								if mo.x <= anglex then rotation = -rotation
-								elseif mo.x <= mapwidth - anglex then rotation = 0 end
+								local angley = math.max(mapheight / 100 * 20, 2)
+								local anglex = math.max(mapwidth / 100 * 20, 2)
+								local bump = bumps[tostring(mo.y <= angley) .. tostring(mo.x <= anglex) .. tostring(mo.y > mapheight - angley) .. tostring(mo.x > mapwidth - anglex) .. mo.momx .. mo.momy]
+								if bump then rotation = bump / math.max(mapheight, mapwidth) end
 							end
 							mo.momx = 0
 							mo.momy = 0
@@ -320,9 +332,9 @@ local function DrawTilemap()
 	local tilesize = math.floor(32*scale)
 	local superdark = menu.extras[4].value == 1
 	love.graphics.push()
-	love.graphics.translate(screenwidth/2, screenheight/2)
+	love.graphics.translate(screenwidth / 2, screenheight / 2)
 	love.graphics.rotate(rotation)
-	love.graphics.translate(-screenwidth/2, -screenheight/2)
+	love.graphics.translate(-screenwidth / 2, -screenheight / 2)
 	if player then
 		mouse.speed = math.max(mouse.speed - 1, 1)
 		local playerx = centerx + player.x * tilesize + tilesize / 2

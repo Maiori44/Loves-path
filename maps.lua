@@ -162,6 +162,7 @@ function LoadMap(mapname)
 	frametime = 0
 	flash = 1
 	darkness = 0
+	rotation = 0
 	gamestate = "ingame"
 	mouse.camerax = 0
 	mouse.cameray = 0
@@ -262,6 +263,7 @@ function LoadEditorMap(mapname)
 	statetimer = 1
 	flash = 1
 	darkness = 0
+	rotation = 0
 	mouse.mode = "editing"
 	love.window.requestAttention()
 	particles.reset()
