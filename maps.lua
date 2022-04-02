@@ -146,8 +146,9 @@ function LoadMap(mapname)
 		end
 	end
 	local loadedmap = tonumber(mapname:match("%d+%d"))
-	if coins[loadedmap] and not coins[loadedmap].got then
-		SpawnObject(coins.path, coins[loadedmap].x, coins[loadedmap].y, "coin", coins.quads, "default")
+	local coindata = coins[loadedmap]
+	if coindata and not coindata.got then
+		SpawnObject(coins.path, coindata.x, coindata.y, "coin", coins.quads, "default")
 	end
 	if customEnv then customEnv.tilemap = tilemap end
 	if playerx and playery then
