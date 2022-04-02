@@ -339,6 +339,7 @@ local function DrawTilemap()
 		mouse.speed = math.max(mouse.speed - 1, 1)
 		local playerx = centerx + player.x * tilesize + tilesize / 2
 		local playery = centery + player.y * tilesize + tilesize / 2
+		playerx, playery = love.graphics.transformPoint(playerx, playery)
 		if debugmode and not debugmode["Free Camera"] or not debugmode then
 			if playerx > screenwidth - 100 then
 				mouse.camerax = mouse.camerax - 2 * mouse.speed
@@ -356,7 +357,7 @@ local function DrawTilemap()
 			end
 		end
 		if flags.dark or superdark then
-			darkshader:send("pos", {love.graphics.transformPoint(playerx, playery)})
+			darkshader:send("pos", {playerx, playery})
 			darkshader:send("scale", scale)
 			table.insert(shaders, darkshader)
 		end
