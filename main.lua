@@ -949,21 +949,6 @@ local drawModes = {
 	settings = DrawMenu,
 	credits = function()
 		DrawMenu()
-		--[[love.graphics.printf([[
--Felix44-
-Mapper
-Coder
-Story writer
-
--MAKYUNI-
-Music composer
-Spriter
-
--Fele88-
-Tester
-Mapper
-
-]]--, 0, 120, screenwidth, "center")
 		local third = screenwidth / 3
 		local a = math.sin(love.timer.getTime() * 2) / 2
 		love.graphics.setColor(1, a, a)
