@@ -19,6 +19,32 @@ function love.graphics.setColor(r, g, b, a)
 	SetColor(r, g, b, a)
 end
 
+local PrintFormatted = love.graphics.printf
+
+function love.graphics.printf(text, x, y, ...)
+	local r, g, b, a = love.graphics.getColor()
+	SetColor(0, 0, 0, a)
+	PrintFormatted(text, x + 1, y, ...)
+	PrintFormatted(text, x - 1, y, ...)
+	PrintFormatted(text, x, y + 1, ...)
+	PrintFormatted(text, x, y - 1, ...)
+	SetColor(r, g, b, a)
+	PrintFormatted(text, x, y, ...)
+end
+
+local Print = love.graphics.print
+
+function love.graphics.print(text, x, y, ...)
+	local r, g, b, a = love.graphics.getColor()
+	SetColor(0, 0, 0, a)
+	Print(text, x + 1, y, ...)
+	Print(text, x - 1, y, ...)
+	Print(text, x, y + 1, ...)
+	Print(text, x, y - 1, ...)
+	SetColor(r, g, b, a)
+	Print(text, x, y, ...)
+end
+
 love.graphics.setBackgroundColor(0.1, 0.1, 0.1, 1)
 
 function GetMapNum(mapnum)
