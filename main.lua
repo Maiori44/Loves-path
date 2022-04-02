@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.169"
+VERSION = "Version b7.0.170"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
