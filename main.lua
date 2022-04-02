@@ -827,10 +827,10 @@ tilesets = {
 		collision = {
 			[TILE_CUSTOM1] = true,
 			[TILE_CUSTOM2] = true,
-			[TILE_CUSTOM3] = function()
-				local superdark = menu.extras[4]
-				if superdark.value then return end
-				superdark.value = 1
+			[TILE_CUSTOM3] = function(mo)
+				menu.extras[4].value = 1
+				tilemap[mo.y][mo.x] = TILE_CUSTOM2
+				sound.playSound("lock.wav")
 				SaveData()
 				LoadData()
 				messagebox.setMessage("SuperDark mode unlocked!", [[
@@ -846,7 +846,11 @@ Good luck!
 				SpawnObject(masterbuttonsprite, x, y, "masterbutton", GetQuads(3, masterbuttonsprite), "frame")
 			end,
 			[TILE_CUSTOM2] = nil,
-			[TILE_CUSTOM3] = nil
+			[TILE_CUSTOM3] = function(x, y)
+				if menu.extras[4].name == "superdark" then
+					tilemap[y][x] = TILE_CUSTOM2
+				end
+			end
 		}
 	}
 }
