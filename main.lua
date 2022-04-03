@@ -177,7 +177,7 @@ function love.load(args)
 	rotation = 0
 	screenwidth = love.graphics.getWidth()
 	screenheight = love.graphics.getHeight()
-	tileset = 0
+	tileset = nil
 	wheelmoved = 0
 	player = nil
 	gamemapname = ""
@@ -349,6 +349,38 @@ local function AnimatedPrint(text, x, y, speed)
 	end
 end
 
+function UpdateTilemap(tilesize, rotatebridges)
+	tileset:clear()
+	for i,row in ipairs(tilemap) do
+		for j,tile in ipairs(row) do
+			if tile ~= 0 then
+				local rotation = 0
+				local animationtime = tileAnimations[tile] or 1
+				local animationframe = math.floor((leveltime % animationtime) / 10)
+				local x = j * tilesize
+				local y = i * tilesize
+				if tile >= 50 and tile ~= TILE_SUPERDARK then
+					tile = tile - 10
+					if rotatebridges ~= false then
+						rotation = math.pi / 2
+						x = x + tilesize
+					end
+				end
+				if quads[tile+animationframe] then
+					if debugmode and debugmode["Map info"] then
+						love.graphics.print(tile+animationframe, x, y, 0, scale)
+					else
+						tileset:add(quads[tile+animationframe], x, y, rotation, scale)
+					end
+				else
+					love.graphics.draw(errortile, x, y, 0, scale)
+					love.graphics.print(tile, x, y, 0, scale)
+				end
+			end 
+		end
+	end
+end
+
 local function DrawTilemap()
 	local shaders = {}
 	local flags = tilesets[tilesetname]
@@ -407,34 +439,12 @@ local function DrawTilemap()
 	if #shaders > 0 then
 		love.graphics.setShader(unpack(shaders))
 	end
-	for i,row in ipairs(tilemap) do
-		for j,tile in ipairs(row) do
-			if tile ~= 0 then
-				local rotation = 0
-				local animationtime = tileAnimations[tile] or 1
-				local animationframe = math.floor((leveltime % animationtime) / 10)
-				local x = centerx + j * tilesize
-				local y = centery + i * tilesize
-				if tile >= 50 and tile ~= TILE_SUPERDARK then
-					tile = tile - 10
-					if flags.rotatebridges ~= false then
-						rotation = math.pi / 2
-						x = x + tilesize
-					end
-				end
-				if quads[tile+animationframe] then
-					if debugmode and debugmode["Map info"] then
-						love.graphics.print(tile+animationframe, x, y, 0, scale)
-					else
-						love.graphics.draw(tileset, quads[tile+animationframe], x, y, rotation, scale)
-					end
-				else
-					love.graphics.draw(errortile, x, y, 0, scale)
-					love.graphics.print(tile, x, y, 0, scale)
-				end
-			end 
-		end
+	local start = love.timer.getTime()
+	if leveltime % 5 == 0 then
+		UpdateTilemap(tilesize, flags.rotatebridges)
 	end
+	love.graphics.draw(tileset, centerx, centery)
+	print(love.timer.getTime() - start)
 	for k = 1,40 do
 		local particle = particles.list[k]
 		if particle then

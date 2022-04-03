@@ -119,7 +119,7 @@ function LoadMap(mapname)
 	end
 	if oldtileset ~= tilesetname then
 		enemysprite = path.."Enemies/"..tilesetname
-		tileset = GetImage(path.."Tiles/"..tilesetname)
+		tileset = love.graphics.newSpriteBatch(GetImage(path.."Tiles/"..tilesetname), 1225, "static")
 	end
 	local playerx, playery
 	tilemap = {}
@@ -186,6 +186,7 @@ function LoadMap(mapname)
 	elseif not flags.rain or menu.settings[6].value == 0 then
 		particles.reset(PARTICLE_RAIN)
 	end
+	UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), flags.rotatebridges)
 end
 
 function CheckMap(...)

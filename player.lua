@@ -265,6 +265,7 @@ function love.wheelmoved(x, y)
 	elseif mouse.mode == "camera" and (gamestate == "editing" or gamestate == "ingame") then
 		wheelmoved = 120
 		scale = math.min(math.max(scale+(0.1*(y/math.abs(y))), 0.5), 2)
+		UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), tilesets[tilesetname].rotatebridges)
 	end
 end
 
