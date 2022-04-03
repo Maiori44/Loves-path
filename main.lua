@@ -509,7 +509,7 @@ local girl = love.graphics.newImage("Sprites/girl.png")
 
 local function DrawMenu(gs)
 	local gamestate = gs or gamestate
-	if gamestate ~= laststate and statetimer < 0.99 then
+	if gamestate ~= laststate and statetimer < 0.999 then
 		love.graphics.translate(0, screenwidth - ((1 -statetimer) * screenwidth))
 		DrawMenu(laststate)
 		love.graphics.origin()
