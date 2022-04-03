@@ -45,25 +45,6 @@ function ChangeGamestate(newgamestate)
 	statetimer = 0
 end
 
-function RestartMap()
-	local oldscale = scale
-	if gamemap < 0 then
-		if gamemap == -99 then
-			LoadMap("superdark.map")
-			frames = 0
-			seconds = 0
-			minutes = 0
-			hours = 0
-			tilesets["factory.png"].tile[TILE_CUSTOM2](21, 12)
-		else
-			menu["bonus levels"][math.abs(gamemap)].func()
-		end
-	else
-		LoadMap("map"..GetMapNum(gamemap)..".map")
-	end
-	scale = oldscale
-end
-
 local function SpawnDots(x, y)
 	SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pac dot")
 end

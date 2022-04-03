@@ -90,11 +90,30 @@ quads[TILE_SUPERDARK] = quads[TILE_FLOOR1]
 
 local enemysprite = "Sprites/Enemies/forest.png"
 
+function RestartMap()
+	local oldscale = scale
+	if gamemap < 0 then
+		if gamemap == -99 then
+			LoadMap("superdark.map")
+			frames = 0
+			seconds = 0
+			minutes = 0
+			hours = 0
+			tilesets["factory.png"].tile[TILE_CUSTOM2](21, 12)
+		else
+			menu["bonus levels"][math.abs(gamemap)].func()
+		end
+		scale = oldscale
+	else
+		LoadMap("map"..GetMapNum(gamemap)..".map", oldscale)
+	end
+end
+
 local function GetMapData(mapname)
 	return love.filesystem.read(mapspath..mapname)
 end
 
-function LoadMap(mapname)
+function LoadMap(mapname, oldscale)
 	timer = 0
 	voids = {}
 	for k, _ in pairs(objects) do objects[k] = nil end
@@ -163,13 +182,13 @@ function LoadMap(mapname)
 	frametime = 0
 	flash = 1
 	darkness = 0
-	rotation = 0
+	rotation = 0--math.pi / 2 * 4
 	gamestate = "ingame"
 	mouse.camerax = 0
 	mouse.cameray = 0
 	mouse.mode = "camera"
 	local longside = math.max(mapwidth, mapheight)
-	scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale(longside)) or 1
+	scale = oldscale or ((mapwidth >= 20 or mapheight >= 20) and GetScale(longside)) or 1
 	love.window.requestAttention()
 	if customEnv and customEnv.MapLoad and type(customEnv.MapLoad) == "function" then
 		customEnv.MapLoad(gamemap, tilesetname)

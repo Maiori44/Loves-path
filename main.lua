@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.171"
+VERSION = "Version b7.0.172"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -213,10 +213,10 @@ local bumps =  {
 
 local updateModes = {
 	ingame = function(dt)
-		if not player then darkness = math.min(darkness+0.2, 70) end
-		leveltime = leveltime+1
+		if not player then darkness = math.min(darkness + 0.2, 70) end
+		leveltime = leveltime + 1
 		rotation = rotation / 2
-		frames = frames+1
+		frames = frames + 1
 		seconds, frames = DoTime(seconds, frames)
 		minutes, seconds = DoTime(minutes, seconds)
 		hours, minutes = DoTime(hours, minutes)
@@ -398,7 +398,7 @@ local function DrawTilemap()
 		local playerx = centerx + player.x * tilesize + tilesize / 2
 		local playery = centery + player.y * tilesize + tilesize / 2
 		playerx, playery = love.graphics.transformPoint(playerx, playery)
-		if debugmode and not debugmode["Free Camera"] or not debugmode then
+		if debugmode and not debugmode["Free Camera"] or true then
 			if playerx > screenwidth - 100 then
 				mouse.camerax = mouse.camerax - 2 * mouse.speed
 				mouse.speed = mouse.speed + 2
