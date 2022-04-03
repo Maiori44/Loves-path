@@ -594,6 +594,15 @@ local function DrawMenu(gs)
 	love.graphics.setColor(1, 1, 1, 1)
 end
 
+local function DrawMenuWithBG()
+	local scale = math.max(screenwidth, screenheight) / 800
+	local x = screenwidth / (scale * 4) - 200
+	local y = screenheight / scale - 600
+	love.graphics.draw(girl, x, y, 0, scale)
+	love.graphics.draw(brownie, x + screenwidth / 2, y, 0, scale)
+	DrawMenu()
+end
+
 local function DrawCoinHud(time)
 	love.graphics.draw(coins.sprite, coins.quads[math.floor((time%(#coins.quads*10))/10)+1], 10, screenheight-50)
 	local coinsgot, coinstotal = coins.count()
@@ -973,18 +982,18 @@ local drawModes = {
 			love.graphics.setColor(1, 1, 1, 1)
 		end
 	end,
-	title = DrawMenu,
+	title = DrawMenuWithBG,
 	pause = function()
 		love.graphics.setColor(1, 1, 1, 0.5)
 		DrawTilemap()
 		love.graphics.setColor(1, 1, 1, 1)
 		DrawMenu()
 	end,
-	settings = DrawMenu,
+	settings = DrawMenuWithBG,
 	credits = function()
 		local fifteentens = screenwidth / 1.5
 		local third = screenwidth / 3
-		DrawMenu()
+		DrawMenuWithBG()
 		local a = math.sin(love.timer.getTime() * 2) / 2
 		love.graphics.setColor(1, a, a)
 		love.graphics.printf([[
@@ -1013,7 +1022,7 @@ Artist]], 0, 355, screenwidth, "center")
 Beta tester]], 0, 355, third, "center")
 	end,
 	["select level"] = function()
-		DrawMenu()
+		DrawMenuWithBG()
 		if not customEnv then
 			for i = 1, 4 do
 				if lastmap > (i - 1) * 10 then
@@ -1024,7 +1033,7 @@ Beta tester]], 0, 355, third, "center")
 		love.graphics.origin()
 		DrawCoinHud(love.timer.getTime() * 50)
 	end,
-	["level editor"] = DrawMenu,
+	["level editor"] = DrawMenuWithBG,
 	editing = function()
 		DrawTilemap()
 		if not hidecontrols then
@@ -1087,7 +1096,7 @@ Beta tester]], 0, 355, third, "center")
 		love.graphics.setColor(1, 1, 1, 1)
 		DrawMenu()
 	end,
-	["create map"] = DrawMenu,
+	["create map"] = DrawMenuWithBG,
 	["the end"] = function()
 		local n = "\n"
 		local msg =
@@ -1097,10 +1106,10 @@ Beta tester]], 0, 355, third, "center")
 		"Try the level editor!"..n..n..
 		"see you next update!"
 		love.graphics.printf(msg, 0, 120, screenwidth, "center")
-		DrawMenu()
+		DrawMenuWithBG()
 	end,
 	["sound test"] = function()
-		DrawMenu()
+		DrawMenuWithBG()
 		love.graphics.printf(sound.soundtest[sound.soundtestpointer].subtitle, 0, 230, screenwidth, "center")
 		love.graphics.printf("By: "..sound.soundtest[sound.soundtestpointer].creator, 0, 260, screenwidth, "center")
 		if sound.musicname == sound.soundtest[sound.soundtestpointer].filename then love.graphics.setColor(1, 1, 0, 1) end
@@ -1119,7 +1128,7 @@ Beta tester]], 0, 355, third, "center")
 		love.graphics.print("Unlocked music: "..gotmusic.."/"..totmusic, 10, screenheight - 20)
 	end,
 	["select mod"] = function()
-		DrawMenu()
+		DrawMenuWithBG()
 		local mods = #menu["select mod"] - 1
 		if mods == 0 then
 			love.graphics.setColor(1, 0, 0, 1)
@@ -1128,13 +1137,13 @@ Beta tester]], 0, 355, third, "center")
 		end
 		love.graphics.printf(mods.." mods found", 0, 90, screenwidth, "center")
 	end,
-	addons = DrawMenu,
+	addons = DrawMenuWithBG,
 	extras = function()
-		DrawMenu()
+		DrawMenuWithBG()
 		love.graphics.origin()
 		DrawCoinHud(love.timer.getTime() * 50)
 	end,
-	["bonus levels"] = DrawMenu,
+	["bonus levels"] = DrawMenuWithBG,
 	["bonus level complete!"] = function()
 		love.graphics.setColor(1, 1, 1, 0.5)
 		DrawTilemap()
@@ -1237,20 +1246,9 @@ function debug.collectInfo()
 end
 
 function love.draw()
-	love.graphics.setColor(1, 1, 1, 1)
-	if gamestate ~= "ingame" and gamestate ~= "pause" and gamestate ~= "map settings" and gamestate ~= "editing" then
-		local scale = math.max(screenwidth, screenheight) / 800
-		local x = screenwidth / (scale * 4) - 200
-		local y = screenheight / scale - 600
-		love.graphics.draw(girl, x, y, 0, scale)
-		love.graphics.draw(brownie, x + screenwidth / 2, y, 0, scale)
-	end
-	if drawModes[gamestate] then
-		drawModes[gamestate]()
-		love.graphics.origin()
-	else
-		error("invalid gamestate!")
-	end
+	love.graphics.setColor(1, 1, 1, 1);
+	(assert(drawModes[gamestate], "invalid gamestate!"))()
+	love.graphics.origin()
 	love.graphics.setColor(1, 1, 1, 1)
 	if not debugmode and menu.settings[1].value == 1 then
 		love.graphics.print("FPS: "..tostring(math.min(love.timer.getFPS(), 60)), 10, 10)
