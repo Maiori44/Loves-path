@@ -997,7 +997,7 @@ Story writer]], 0, 175, fifteentens, "center")
 -MAKYUNI-
 Music composer
 Spriter]], screenwidth - fifteentens, 175, fifteentens, "center") 
-		love.graphics.setColor(1 - 0.2, a, 1 - 0.2)
+		love.graphics.setColor(0.8, a, 0.8)
 		love.graphics.printf([[
 -Fele88-
 Beta tester
@@ -1007,7 +1007,7 @@ Mapper]], screenwidth - third, 355, third, "center")
 -Dusty-
 Characters designer
 Artist]], 0, 355, screenwidth, "center")
-		love.graphics.setColor(a, a, a)
+		love.graphics.setColor(a, 0.7, a)
 		love.graphics.printf([[
 -Ciaccy-
 Beta tester]], 0, 355, third, "center")
