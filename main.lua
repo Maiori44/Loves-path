@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.170"
+VERSION = "Version b7.0.171"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -974,26 +974,35 @@ local drawModes = {
 	end,
 	settings = DrawMenu,
 	credits = function()
-		DrawMenu()
+		local fifteentens = screenwidth / 1.5
 		local third = screenwidth / 3
+		DrawMenu()
 		local a = math.sin(love.timer.getTime() * 2) / 2
 		love.graphics.setColor(1, a, a)
-		love.graphics.printf([[-Felix44-
+		love.graphics.printf([[
+-Felix44-
 Coder
 Mapper
-Story writer]], 0, 120, screenwidth, "center")
+Story writer]], 0, 175, fifteentens, "center")
 		love.graphics.setColor(a, 1, a)
-		love.graphics.printf([[-MAKYUNI-
+		love.graphics.printf([[
+-MAKYUNI-
 Music composer
-Spriter]], 0, 240, third, "center") 
+Spriter]], screenwidth - fifteentens, 175, fifteentens, "center") 
 		love.graphics.setColor(1 - 0.2, a, 1 - 0.2)
-		love.graphics.printf([[-Fele88-
+		love.graphics.printf([[
+-Fele88-
 Beta tester
-Mapper]], screenwidth - third, 240, third, "center")
+Mapper]], screenwidth - third, 355, third, "center")
 		love.graphics.setColor(a, 0.7, 1)
-		love.graphics.printf([[-Dusty-
+		love.graphics.printf([[
+-Dusty-
 Characters designer
-Artist]], 0, 360, screenwidth, "center")
+Artist]], 0, 355, screenwidth, "center")
+		love.graphics.setColor(a, a, a)
+		love.graphics.printf([[
+-Ciaccy-
+Beta tester]], 0, 355, third, "center")
 	end,
 	["select level"] = function()
 		DrawMenu()
