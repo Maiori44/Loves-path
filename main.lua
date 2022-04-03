@@ -439,12 +439,10 @@ local function DrawTilemap()
 	if #shaders > 0 then
 		love.graphics.setShader(unpack(shaders))
 	end
-	local start = love.timer.getTime()
 	if leveltime % 5 == 0 then
 		UpdateTilemap(tilesize, flags.rotatebridges)
 	end
 	love.graphics.draw(tileset, centerx, centery)
-	print(love.timer.getTime() - start)
 	for k = 1,40 do
 		local particle = particles.list[k]
 		if particle then
