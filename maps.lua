@@ -279,7 +279,7 @@ function LoadEditorMap(mapname)
 	player = nil
 	if oldtileset ~= tilesetname then
 		enemysprite = path.."Enemies/"..tilesetname
-		tileset = GetImage(path.."Tiles/"..tilesetname)
+		tileset = love.graphics.newSpriteBatch(GetImage(path.."Tiles/"..tilesetname), 1225, "static")
 	end
 	wheelmoved = 0
 	statetimer = 1
@@ -291,6 +291,7 @@ function LoadEditorMap(mapname)
 	particles.reset()
 	particles.reset(PARTICLE_SNOW)
 	particles.reset(PARTICLE_RAIN)
+	UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), tilesets[tilesetname].rotatebridges)
 	return true
 end
 

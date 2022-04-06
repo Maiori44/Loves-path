@@ -1055,11 +1055,12 @@ Beta tester]], 0, 355, third, "center")
 		love.graphics.rectangle("line", x, y, xlen, ylen)
 		scale = scale / GetScaleByScreen()
 		love.graphics.print(mouse.mode..((mouse.mode == "editing" and " x:"..mouse.x.." y:"..mouse.y) or ""), 10, screenheight-20)
+		local tilesetsprite = GetImage(GetTilesetPath().."Tiles/"..tilesetname)
 		if wheelmoved > 0 and mouse.mode == "editing" then
 			love.graphics.setColor(1, 1, 1, ((math.min(math.max(wheelmoved, 0), 60)%120)/60))
 			local tilesetx = screenwidth/15
 			local tilesety = screenheight/15
-			love.graphics.draw(tileset, tilesetx, tilesety)
+			love.graphics.draw(tilesetsprite, tilesetx, tilesety)
 			local x = (tilesetx-34)+34*(((mouse.tile%3) > 0 and mouse.tile%3) or 3)
 			local y = tilesety+34*(math.floor(mouse.tile/3.01))
 			love.graphics.rectangle("line", x, y, 34, 34)
@@ -1077,7 +1078,7 @@ Beta tester]], 0, 355, third, "center")
 			scale = scale * GetScaleByScreen()
 			local x = centerx+mouse.x*math.floor(32*scale)
 			local y = centery+mouse.y*math.floor(32*scale)
-			love.graphics.draw(tileset, quads[mouse.tile], x, y, 0, scale)
+			love.graphics.draw(tilesetsprite, quads[mouse.tile], x, y, 0, scale)
 			scale = scale / GetScaleByScreen()
 		end
 	end,
