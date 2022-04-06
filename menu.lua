@@ -118,6 +118,7 @@ menu = {
 						coins[k].got = false
 					end
 				end
+				sound.soundtest[#sound.soundtest] = {require = 0xFF}
 				SaveData()
 				this.name = "Erase Data"
 				notification.setMessage("Data erased")

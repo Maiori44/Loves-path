@@ -84,7 +84,7 @@ sound.soundtest = {
 	{name = "Rusted Gears", subtitle = "Chapter 4 Act 2", creator = "MAKYUNI", filename = "factory 2.ogg", require = 36},
 	{name = "Inside the mind", subtitle = "Chapter 5", creator = "Felix44 & MAKYUNI", filename = "mind.ogg", require = 41},
 	{name = "Inside the heart", subtitle = "Vs. Beldurra", creator = "LordXermon", filename = "heart.ogg", require = 50},
-	{require = 256} --gets replaced by bonus.ogg when unlocked
+	{require = 0xFF} --gets replaced by bonus.ogg when unlocked
 }
 
 return sound
