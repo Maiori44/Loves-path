@@ -3,6 +3,7 @@ local sprite = love.graphics.newImage("Sprites/coin.png")
 local coins = {
 	sprite = sprite,
 	path = "Sprites/coin.png",
+	shadowpath = "Sprites/shadow coin.png",
 	quads = GetQuads(8, sprite),
 	hudtimer = 0,
 	soundtest = {name = "Lovely Bonus", subtitle = "Bonus levels", creator = "MAKYUNI", filename = "bonus.ogg"};

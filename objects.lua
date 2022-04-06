@@ -397,6 +397,11 @@ Good luck!]])
 			end
 		end
 	end,
+	["shadow coin"] = function(_, obstmo)
+		sound.playSound("coin.wav")
+		particles.spawnStars(obstmo.x, obstmo.y)
+		EraseObject(obstmo)
+	end,
 	key = PushObject,
 	box = function(_, obstmo, momx, momy)
 		local check = PushObject(nil, obstmo, momx, momy)
@@ -507,6 +512,9 @@ end)
 
 --COIN
 AddObjectType("coin")
+
+--SHADOW COIN
+AddObjectType("shadow coin")
 
 --KEY
 AddObjectType("key", {

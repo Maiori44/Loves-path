@@ -166,8 +166,9 @@ function LoadMap(mapname, oldscale)
 	end
 	local loadedmap = tonumber(mapname:match("%d+%d"))
 	local coindata = coins[loadedmap]
-	if coindata and not coindata.got then
-		SpawnObject(coins.path, coindata.x, coindata.y, "coin", coins.quads, "default")
+	if coindata then
+		local shadow = coindata.got
+		SpawnObject(shadow and coins.shadowpath or coins.path, coindata.x, coindata.y, shadow and "shadow coin" or "coin", coins.quads, "default")
 	end
 	if customEnv then customEnv.tilemap = tilemap end
 	if playerx and playery then
@@ -182,7 +183,7 @@ function LoadMap(mapname, oldscale)
 	frametime = 0
 	flash = 1
 	darkness = 0
-	rotation = 0--math.pi / 2 * 4
+	rotation = 0
 	gamestate = "ingame"
 	mouse.camerax = 0
 	mouse.cameray = 0
