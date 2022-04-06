@@ -2,6 +2,9 @@ local sound = require "music"
 local coins = require "coins"
 local nativefs = require "nativefs"
 
+EXTRA_BONUSLEVELS = 3
+EXTRA_SUPERDARK = 4
+
 pointer = 1
 local valuesnames = {[0] = "off", [1] = "on"}
 local percentuals = {
@@ -248,6 +251,8 @@ menu = {
 						table.remove(menu.addons, 2)
 						table.remove(menu.addons, 2)
 						table.remove(menu.extras, 3)
+						EXTRA_SUPERDARK = 3
+						LoadData()
 						notification.setMessage("\""..filename.."\" loaded succesfully")
 					end})
 				end
@@ -449,7 +454,7 @@ function SaveData()
 	local l = string.char(math.min(lastmap, 255))
 	file:write(l..l)
 	if not customEnv then
-		file:write(hisname.."\0"..string.char(menu.extras[4].value and 1 or 0))
+		file:write(hisname.."\0"..string.char(menu.extras[EXTRA_SUPERDARK].value and 1 or 0))
 	end
 	for k, coin in pairs(coins) do
 		if type(k) == "number" then
@@ -469,9 +474,10 @@ local function TryLoadData(savefile)
 		end
 		local superdark = savefile:read(1):byte()
 		if superdark == 1 then
-			menu.extras[4].name = "superdark"
-			menu.extras[4].value = 0
-			menu.extras[4].values = valuesnames
+			local superdark = menu.extras[EXTRA_SUPERDARK]
+			superdark.name = "superdark"
+			superdark.value = 0
+			superdark.values = valuesnames
 		end
 	end
 	repeat
@@ -506,7 +512,7 @@ function LoadData()
 	local coinsgot, coinstotal = coins.count()
 	if coinsgot == coinstotal then
 		sound.soundtest[#sound.soundtest] = coins.soundtest
-		menu.extras[3].name = "Bonus levels"
+		menu.extras[EXTRA_BONUSLEVELS].name = "Bonus levels"
 	end
 end
 

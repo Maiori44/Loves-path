@@ -388,7 +388,7 @@ local function DrawTilemap()
 	local centery = GetStartY()
 	scale = scale * GetScaleByScreen()
 	local tilesize = math.floor(32*scale)
-	local superdark = menu.extras[4].value == 1
+	local superdark = menu.extras[EXTRA_SUPERDARK].value == 1
 	love.graphics.push()
 	love.graphics.translate(screenwidth / 2, screenheight / 2)
 	love.graphics.rotate(rotation)
@@ -871,7 +871,7 @@ tilesets = {
 			[TILE_CUSTOM1] = true,
 			[TILE_CUSTOM2] = true,
 			[TILE_CUSTOM3] = function(mo)
-				menu.extras[4].value = 1
+				menu.extras[EXTRA_SUPERDARK].value = 1
 				tilemap[mo.y][mo.x] = TILE_CUSTOM2
 				sound.playSound("lock.wav")
 				SaveData()
@@ -890,7 +890,7 @@ Good luck!
 			end,
 			[TILE_CUSTOM2] = nil,
 			[TILE_CUSTOM3] = function(x, y)
-				if menu.extras[4].name == "superdark" then
+				if menu.extras[EXTRA_SUPERDARK].name == "superdark" then
 					tilemap[y][x] = TILE_CUSTOM2
 				end
 			end

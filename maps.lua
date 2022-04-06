@@ -166,7 +166,7 @@ function LoadMap(mapname, oldscale)
 	end
 	local loadedmap = tonumber(mapname:match("%d+%d"))
 	local coindata = coins[loadedmap]
-	if coindata then
+	if coindata and not mapname:match("bonus") then
 		local shadow = coindata.got
 		SpawnObject(shadow and coins.shadowpath or coins.path, coindata.x, coindata.y, shadow and "shadow coin" or "coin", coins.quads, "default")
 	end
