@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.172"
+VERSION = "Version b7.0.173"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -1153,7 +1153,7 @@ Beta tester]], 0, 355, third, "center")
 		local tminutes = (minutes < 10 and "0"..minutes) or tostring(minutes)
 		love.graphics.printf("Completed in "..hours..":"..tminutes.."."..tseconds, 0, 90, screenwidth, "center")
 	end,
-	["name him"] = DrawMenu
+	["name him"] = DrawMenuWithBG
 }
 
 function debug.collectInfo()
