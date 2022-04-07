@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.174"
+VERSION = "Version b7.0.175"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -351,6 +351,7 @@ end
 
 function UpdateTilemap(tilesize, rotatebridges)
 	tileset:clear()
+	local scale = tilesize / 32
 	for i,row in ipairs(tilemap) do
 		for j,tile in ipairs(row) do
 			if tile ~= 0 then
