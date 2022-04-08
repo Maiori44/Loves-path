@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.175"
+VERSION = "Version b7.0.176"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -377,7 +377,7 @@ function UpdateTilemap(tilesize, rotatebridges)
 					love.graphics.draw(errortile, x, y, 0, scale)
 					love.graphics.print(tile, x, y, 0, scale)
 				end
-			end 
+			end
 		end
 	end
 end
@@ -440,7 +440,7 @@ local function DrawTilemap()
 	if #shaders > 0 then
 		love.graphics.setShader(unpack(shaders))
 	end
-	if leveltime % 5 == 0 then
+	if leveltime % 10 == 0 then
 		UpdateTilemap(tilesize, flags.rotatebridges)
 	end
 	love.graphics.draw(tileset, centerx, centery)
