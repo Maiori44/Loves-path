@@ -3,11 +3,11 @@ PARTICLE_HELP = 42
 PARTICLE_RAIN = 43
 
 local particles = {list = {}}
-
 local path = "Sprites/Particles/"
+local particlesetting = menu.settings[6]
 
 function particles.spawnSmoke(x, y)
-	if menu.settings[6].value == 0 then return end
+	if particlesetting.value < 2 then return end
 	for i = 1,40 do
 		if not particles.list[i] then
 			particles.list[i] = {x = x, y = y}
@@ -23,7 +23,7 @@ function particles.spawnSmoke(x, y)
 end
 
 function particles.spawnShards(x, y, mult)
-	if menu.settings[6].value == 0 then return end
+	if particlesetting.value < 2 then return end
 	for i = 1,40 do
 		if not particles.list[i] then
 			particles.list[i] = {x = x, y = y}
@@ -40,7 +40,7 @@ function particles.spawnShards(x, y, mult)
 end
 
 function particles.spawnWarning(x, y, speed)
-	if menu.settings[6].value == 0 then return end
+	if particlesetting.value == 0 then return end
 	for i = 1,40 do
 		if not particles.list[i] then
 			particles.list[i] = {x = x, y = y}
@@ -56,7 +56,7 @@ function particles.spawnWarning(x, y, speed)
 end
 
 function particles.spawnStars(x, y)
-	if menu.settings[6].value == 0 then return end
+	if particlesetting.value < 2 then return end
 	for i = 1,40 do
 		if not particles.list[i] then
 			particles.list[i] = {x = x, y = y}
@@ -73,7 +73,7 @@ function particles.spawnStars(x, y)
 end
 
 function particles.spawnBridgeShards(x, y, amount, alpha)
-	if menu.settings[6].value == 0 then return end
+	if particlesetting.value < 2 then return end
 	for i = 1,40 do
 		if not particles.list[i] then
 			particles.list[i] = {x = x, y = y}
@@ -97,7 +97,8 @@ function particles.spawnBridgeShards(x, y, amount, alpha)
 end
 
 function particles.spawnSnow()
-	if menu.settings[6].value == 0 then return end
+	if particlesetting.value < 3 then particles.reset(PARTICLE_SNOW) return end
+	if particles.list[PARTICLE_SNOW] then return end
 	particles.list[PARTICLE_SNOW] = {}
 	particles.list[PARTICLE_SNOW].particle = love.graphics.newParticleSystem(GetImage("Sprites/Particles/snow.png"), 100)
 	local particle = particles.list[PARTICLE_SNOW].particle
@@ -110,7 +111,7 @@ function particles.spawnSnow()
 end
 
 function particles.spawnHelp(x, y)
-	if menu.settings[6].value == 0 then return end
+	if particlesetting.value == 0 then return end
 	particles.list[PARTICLE_HELP] = {x = x, y = y}
 	particles.list[PARTICLE_HELP].particle = love.graphics.newParticleSystem(GetImage(path.."circle.png"), 1)
 	local particle = particles.list[PARTICLE_HELP].particle
@@ -121,7 +122,8 @@ function particles.spawnHelp(x, y)
 end
 
 function particles.spawnRain()
-	if menu.settings[6].value == 0 then return end
+	if particlesetting.value < 3 then particles.reset(PARTICLE_RAIN) return end
+	if particles.list[PARTICLE_RAIN] then return end
 	particles.list[PARTICLE_RAIN] = {}
 	particles.list[PARTICLE_RAIN].particle = love.graphics.newParticleSystem(GetImage("Sprites/Particles/rain.png"), 500)
 	local particle = particles.list[PARTICLE_RAIN].particle

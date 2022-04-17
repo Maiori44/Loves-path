@@ -96,10 +96,10 @@ local ffi = require "ffi"
 ffi.cdef((love.filesystem.read("cdef.c")))
 
 require "cache"
+require "menu"
 require "customhandler"
 require "maps"
 require "objects"
-require "menu"
 require "player"
 utf8 = require "utf8"
 local sound = require "music"
@@ -183,6 +183,7 @@ function love.load(args)
 	gamemapname = ""
 	musicname = ""
 	pcall(LoadSettings)
+	GetAllMaps()
 	sound.setMusic("menu.ogg")
 end
 

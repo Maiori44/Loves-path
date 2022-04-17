@@ -107,7 +107,7 @@ menu = {
 			sound.music:setVolume(this.value / 10)
 		end},
 		{name = "Sounds", value = 5, values = percentuals},
-		{name = "Particles", value = 1, values = valuesnames},
+		{name = "Particles", value = 3, values = {[0] = "none", [1] = "few", [2] = "most", [3] = "all"}},
 		{name = "Flashing stuff", value = 1, values = valuesnames},
 		{name = "Cutscenes", value = 1, values = valuesnames},
 		{name = "Erase Data", func = function(this)
@@ -428,8 +428,6 @@ menu = {
 		{name = "back", state = "title"}
 	}
 }
-
-GetAllMaps()
 
 function SaveSettings()
 	local file = io.open("settings.cfg", "w+b")
