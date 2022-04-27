@@ -26,7 +26,7 @@ function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
 	if not collisions[type] then error('object type "'..type..'" does not exist!') end
 	quadtype = (quadtype and quadtype) or (not quads and "none") or (hp and "hp") or (#quads == 1 and "single") or (#quads == 8 and "directions") or "default"
 	local key = (#voids > 0 and table.remove(voids) or #objects + 1)
-	local newobject = (type == "player" and MakePlayerObject or MakeObject)(quads and CacheQuadArray(quads) or 0, hp or 1, x, y, direction or DIR_LEFT, 0, false, key, 1, 0, 0, sprite, quadtype, type)
+	local newobject = (type == "player" and MakePlayerObject or MakeObject)(quads and CacheQuadArray(quads) or 0, key, sprite, quadtype, type, hp or 1, x, y, direction or DIR_LEFT, 0, 1, false, false, 0, 0)
 	objects[key] = newobject
 	return newobject
 end
@@ -133,7 +133,7 @@ function PusherCheck(mo)
 end
 
 function PushObject(_, obstmo, momx, momy)
-	obstmo.lastaxis = (momx ~= 0 and "x") or "y"
+	obstmo.lastaxis = (momx ~= 0 and false) or true
 	PusherCheck(obstmo)
 	if not TryMove(obstmo, momx, momy) then return false end
 end
@@ -141,7 +141,7 @@ end
 function SlowPushObject(mo, obstmo, momx, momy)
 	obstmo.momx = momx/1.4
 	obstmo.momy = momy/1.4
-	obstmo.lastaxis = (momx ~= 0 and "x") or "y"
+	obstmo.lastaxis = (momx ~= 0 and false) or true
 	PusherCheck(mo)
 	return false
 end
@@ -229,7 +229,7 @@ local function ThrustObject(mo, thrustx, thrusty)
 	end
 	mo.momx = thrustx
 	mo.momy = thrusty
-	mo.lastaxis = (thrustx ~= 0 and "x") or "y"
+	mo.lastaxis = (thrustx ~= 0 and false) or true
 end
 
 local directionToMomentum = {
