@@ -1,4 +1,4 @@
-VERSION = "Version b7.0.176"
+VERSION = "Version b8.0.177"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -213,7 +213,7 @@ local bumps =  {
 }
 
 local updateModes = {
-	ingame = function(dt)
+	ingame = function()
 		if not player then darkness = math.min(darkness + 0.2, 70) end
 		leveltime = leveltime + 1
 		rotation = rotation / 2
@@ -325,7 +325,7 @@ local quadDrawingMethods = {
 		love.graphics.draw(sprite, quads[mo.direction+(((mo.momx == 0 and mo.momy == 0) and 0) or 1)], x, y, 0, scale)
 	end,
 	position = function(mo, x, y, sprite, quads)
-		local movingaxis = mo.lastaxis == "y" and mo.y or mo.x
+		local movingaxis = ffi.string(mo.lastaxis) == "y" and mo.y or mo.x
 		love.graphics.draw(sprite, quads[(movingaxis%#quads)+1], x, y, 0, scale)
 	end,
 	hp = function(mo, x, y, sprite, quads)
