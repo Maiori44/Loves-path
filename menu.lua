@@ -308,6 +308,13 @@ menu = {
 			ChangeGamestate("bonus levels")
 			pointer = 1
 		end},
+		{name = "???????", func = function(this)
+			if not this.value then
+				messagebox.setMessage("This extra is locked...", "Find and fall into a special hole hidden somewhere in chapter 1!")
+			else
+
+			end
+		end},
 		{name = "?????????", func = function(this)
 			if not this.value then
 				messagebox.setMessage("This extra is locked...", "Look for a yellow button hidden somewhere in chapter 4!")
@@ -430,7 +437,11 @@ menu = {
 }
 
 function SaveSettings()
-	local file = io.open("settings.cfg", "w+b")
+	local file, errormsg = io.open("settings.cfg", "w+b")
+	if not file then
+		messagebox.setMessage("Failed to save settings!", errormsg, true)
+		return
+	end
 	for i = 1,#menu.settings-2 do
 		file:write(string.char(menu.settings[i].value))
 	end
@@ -448,7 +459,11 @@ end
 savefile = "save.dat"
 
 function SaveData()
-	local file = io.open(savefile, "w+b")
+	local file, errormsg = io.open(savefile, "w+b")
+	if not file then
+		messagebox.setMessage("Failed to save data!", errormsg, true)
+		return
+	end
 	local l = string.char(math.min(lastmap, 255))
 	file:write(l..l)
 	if not customEnv then
