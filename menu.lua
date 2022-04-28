@@ -3,7 +3,8 @@ local coins = require "coins"
 local nativefs = require "nativefs"
 
 EXTRA_BONUSLEVELS = 3
-EXTRA_SUPERDARK = 4
+EXTRA_SPINNER = 4
+EXTRA_SUPERDARK = 5
 
 pointer = 1
 local valuesnames = {[0] = "off", [1] = "on"}
@@ -251,7 +252,8 @@ menu = {
 						table.remove(menu.addons, 2)
 						table.remove(menu.addons, 2)
 						table.remove(menu.extras, 3)
-						EXTRA_SUPERDARK = 3
+						EXTRA_SPINNER = 3
+						EXTRA_SUPERDARK = 4
 						LoadData()
 						notification.setMessage("\""..filename.."\" loaded succesfully")
 					end})
