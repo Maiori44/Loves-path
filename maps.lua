@@ -199,9 +199,13 @@ function LoadMap(mapname, oldscale)
 	particles.reset(PARTICLE_HELP)
 	if flags.snow then
 		particles.spawnSnow()
+	else
+		particles.reset(PARTICLE_SNOW)
 	end
 	if flags.rain then
 		particles.spawnRain()
+	else
+		particles.reset(PARTICLE_RAIN)
 	end
 	UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), flags.rotatebridges)
 end
