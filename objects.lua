@@ -296,8 +296,9 @@ function EndLevel()
 			notification.setMessage(unlocks)
 		end
 	end
+	local prevlastmap = lastmap
 	lastmap = math.max(gamemap + 1, lastmap)
-	StartSaving()
+	if lastmap > prevlastmap then StartSaving() end
 	if gamemap == #menu["select level"] - 1 then
 		pointer = 1
 		gamestate = "the end"
