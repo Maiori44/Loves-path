@@ -130,6 +130,13 @@ menu = {
 					end
 				end
 				sound.soundtest[#sound.soundtest] = {require = 0xFF}
+				menu.extras[EXTRA_BONUSLEVELS].name = "????? ??????"
+				menu.extras[EXTRA_SPINNER].name = "???????"
+				menu.extras[EXTRA_SPINNER].value = nil
+				menu.extras[EXTRA_SPINNER].values = nil
+				menu.extras[EXTRA_SUPERDARK].name = "?????????"
+				menu.extras[EXTRA_SUPERDARK].value = nil
+				menu.extras[EXTRA_SUPERDARK].values = nil
 				SaveData()
 				this.name = "Erase Data"
 				notification.setMessage("Data erased")
@@ -324,10 +331,10 @@ menu = {
 			messagebox.setMessage("This extra is locked...", "You need "..math.floor(coinstotal / 2) - coinsgot.." more coins to unlock this extra!")
 		end},
 		{name = "?????????", func = function(this)
+			if VanillaExtraCheck() then return end
 			if not this.value then
 				messagebox.setMessage("This extra is locked...", "Look for a yellow button hidden somewhere in chapter 4!")
 			else
-				if VanillaExtraCheck() then return end
 				darkshader:send("light", this.value == 1 and 160 or 200)
 			end
 		end},

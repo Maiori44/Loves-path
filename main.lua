@@ -185,6 +185,11 @@ function love.load(args)
 	pcall(LoadSettings)
 	GetAllMaps()
 	sound.setMusic("menu.ogg")
+	local coinsgot, coinstotal = coins.count()
+	if coinsgot == coinstotal then
+		sound.soundtest[#sound.soundtest] = coins.soundtest
+		menu.extras[EXTRA_BONUSLEVELS].name = "Bonus levels"
+	end
 end
 
 local glitchshader = love.graphics.newShader("Shaders/glitch.glsl")
@@ -876,11 +881,12 @@ tilesets = {
 			[TILE_CUSTOM1] = true,
 			[TILE_CUSTOM2] = true,
 			[TILE_CUSTOM3] = function(mo)
-				menu.extras[EXTRA_SUPERDARK].value = 1
+				local superdark = menu.extras[EXTRA_SUPERDARK]
+				superdark.name = "superdark"
+				superdark.value = 0
+				superdark.values = valuesnames
 				tilemap[mo.y][mo.x] = TILE_CUSTOM2
 				sound.playSound("lock.wav")
-				SaveData()
-				LoadData()
 				messagebox.setMessage("SuperDark mode unlocked!", [[
 When enabled superdark mode will make all levels much darker
 It will be impossible to see far away
