@@ -62,6 +62,13 @@ local function LoadBonusMap(num)
 	hours = 0
 end
 
+local function VanillaExtraCheck()
+	if customEnv then
+		messagebox.setMessage("This extra is locked...", "You can only unlock it by playing without mods!\n(Once unlocked it can be used with mods too)")
+		return true
+	end
+end
+
 menu = {
 	title = {
 		{name = "Start Game", func = function()
@@ -311,14 +318,16 @@ menu = {
 			pointer = 1
 		end},
 		{name = "???????", func = function(this)
-			if not this.value then
-				messagebox.setMessage("This extra is locked...", "Find and fall into a special hole hidden somewhere in chapter 1!")
-			end
+			if this.value then return end
+			if VanillaExtraCheck() then return end
+			local coinsgot, coinstotal = coins.count()
+			messagebox.setMessage("This extra is locked...", "You need "..math.floor(coinstotal / 2) - coinsgot.." more coins to unlock this extra!")
 		end},
 		{name = "?????????", func = function(this)
 			if not this.value then
 				messagebox.setMessage("This extra is locked...", "Look for a yellow button hidden somewhere in chapter 4!")
 			else
+				if VanillaExtraCheck() then return end
 				darkshader:send("light", this.value == 1 and 160 or 200)
 			end
 		end},
