@@ -7,7 +7,7 @@ EXTRA_SPINNER = 4
 EXTRA_SUPERDARK = 5
 
 pointer = 1
-local valuesnames = {[0] = "off", [1] = "on"}
+valuesnames = {[0] = "off", [1] = "on"}
 local percentuals = {
 	[0] = "0%",
 	[1] = "10%",
@@ -538,11 +538,6 @@ function LoadData()
 	end
 	pcall(TryLoadData, savefile)
 	if customEnv then return end
-	local coinsgot, coinstotal = coins.count()
-	if coinsgot == coinstotal then
-		sound.soundtest[#sound.soundtest] = coins.soundtest
-		menu.extras[EXTRA_BONUSLEVELS].name = "Bonus levels"
-	end
 end
 
 function LoadSettings()

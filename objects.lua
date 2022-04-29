@@ -384,18 +384,31 @@ AddObjectType("player", {
 		sound.playSound("coin.wav")
 		particles.spawnStars(obstmo.x, obstmo.y)
 		EraseObject(obstmo)
-		SaveData()
 		if not customEnv then
 			local coinsgot, coinstotal = coins.count()
-			if coinsgot == coinstotal then
-				LoadData()
+			if coinsgot == math.floor(coinstotal / 2) then
+				local spinner = menu.extras[EXTRA_SPINNER]
+				spinner.name = "spinner"
+				spinner.value = 0
+				spinner.values = valuesnames
+				messagebox.setMessage("Spinner mode unlocked!", [[
+When enabled spinner mode will rotate the map up and down
+Making movement much harder!
+NOTE: May cause a bit of nausea
+Good luck!
+(Spinner mode can be enabled in the extras menu)]])
+			elseif coinsgot == coinstotal then
+				sound.soundtest[#sound.soundtest] = coins.soundtest
+				menu.extras[EXTRA_BONUSLEVELS].name = "Bonus levels"
 				notification.setMessage("Unlocked music:\nLovely Bonus")
 				messagebox.setMessage("Bonus levels unlocked!", [[
 Each bonus level has a special unique gimmick!
 They are ordered by difficulty, but can be cleared in any order
-Good luck!]])
+Good luck!
+(The bonus levels can be accessed from the extras menu)]])
 			end
 		end
+		SaveData()
 	end,
 	["shadow coin"] = function(_, obstmo)
 		sound.playSound("coin.wav")
