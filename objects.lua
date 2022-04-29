@@ -610,6 +610,7 @@ AddObjectType("snowball", {
 	[TILE_DOWNPUSHER1] = function(mo) ThrustObject(mo, 0, 0.95) return true end,
 	player = PushObject,
 	coin = true,
+	["shadow coin"] = true,
 	key = PushObject,
 	enemy = RemoveCollidedObject,
 	snowball = SlowPushObject,
