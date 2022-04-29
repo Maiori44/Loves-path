@@ -297,7 +297,7 @@ function EndLevel()
 		end
 	end
 	lastmap = math.max(gamemap + 1, lastmap)
-	SaveData()
+	StartSaving()
 	if gamemap == #menu["select level"] - 1 then
 		pointer = 1
 		gamestate = "the end"
@@ -408,7 +408,7 @@ Good luck!
 (The bonus levels can be accessed from the extras menu)]])
 			end
 		end
-		SaveData()
+		StartSaving()
 	end,
 	["shadow coin"] = function(_, obstmo)
 		sound.playSound("coin.wav")

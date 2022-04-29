@@ -472,6 +472,18 @@ local function DataCheck(val)
 	end
 end
 
+saver = nil
+
+function StartSaving()
+	saver = coroutine.create(SaveData)
+end
+
+local function SaverYield()
+	if saver then
+		coroutine.yield()
+	end
+end
+
 savefile = "save.dat"
 
 function SaveData()
@@ -480,16 +492,21 @@ function SaveData()
 		messagebox.setMessage("Failed to save data!", errormsg, true)
 		return
 	end
+	SaverYield()
 	local l = string.char(math.min(lastmap, 255))
 	file:write(l..l)
+	SaverYield()
 	if not customEnv then
 		local extras = (menu.extras[EXTRA_SUPERDARK].value and 1 or 0) + (menu.extras[EXTRA_SPINNER].value and 2 or 0)
+		SaverYield()
 		file:write(hisname.."\0"..string.char(extras))
+		SaverYield()
 	end
 	for k, coin in pairs(coins) do
 		if type(k) == "number" then
 			file:write(string.char(k)..string.char((coin.got and 1) or 0))
 		end
+		SaverYield()
 	end
 	file:close()
 end

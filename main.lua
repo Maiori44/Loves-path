@@ -298,13 +298,17 @@ local updateModes = {
 }
 
 function love.update(dt)
-	coins.hudtimer = math.max(coins.hudtimer-1, 0)
+	if saver then
+		coroutine.resume(saver)
+		if coroutine.status(saver) == "dead" then saver = nil end
+	end
 	frametime = frametime + math.min(dt, 1/15)
 	while frametime > 1/60 do
 		frametime = frametime-1/60
 		if statetimer < 1 then
 			statetimer = statetimer + (1 - statetimer) / 10
 		end
+		coins.hudtimer = math.max(coins.hudtimer-1, 0)
 		if #sound.list >= 10 then sound.collectGarbage() end
 		if #particles.list >= 20 then particles.collectGarbage() end
 		if updateModes[gamestate] then updateModes[gamestate](dt) end
@@ -1291,6 +1295,9 @@ function love.draw()
 		love.graphics.setColor(1, 1, 1, 1)
 	end
 	love.graphics.printf(VERSION, 0, screenheight-20, screenwidth, "right")
+	if saver then
+		love.graphics.printf("Saving...", 0, screenheight-40, screenwidth, "right")
+	end
 	if notification.timer > 0 then
 		love.graphics.setColor(1, 1, 1, ((math.min(math.max(notification.timer, 0), 60) % 120) / 60))
 		love.graphics.print(notification.text, 10, 45)
