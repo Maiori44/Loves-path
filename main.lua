@@ -1,4 +1,4 @@
-VERSION = "Version b8.0.178"
+VERSION = "Version b8.0.179"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -216,7 +216,10 @@ local updateModes = {
 	ingame = function()
 		if not player then darkness = math.min(darkness + 0.2, 70) end
 		leveltime = leveltime + 1
-		rotation = rotation / 2
+		local spinner = menu.extras[EXTRA_SPINNER].value
+		rotation = spinner > 0
+			and rotation + (math.cos(leveltime / 100) / 5) / math.max(mapheight, mapwidth)
+			or rotation / 2
 		frames = frames + 1
 		seconds, frames = DoTime(seconds, frames)
 		minutes, seconds = DoTime(minutes, seconds)
@@ -249,7 +252,7 @@ local updateModes = {
 								local angley = math.max(mapheight / 100 * 20, 2)
 								local anglex = math.max(mapwidth / 100 * 20, 2)
 								local bump = bumps[tostring(mo.y <= angley) .. tostring(mo.x <= anglex) .. tostring(mo.y > mapheight - angley) .. tostring(mo.x > mapwidth - anglex) .. mo.momx .. mo.momy]
-								if bump then rotation = bump / math.max(mapheight, mapwidth) end
+								if bump then rotation = rotation + bump / math.max(mapheight, mapwidth) end
 							end
 							mo.momx = 0
 							mo.momy = 0

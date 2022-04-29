@@ -313,8 +313,6 @@ menu = {
 		{name = "???????", func = function(this)
 			if not this.value then
 				messagebox.setMessage("This extra is locked...", "Find and fall into a special hole hidden somewhere in chapter 1!")
-			else
-
 			end
 		end},
 		{name = "?????????", func = function(this)
@@ -469,7 +467,8 @@ function SaveData()
 	local l = string.char(math.min(lastmap, 255))
 	file:write(l..l)
 	if not customEnv then
-		file:write(hisname.."\0"..string.char(menu.extras[EXTRA_SUPERDARK].value and 1 or 0))
+		local extras = (menu.extras[EXTRA_SUPERDARK].value and 1 or 0) + (menu.extras[EXTRA_SPINNER].value and 2 or 0)
+		file:write(hisname.."\0"..string.char(extras))
 	end
 	for k, coin in pairs(coins) do
 		if type(k) == "number" then
@@ -487,12 +486,18 @@ local function TryLoadData(savefile)
 			hisname = hisname..char
 			char = savefile:read(1)
 		end
-		local superdark = savefile:read(1):byte()
-		if superdark == 1 then
+		local extras = savefile:read(1):byte()
+		if extras == 3 or extras == 1 then
 			local superdark = menu.extras[EXTRA_SUPERDARK]
 			superdark.name = "superdark"
 			superdark.value = 0
 			superdark.values = valuesnames
+		end
+		if extras == 3 or extras == 2 then
+			local spinner = menu.extras[EXTRA_SPINNER]
+			spinner.name = "spinner"
+			spinner.value = 0
+			spinner.values = valuesnames
 		end
 	end
 	repeat
