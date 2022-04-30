@@ -221,8 +221,8 @@ local updateModes = {
 	ingame = function()
 		if not player then darkness = math.min(darkness + 0.2, 70) end
 		leveltime = leveltime + 1
-		local spinner = menu.extras[EXTRA_SPINNER].value
-		rotation = (spinner and spinner > 0)
+		local wobble = menu.extras[EXTRA_WOBBLE].value
+		rotation = (wobble and wobble > 0)
 			and rotation + (math.cos(leveltime / 100) / 5) / math.max(mapheight, mapwidth)
 			or rotation / 2
 		frames = frames + 1

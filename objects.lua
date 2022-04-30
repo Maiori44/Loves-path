@@ -388,16 +388,16 @@ AddObjectType("player", {
 		if not customEnv then
 			local coinsgot, coinstotal = coins.count()
 			if coinsgot == math.floor(coinstotal / 2) then
-				local spinner = menu.extras[EXTRA_SPINNER]
-				spinner.name = "spinner"
-				spinner.value = 0
-				spinner.values = valuesnames
-				messagebox.setMessage("Spinner mode unlocked!", [[
-When enabled spinner mode will rotate the map up and down
+				local wobble = menu.extras[EXTRA_WOBBLE]
+				wobble.name = "wobble"
+				wobble.value = 0
+				wobble.values = valuesnames
+				messagebox.setMessage("wobble mode unlocked!", [[
+When enabled wobble mode will rotate the map up and down
 Making movement much harder!
 NOTE: May cause a bit of nausea
 Good luck!
-(Spinner mode can be enabled in the extras menu)]])
+(wobble mode can be enabled in the extras menu)]])
 			elseif coinsgot == coinstotal then
 				sound.soundtest[#sound.soundtest] = coins.soundtest
 				menu.extras[EXTRA_BONUSLEVELS].name = "Bonus levels"

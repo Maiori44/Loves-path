@@ -3,7 +3,7 @@ local coins = require "coins"
 local nativefs = require "nativefs"
 
 EXTRA_BONUSLEVELS = 3
-EXTRA_SPINNER = 4
+EXTRA_WOBBLE = 4
 EXTRA_SUPERDARK = 5
 
 pointer = 1
@@ -131,9 +131,9 @@ menu = {
 				end
 				sound.soundtest[#sound.soundtest] = {require = 0xFF}
 				menu.extras[EXTRA_BONUSLEVELS].name = "????? ??????"
-				menu.extras[EXTRA_SPINNER].name = "???????"
-				menu.extras[EXTRA_SPINNER].value = nil
-				menu.extras[EXTRA_SPINNER].values = nil
+				menu.extras[EXTRA_WOBBLE].name = "???????"
+				menu.extras[EXTRA_WOBBLE].value = nil
+				menu.extras[EXTRA_WOBBLE].values = nil
 				menu.extras[EXTRA_SUPERDARK].name = "?????????"
 				menu.extras[EXTRA_SUPERDARK].value = nil
 				menu.extras[EXTRA_SUPERDARK].values = nil
@@ -268,7 +268,7 @@ menu = {
 						table.remove(menu.addons, 2)
 						table.remove(menu.addons, 2)
 						table.remove(menu.extras, 3)
-						EXTRA_SPINNER = 3
+						EXTRA_WOBBLE = 3
 						EXTRA_SUPERDARK = 4
 						LoadData()
 						notification.setMessage("\""..filename.."\" loaded succesfully")
@@ -499,7 +499,7 @@ function SaveData()
 	file:write(l..l)
 	SaverYield()
 	if not customEnv then
-		local extras = (menu.extras[EXTRA_SUPERDARK].value and 1 or 0) + (menu.extras[EXTRA_SPINNER].value and 2 or 0)
+		local extras = (menu.extras[EXTRA_SUPERDARK].value and 1 or 0) + (menu.extras[EXTRA_WOBBLE].value and 2 or 0)
 		SaverYield()
 		file:write(hisname.."\0"..string.char(extras))
 		SaverYield()
@@ -529,10 +529,10 @@ local function TryLoadData(savefile)
 			superdark.values = valuesnames
 		end
 		if extras == 3 or extras == 2 then
-			local spinner = menu.extras[EXTRA_SPINNER]
-			spinner.name = "spinner"
-			spinner.value = 0
-			spinner.values = valuesnames
+			local wobble = menu.extras[EXTRA_WOBBLE]
+			wobble.name = "wobble"
+			wobble.value = 0
+			wobble.values = valuesnames
 		end
 	end
 	repeat
