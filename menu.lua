@@ -168,6 +168,7 @@ menu = {
 					mouse.camerax = 0
 					mouse.cameray = 0
 					scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
+					UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), tilesets[tilesetname].rotatebridges)
 				else
 					messagebox.setMessage("Map not found!", "If you want to create a new map\nselect the \"Create Map\" button instead")
 					menu["level editor"][1].int = ""
@@ -212,6 +213,7 @@ menu = {
 				mouse.camerax = 0
 				mouse.cameray = 0
 				scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
+				UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), tilesets[tilesetname].rotatebridges)
 			end
 		end},
 		{name = "back", func = function() ChangeGamestate("level editor") pointer = 2 end}

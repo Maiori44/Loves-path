@@ -292,7 +292,6 @@ function LoadEditorMap(mapname)
 	particles.reset()
 	particles.reset(PARTICLE_SNOW)
 	particles.reset(PARTICLE_RAIN)
-	UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), tilesets[tilesetname].rotatebridges)
 	return true
 end
 
