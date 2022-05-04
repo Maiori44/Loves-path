@@ -363,6 +363,8 @@ local function AnimatedPrint(text, x, y, speed)
 end
 
 function UpdateTilemap(tilesize, rotatebridges)
+	if not tilesize then tilesize = math.floor(scale * GetScaleByScreen() * 32) end
+	if not rotatebridges then rotatebridges = tilesets[tilesetname].rotatebridges end
 	tileset:clear()
 	local scale = tilesize / 32
 	for i,row in ipairs(tilemap) do
