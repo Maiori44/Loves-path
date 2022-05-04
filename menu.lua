@@ -426,6 +426,14 @@ menu = {
 			SpawnObject(numonitor, 22, 31, "numonitor", GetQuads(10, numonitor), "frame")
 			SpawnObject(numonitor, 4, 20, "numonitor", GetQuads(10, numonitor), "frame")
 		end},
+		{name = "wall landers", func = function()
+			LoadBonusMap(6)
+			SetTile(16, 2, TILE_DOWNPUSHER1)
+			SetTile(17, 2, TILE_DOWNPUSHER1)
+			SetTile(14, 2, TILE_DOWNPUSHER1)
+			local rotcounter = "Sprites/Bonuses/number monitor.png"
+			SpawnObject(rotcounter, 20, 1, "rotcounter", GetQuads(10, rotcounter), "frame").frame = 10
+		end},
 		{name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
 	},
 	["bonus level complete!"] = {

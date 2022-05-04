@@ -1,4 +1,4 @@
-VERSION = "Version b7.1.180"
+VERSION = "Version b7.1.181"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -728,6 +728,8 @@ tilesets = {
 							notification.setMessage("Wrong number...")
 						end
 					end
+				elseif gamemap == -6 and mo == player then
+					objects[4].frame = 10
 				end
 			end,
 			[TILE_CUSTOM2] = function()
@@ -749,6 +751,17 @@ tilesets = {
 						messagebox.setMessage("Right riddle hint", "It fades away every time\nbut only now changed shape\nyou'll have to run!")
 						gamemapname = "8"
 					end
+				elseif gamemap == -6 then
+					local line = tilemap[5]
+					line[9] = TILE_DOWNPUSHER1
+					line[10] = TILE_DOWNPUSHER1
+					line[11] = TILE_DOWNPUSHER1
+					line[12] = TILE_DOWNPUSHER1
+					line[13] = TILE_DOWNPUSHER1
+					line[14] = TILE_DOWNPUSHER1
+					tilemap[18][7] = TILE_DOWNPUSHER1
+					objects[4].frame = 10
+					UpdateTilemap()
 				end
 			end,
 		},

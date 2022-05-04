@@ -898,3 +898,39 @@ AddObjectType("pacdot", {
 --RIDDLE MONITORS
 AddObjectType("bimonitor")
 AddObjectType("numonitor")
+
+--ROTATIONS COUNTER
+local function RotateMap()
+	local newtilemap = {}
+	for k, row in pairs(tilemap) do
+		for y = 1, mapheight do
+			if not newtilemap[y] then newtilemap[y] = {} end
+			newtilemap[y][mapheight - k + 1] = row[y]
+		end
+	end
+	tilemap = newtilemap
+	player.fmomx = 0
+	for _, mo in pairs(objects) do
+		mo.x, mo.y = mapwidth - mo.y + 1, mo.x
+	end
+end
+
+AddObjectType("rotcounter", nil, function(mo)
+	CheckMap(TILE_FLOOR1, TILE_DOWNPUSHER1)
+	if not player
+	or (tilemap[player.y + 1][player.x] == TILE_DOWNPUSHER1
+	and not SearchObject(player.x, player.y + 1)) then return end
+	if player.fmomx > 0 then
+		RotateMap()
+		UpdateTilemap()
+		if mo.frame == 1 then RemoveObject(player)
+		else mo.frame = mo.frame - 1 end
+	elseif player.fmomx < 0 then
+		RotateMap()
+		RotateMap()
+		RotateMap()
+		UpdateTilemap()
+		if mo.frame == 1 then RemoveObject(player)
+		else mo.frame = mo.frame - 1 end
+	end
+end)

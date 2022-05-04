@@ -105,6 +105,7 @@ function RestartMap()
 			menu["bonus levels"][math.abs(gamemap)].func()
 		end
 		scale = oldscale
+		UpdateTilemap()
 	else
 		LoadMap("map"..GetMapNum(gamemap)..".map", oldscale)
 	end
@@ -224,7 +225,7 @@ function CheckMap(...)
 				local tocheck = args[i]
 				local change = args[i+1]
 				if not tocheck or not args then break end
-				if tilemap[y][x] == tocheck then
+				if tilemap[y] and tilemap[y][x] == tocheck then
 					tilemap[y][x] = change
 					replaced = true
 					if dosmoke then
@@ -242,7 +243,7 @@ end
 function IterateMap(tile, func)
 	for y = 1, mapheight do
 		for x = 1, mapwidth do
-			if tilemap[y][x] == tile then
+			if tilemap[y] and tilemap[y][x] == tile then
 				local check = func(x, y)
 				if check then return end
 			end
