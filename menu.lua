@@ -168,7 +168,7 @@ menu = {
 					mouse.camerax = 0
 					mouse.cameray = 0
 					scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
-					UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), tilesets[tilesetname].rotatebridges)
+					UpdateTilemap()
 				else
 					messagebox.setMessage("Map not found!", "If you want to create a new map\nselect the \"Create Map\" button instead")
 					menu["level editor"][1].int = ""
@@ -213,7 +213,7 @@ menu = {
 				mouse.camerax = 0
 				mouse.cameray = 0
 				scale = ((mapwidth >= 20 or mapheight >= 20) and GetScale((mapwidth >= mapheight and mapwidth) or mapheight )) or 1
-				UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), tilesets[tilesetname].rotatebridges)
+				UpdateTilemap()
 			end
 		end},
 		{name = "back", func = function() ChangeGamestate("level editor") pointer = 2 end}
@@ -229,6 +229,7 @@ menu = {
 			SaveMap(mapspath.."/map"..GetMapNum(gamemap)..".map", mapinfo[1].string.."\n", mapinfo[2].values[mapinfo[2].value].."\n", mapinfo[3].values[mapinfo[3].value].."\n", mapinfo[4].int.."\n", mapinfo[5].int.."\n")
 			LoadEditorMap("map"..GetMapNum(gamemap)..".map")
 			notification.setMessage("Map saved")
+			UpdateTilemap()
 		end},
 		{name = "Resume editing", func = function() gamestate = "editing" end},
 		{name = "Return to Title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},

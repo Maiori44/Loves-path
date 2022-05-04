@@ -243,14 +243,20 @@ function mouse.think()
 			local tile = mouse.tile
 			local x = mouse.x
 			local y = mouse.y
+			local oldtile = tilemap[y][x]
 			local nextRow = tilemap[y + 1]
 			local prevRow = tilemap[y - 1]
 			if IsBridge(tile) and ((nextRow and IsBridge(nextRow[x])) or (prevRow and IsBridge(prevRow[x]))) then
 				tile = tile + 10
 			end
 			tilemap[y][x] = tile
+			if oldtile ~= tile then UpdateTilemap() end
 		elseif love.mouse.isDown(2) then
-			tilemap[mouse.y][mouse.x] = TILE_EMPTY
+			local x = mouse.x
+			local y = mouse.y
+			local oldtile = tilemap[y][x]
+			tilemap[y][x] = TILE_EMPTY
+			if oldtile ~= TILE_EMPTY then UpdateTilemap() end
 		elseif love.mouse.isDown(3) then
 			local possibleTile = tilemap[mouse.y][mouse.x]
 			mouse.tile = ((possibleTile >= 50 and possibleTile ~= TILE_SUPERDARK) and possibleTile - 10) or (possibleTile > 0 and possibleTile) or mouse.tile
@@ -265,7 +271,7 @@ function love.wheelmoved(x, y)
 	elseif mouse.mode == "camera" and (gamestate == "editing" or gamestate == "ingame") then
 		wheelmoved = 120
 		scale = math.min(math.max(scale+(0.1*(y/math.abs(y))), 0.5), 2)
-		UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), tilesets[tilesetname].rotatebridges)
+		UpdateTilemap()
 	end
 end
 

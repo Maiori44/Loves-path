@@ -207,7 +207,7 @@ function LoadMap(mapname, oldscale)
 	else
 		particles.reset(PARTICLE_RAIN)
 	end
-	UpdateTilemap(math.floor(scale * GetScaleByScreen() * 32), flags.rotatebridges)
+	UpdateTilemap(nil, flags.rotatebridges)
 end
 
 function CheckMap(...)
