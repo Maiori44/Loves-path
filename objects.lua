@@ -86,9 +86,9 @@ local function BlueSwitch(mo, momx, momy)
 end
 
 local function CrackBridge(mo)
-	local row = tilemap[mo.y]
 	local x = mo.x
-	row[x] = row[x] == TILE_BRIDGE_ROTATED and TILE_CRACKEDBRIDGE_ROTATED or TILE_CRACKEDBRIDGE
+	local y = mo.y
+	SetTile(x, y, tilemap[y][x] == TILE_BRIDGE_ROTATED and TILE_CRACKEDBRIDGE_ROTATED or TILE_CRACKEDBRIDGE)
 end
 
 function IsBridge(tile)
@@ -97,10 +97,12 @@ end
 
 local function DestroyBridge(mo, momx, momy)
 	if momx == 0 and momy == 0 then return end
-	tilemap[mo.y][mo.x] = TILE_EMPTY
-	if tilemap[mo.y + 1][mo.x] then
-		if tilemap[mo.y + 1][mo.x] == TILE_CHASM2 then
-			tilemap[mo.y + 1][mo.x] = TILE_EMPTY
+	local x = mo.x
+	local y = mo.y
+	SetTile(x, y, TILE_EMPTY)
+	if tilemap[y + 1][x] then
+		if tilemap[y + 1][x] == TILE_CHASM2 then
+			SetTile(x, y + 1, TILE_EMPTY)
 			particles.spawnBridgeShards(mo.x, mo.y, 6)
 			particles.spawnBridgeShards(mo.x, mo.y + 1, 6, 0.2)
 		else
@@ -110,9 +112,9 @@ local function DestroyBridge(mo, momx, momy)
 	local uppertile = tilemap[mo.y - 1][mo.x]
 	local isBridge = IsBridge(uppertile)
 	if uppertile and uppertile ~= TILE_EMPTY and (not isBridge) and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
-		tilemap[mo.y][mo.x] = TILE_CHASM1
+		SetTile(x, y, TILE_CHASM1)
 	elseif uppertile and isBridge then
-		tilemap[mo.y][mo.x] = TILE_CHASM2
+		SetTile(x, y, TILE_CHASM2)
 	end
 end
 
@@ -482,7 +484,7 @@ Good luck!
 		local key = objects[1]
 		if obstmo.x == 2 and obstmo.y == 5 and key then
 			EraseObject(key)
-			tilemap[12][17] = TILE_CUSTOM2
+			SetTile(17, 12, TILE_CUSTOM2)
 			sound.playSound("box.wav")
 		end
 		return check
@@ -499,7 +501,7 @@ Good luck!
 			end
 		end)
 		if gotAll then
-			tilemap[10][11] = TILE_CUSTOM2
+			SetTile(11, 10, TILE_CUSTOM2)
 			sound.playSound("box.wav")
 		end
 	end,
@@ -536,7 +538,7 @@ AddObjectType("key", {
 	[TILE_FLOOR2] = StopObject,
 	[TILE_FLOOR3] = StopObject,
 	[TILE_LOCK] = function(mo)
-		tilemap[mo.y][mo.x] = TILE_FLOOR1
+		SetTile(mo.x, mo.y, TILE_FLOOR1)
 		EraseObject(mo)
 		sound.playSound("lock.wav")
 	end,
@@ -663,7 +665,7 @@ AddObjectType("masterbutton")
 
 --METAL BOX
 local function DestroySpikes(mo)
-	tilemap[mo.y][mo.x] = TILE_FLOOR2
+	SetTile(mo.x, mo.y, TILE_FLOOR2)
 	sound.playSound("boom.wav")
 	particles.spawnShards(mo.x, mo.y, 0.5)
 end
@@ -715,7 +717,7 @@ local function EndBrainfuck(mo, posmo)
 	player.momy = -1
 	if SearchObject(10, 4).hp == 1 and SearchObject(11, 4).hp == 8 and SearchObject(12, 4).hp == 8 and SearchObject(13, 4).hp == 8 and SearchObject(14, 4).hp == 8 then
 		if tilemap[16][20] == TILE_LOCK then
-			tilemap[16][20] = TILE_FLOOR1
+			SetTile(20, 16, TILE_FLOOR1)
 			sound.playSound("lock.wav")
 		end
 	end
@@ -864,6 +866,7 @@ AddObjectType("biybridge", BIYCollision, function(mo)
 		tilemap[12][5] = TILE_SLIME
 		tilemap[13][4] = TILE_CHASM1
 		tilemap[13][5] = TILE_CHASM1
+		UpdateTilemap()
 		sound.playSound("box.wav")
 		mo.var2 = true
 	elseif slime.x == 13 and slime.y == 16 and mo.x == 15 and mo.y == 16 then
@@ -886,7 +889,7 @@ AddObjectType("pacdot", {
 			end
 		end)
 		if gotAll then
-			tilemap[10][11] = TILE_CUSTOM2
+			SetTile(11, 10, TILE_CUSTOM2)
 			sound.playSound("box.wav")
 		end
 	end

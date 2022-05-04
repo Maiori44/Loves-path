@@ -315,7 +315,7 @@ function love.update(dt)
 	end
 end
 
-local tileAnimations = {
+tileAnimations = {
 	[TILE_AFLOOR1] = 20,
 	[TILE_RIGHTPUSHER1] = 30,
 	[TILE_LEFTPUSHER1] = 30,
@@ -649,6 +649,7 @@ local function MirrorUpdate(x, y)
 			tilemap[6][14] = TILE_SLIME
 			tilemap[7][30] = TILE_UPPUSHER1
 			CheckMap(TILE_REDWALLON, TILE_REDWALLOFF, TILE_BLUEWALLOFF, TILE_BLUEWALLON)
+			UpdateTilemap()
 		elseif y == 6 then
 			tilemap[6][30] = TILE_FLOOR1
 			tilemap[15][14] = TILE_FLOOR1
@@ -660,6 +661,7 @@ local function MirrorUpdate(x, y)
 			tilemap[7][14] = TILE_LEFTPUSHER1
 			tilemap[13][24] = TILE_CUSTOM3
 			tilemap[14][8] = TILE_CUSTOM3
+			UpdateTilemap()
 		elseif y == 13 then
 			tilemap[7][8] = TILE_FLOOR1
 			tilemap[7][14] = TILE_FLOOR1
@@ -667,6 +669,7 @@ local function MirrorUpdate(x, y)
 			tilemap[14][8] = TILE_FLOOR1
 			tilemap[5][24] = TILE_FLOOR1
 			tilemap[5][8] = TILE_FLOOR1
+			UpdateTilemap()
 			sound.playSound("lock.wav")
 		end
 		return true
@@ -704,13 +707,13 @@ tilesets = {
 								end
 							end
 						end
-						tilemap[4][13] = TILE_FLOOR1
+						SetTile(13, 4, TILE_FLOOR1)
 						sound.playSound("lock.wav")
 					elseif mo.x == 4 and mo.y == 21 then
 						local monitor = SearchObject(4, 20)
 						if monitor.frame == 7 then
 							RemoveObject(monitor)
-							tilemap[21][4] = TILE_FLOOR1
+							SetTile(4, 21, TILE_FLOOR1)
 							messagebox.setMessage("Main riddle hint #1", "The first number is just half of this line's words.\nFor the second number just add 2 to this monitor.")
 						else
 							notification.setMessage("Wrong number...")
@@ -719,7 +722,7 @@ tilesets = {
 						local monitor = SearchObject(22, 31)
 						if monitor.frame == 9 then
 							RemoveObject(monitor)
-							tilemap[32][22] = TILE_FLOOR1
+							SetTile(22, 32, TILE_FLOOR1)
 							messagebox.setMessage("Main riddle hint #2", "The last 2 numbers are both B.")
 						else
 							notification.setMessage("Wrong number...")
@@ -787,7 +790,7 @@ tilesets = {
 			[TILE_CUSTOM1] = true,
 			[TILE_CUSTOM2] = function(mo)
 				if mo.type == "snowball" then
-					tilemap[mo.y][mo.x] = TILE_FLOOR3
+					SetTile(mo.x, mo.y, TILE_FLOOR3)
 					RemoveObject(mo)
 				else return false end
 			end,
@@ -797,13 +800,13 @@ tilesets = {
 			[TILE_CUSTOM1] = function(x, y)
 				local snowsprite = "Sprites/Chapter 2/snowball.png"
 				SpawnObject(snowsprite, x, y, "snowball", GetQuads(4, snowsprite), "position")
-				tilemap[y][x] = TILE_FLOOR3
+				SetTile(x, y, TILE_FLOOR3)
 			end,
 			[TILE_CUSTOM2] = nil,
 			[TILE_CUSTOM3] = function(x, y)
 				local snowmansprite = "Sprites/Chapter 2/snowman.png"
 				SpawnObject(snowmansprite, x, y, "snowman", GetDirectionalQuads(snowmansprite))
-				tilemap[y][x] = TILE_FLOOR3
+				SetTile(x, y, TILE_FLOOR3)
 			end,
 		}
 	},
@@ -836,12 +839,12 @@ tilesets = {
 		tile = {
 			[TILE_CUSTOM1] = function(x, y)
 				timer = timer + 15
-				tilemap[y][x] = TILE_FLOOR1
+				SetTile(x, y, TILE_FLOOR1)
 			end,
 			[TILE_CUSTOM2] = function(x, y)
 				local boxsprite = "Sprites/Chapter 3/box.png"
 				SpawnObject(boxsprite, x, y, "box", GetQuads(5, boxsprite), "hp", nil, 5)
-				tilemap[y][x] = TILE_FLOOR2
+				SetTile(x, y, TILE_FLOOR2)
 			end,
 			[TILE_CUSTOM3] = nil
 		}
@@ -867,12 +870,12 @@ tilesets = {
 			end,
 			[TILE_CUSTOM2] = function(x, y)
 				SpawnObject("Sprites/Chapter 4/metal box.png", x, y, "metalbox")
-				tilemap[y][x] = TILE_FLOOR2
+				SetTile(x, y, TILE_FLOOR2)
 			end,
 			[TILE_CUSTOM3] = function(x, y)
 				local minimansprite = "Sprites/Chapter 4/miniman.png"
 				SpawnObject(minimansprite, x, y, "miniman", GetDirectionalQuads(minimansprite))
-				tilemap[y][x] = TILE_FLOOR1
+				SetTile(x, y, TILE_FLOOR1)
 			end
 		}
 	},
@@ -908,7 +911,7 @@ Good luck!
 			[TILE_CUSTOM2] = nil,
 			[TILE_CUSTOM3] = function(x, y)
 				if menu.extras[EXTRA_SUPERDARK].name == "superdark" then
-					tilemap[y][x] = TILE_CUSTOM2
+					SetTile(x, y, TILE_CUSTOM2)
 				end
 			end
 		}

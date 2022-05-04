@@ -235,6 +235,7 @@ function CheckMap(...)
 			end
 		end
 	end
+	UpdateTilemap()
 	return replaced
 end
 
@@ -247,6 +248,7 @@ function IterateMap(tile, func)
 			end
 		end
 	end
+	UpdateTilemap()
 end
 
 function LoadEditorMap(mapname)
@@ -347,4 +349,12 @@ function SaveMap(map, mapname, tilesetname, musicname, width, height, reset)
 	file:close()
 	GetAllMaps()
 	return true
+end
+
+function SetTile(x, y, tile)
+	tilemap[y][x] = tile
+	local animationtime = tileAnimations[tile] or 1
+	local animationframe = math.floor((leveltime % animationtime) / 10)
+	local tilesize = math.floor(scale * GetScaleByScreen() * 32)
+	tileset:add(quads[tile+animationframe], x * tilesize, y * tilesize, rotation, tilesize / 32)
 end

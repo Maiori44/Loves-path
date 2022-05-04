@@ -203,6 +203,7 @@ function SearchCustom(modname)
 		end,
 		CheckMap = CheckMap,
 		IterateMap = IterateMap,
+		SetTile = SetTile,
 		AddCustomCoin = function(map, x, y)
 			CheckArgument(1, "AddCustomCoin", map, "number")
 			CheckArgument(2, "AddCustomCoin", x, "number")
