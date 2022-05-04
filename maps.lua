@@ -169,7 +169,7 @@ function LoadMap(mapname, oldscale)
 	local coindata = coins[loadedmap]
 	if coindata and not mapname:match("bonus") then
 		local shadow = coindata.got
-		SpawnObject(shadow and coins.shadowpath or coins.path, coindata.x, coindata.y, shadow and "shadow coin" or "coin", coins.quads, "default")
+		SpawnObject(shadow and coins.shadowpath or coins.path, coindata.x, coindata.y, shadow and "shadowcoin" or "coin", coins.quads, "default")
 	end
 	if customEnv then customEnv.tilemap = tilemap end
 	if playerx and playery then

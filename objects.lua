@@ -411,7 +411,7 @@ Good luck!
 		end
 		StartSaving()
 	end,
-	["shadow coin"] = function(_, obstmo)
+	shadowcoin = function(_, obstmo)
 		sound.playSound("coin.wav")
 		particles.spawnStars(obstmo.x, obstmo.y)
 		EraseObject(obstmo)
@@ -488,12 +488,12 @@ Good luck!
 		return check
 	end,
 	biybridge = PushObject,
-	["pac dot"] = function (_, obstmo)
+	["pacdot"] = function (_, obstmo)
 		RemoveObject(obstmo, "menu_move.wav")
 		local gotAll = true;
 		IterateMap(TILE_FLOOR3, function(x, y)
 			local mo = SearchObject(x, y)
-			if mo and mo.type == "pac dot" then
+			if mo and mo.type == "pacdot" then
 				gotAll = false
 				return true
 			end
@@ -528,7 +528,7 @@ end)
 AddObjectType("coin")
 
 --SHADOW COIN
-AddObjectType("shadow coin")
+AddObjectType("shadowcoin")
 
 --KEY
 AddObjectType("key", {
@@ -552,7 +552,7 @@ AddObjectType("key", {
 })
 
 --ENEMY
-AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject, box = PusherCheck, ["pac dot"] = true}, function(mo)
+AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject, box = PusherCheck, pacdot = true}, function(mo)
 	if not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
 	local time = leveltime % 100
 	if time == 40 then
@@ -610,7 +610,7 @@ AddObjectType("snowball", {
 	[TILE_DOWNPUSHER1] = function(mo) ThrustObject(mo, 0, 0.95) return true end,
 	player = PushObject,
 	coin = true,
-	["shadow coin"] = true,
+	shadowcoin = true,
 	key = PushObject,
 	enemy = RemoveCollidedObject,
 	snowball = SlowPushObject,
@@ -797,7 +797,7 @@ local function RemoveObjectAndPlayer(mo)
 	if player then RemoveObject(player) end
 end
 
-AddObjectType("player clone", {
+AddObjectType("playerclone", {
 	[TILE_EMPTY] = RemoveMovingObjectAndPlayer,
 	[TILE_SPIKEON] = RemoveObjectAndPlayer,
 	[TILE_SPIKEOFF] = true,
@@ -874,13 +874,13 @@ AddObjectType("biybridge", BIYCollision, function(mo)
 end)
 
 --PAC DOT
-AddObjectType("pac dot", {
+AddObjectType("pacdot", {
 	player = function (mo)
 		RemoveObject(mo, "menu_move.wav")
 		local gotAll = true;
 		IterateMap(TILE_FLOOR3, function(x, y)
 			local mo = SearchObject(x, y)
-			if mo and mo.type == "pac dot" then
+			if mo and mo.type == "pacdot" then
 				gotAll = false
 				return true
 			end

@@ -50,7 +50,7 @@ function ChangeGamestate(newgamestate)
 end
 
 local function SpawnDots(x, y)
-	SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pac dot")
+	SpawnObject("Sprites/Bonuses/pac dot.png", x, y, "pacdot")
 end
 
 local function LoadBonusMap(num)
@@ -392,7 +392,7 @@ menu = {
 		{name = "mirrored plane", func = function()
 			LoadBonusMap(3)
 			objects = {}
-			SpawnObject("Sprites/player.png", 8, 19, "player clone")
+			SpawnObject("Sprites/player.png", 8, 19, "playerclone")
 			SpawnObject("Sprites/player.png", player.x, player.y, "player")
 			player = objects[2]
 		end},
