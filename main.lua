@@ -730,6 +730,7 @@ tilesets = {
 					end
 				elseif gamemap == -6 and mo == player then
 					objects[4].frame = 10
+					sound.playSound("box.wav")
 				end
 			end,
 			[TILE_CUSTOM2] = function()
@@ -762,6 +763,7 @@ tilesets = {
 					tilemap[18][7] = TILE_DOWNPUSHER1
 					objects[4].frame = 10
 					UpdateTilemap()
+					sound.playSound("lock.wav")
 				end
 			end,
 		},

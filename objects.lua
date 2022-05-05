@@ -909,7 +909,6 @@ local function RotateMap()
 		end
 	end
 	tilemap = newtilemap
-	player.fmomx = 0
 	for _, mo in pairs(objects) do
 		mo.x, mo.y = mapwidth - mo.y + 1, mo.x
 	end
@@ -917,19 +916,21 @@ end
 
 AddObjectType("rotcounter", nil, function(mo)
 	CheckMap(TILE_FLOOR1, TILE_DOWNPUSHER1)
-	if not player
-	or (tilemap[player.y + 1][player.x] == TILE_DOWNPUSHER1
-	and not SearchObject(player.x, player.y + 1)) then return end
-	if player.fmomx > 0 then
+	if not player then return end
+	if player.fmomx ~= 0 then
+		for _, mo in pairs(objects) do
+			if tilemap[mo.y + 1] and tilemap[mo.y + 1][mo.x] == TILE_DOWNPUSHER1
+			and not SearchObject(mo.x, mo.y + 1) then return end
+		end
 		RotateMap()
+		rotation = -math.pi / 2
+		if player.fmomx < 0 then
+			RotateMap()
+			RotateMap()
+			rotation = -rotation
+		end
 		UpdateTilemap()
-		if mo.frame == 1 then RemoveObject(player)
-		else mo.frame = mo.frame - 1 end
-	elseif player.fmomx < 0 then
-		RotateMap()
-		RotateMap()
-		RotateMap()
-		UpdateTilemap()
+		player.fmomx = 0
 		if mo.frame == 1 then RemoveObject(player)
 		else mo.frame = mo.frame - 1 end
 	end
