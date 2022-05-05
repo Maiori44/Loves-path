@@ -1032,7 +1032,7 @@ local drawModes = {
 		local a = math.sin(love.timer.getTime() * 2) / 2
 		love.graphics.setColor(1, a, a)
 		love.graphics.printf([[
--Felix44-
+-Maiori-
 Coder
 Mapper
 Story writer]], 0, 175, fifteentens, "center")
