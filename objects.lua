@@ -2,6 +2,7 @@ local sound = require "music"
 local particles = require "particles"
 local coins = require "coins"
 local ffi = require "ffi"
+local discord = require "discordRPC"
 
 -- DIRECTIONAL OBJECT SPRITE STRUCTURE
 -- 1 2 LEFT
@@ -307,6 +308,7 @@ function EndLevel()
 		gamestate = "the end"
 		sound.reset()
 		sound.setMusic("")
+		discord.updatePresence(discord.menu)
 		return
 	end
 	local errorcheck = LoadMap("map"..GetMapNum(gamemap)..".map")
@@ -324,6 +326,7 @@ function EndLevel()
 	end
 	sound.reset()
 	sound.playSound("win.wav")
+	discord.updateGamePresence()
 end
 
 local defaultCollisions = {

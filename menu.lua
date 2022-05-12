@@ -1,6 +1,7 @@
 local sound = require "music"
 local coins = require "coins"
 local nativefs = require "nativefs"
+local discord = require "discordRPC"
 
 EXTRA_BONUSLEVELS = 3
 EXTRA_WOBBLE = 4
@@ -97,7 +98,12 @@ menu = {
 	pause = {
 		{name = "Resume", state = "ingame"},
 		{name = "Restart", func = RestartMap},
-		{name = "Return to title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},
+		{name = "Return to title", func = function()
+			gamestate = "title"
+			sound.setMusic("menu.ogg")
+			pointer = 1
+			discord.updatePresence(discord.menu)
+		end},
 		{name = "Quit", func = function() love.event.quit(0) end}
 	},
 	settings = {
@@ -442,6 +448,7 @@ menu = {
 			gamestate = "bonus levels"
 			pointer = math.abs(gamemap)
 			sound.setMusic("menu.ogg")
+			discord.updatePresence(discord.menu)
 		end}
 	},
 	["name him"] = {
@@ -458,6 +465,12 @@ menu = {
 			seconds = 0
 			minutes = 0
 			hours = 0
+			discord.updatePresence({
+				details = "Playing",
+				state = "Level 1: Grassy Forest",
+				largeImageKey = "logo",
+				startTimestamp = os.time(os.date("*t"))
+			})
 		end},
 		{name = "back", state = "title"}
 	}

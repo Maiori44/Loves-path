@@ -1,4 +1,4 @@
-VERSION = "Version b7.1.182"
+VERSION = "Version b8.0.184"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -105,6 +105,37 @@ utf8 = require "utf8"
 local sound = require "music"
 local particles = require "particles"
 local coins = require "coins"
+local discord = require "discordRPC"
+
+discord.menu = {
+	state = "In menu",
+	largeImageKey = "logo"
+}
+
+function discord.updateGamePresence()
+	local presence = {
+		details = "Playing",
+		largeImageKey = "logo",
+		startTimestamp = os.time(os.date("*t")),
+		smallImageText = "Level " .. gamemap + 1 .. ": " .. gamemapname
+	}
+	if customEnv then
+		presence.state = "Modded"
+		presence.smallImageKey = "chapter1" --placeholder
+	elseif gamemap == -99 then
+		presence.state = "???"
+		presence.smallImageKey = "chapter1" --placeholder
+		presence.smallImageText = "???"
+	elseif gamemap < 0 then
+		presence.state = "Bonus levels"
+		presence.smallImageKey = "chapter1" --placeholder
+	else
+		local chapter = math.floor(gamemap / 10) + 1
+		presence.state = "Chapter " .. chapter
+		presence.smallImageKey = "chapter" .. chapter
+	end
+	discord.updatePresence(presence)
+end
 
 io.stdout:setvbuf("no")
 
@@ -189,6 +220,8 @@ function love.load(args)
 		sound.soundtest[#sound.soundtest] = coins.soundtest
 		menu.extras[EXTRA_BONUSLEVELS].name = "Bonus levels"
 	end
+	discord.initialize("974379262792581231", true)
+	discord.updatePresence(discord.menu)
 end
 
 local glitchshader = love.graphics.newShader("Shaders/glitch.glsl")
@@ -1313,4 +1346,5 @@ end
 function love.quit()
 	SaveSettings()
 	SaveData()
+	discord.shutdown()
 end

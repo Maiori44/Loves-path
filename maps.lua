@@ -1,6 +1,7 @@
 local sound = require "music"
 local particles = require "particles"
 local coins = require "coins"
+local discord = require "discordRPC"
 
 -- TILESET STRUCTURE
 -- 01 02 03 WALLS
@@ -363,9 +364,10 @@ function GetAllMaps()
 					seconds = 0
 					minutes = 0
 					hours = 0
+					discord.updateGamePresence()
 				end
 			}
-			mapn = mapn+1
+			mapn = mapn + 1
 		end
 	end
 	if #menu["select level"] > 255 then
