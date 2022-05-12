@@ -99,10 +99,10 @@ local function DestroyBridge(mo, momx, momy)
 	if momx == 0 and momy == 0 then return end
 	local x = mo.x
 	local y = mo.y
-	SetTile(x, y, TILE_EMPTY)
+	tilemap[y][x] = TILE_EMPTY
 	if tilemap[y + 1][x] then
 		if tilemap[y + 1][x] == TILE_CHASM2 then
-			SetTile(x, y + 1, TILE_EMPTY)
+			tilemap[y + 1][x] = TILE_EMPTY
 			particles.spawnBridgeShards(mo.x, mo.y, 6)
 			particles.spawnBridgeShards(mo.x, mo.y + 1, 6, 0.2)
 		else
@@ -112,10 +112,11 @@ local function DestroyBridge(mo, momx, momy)
 	local uppertile = tilemap[mo.y - 1][mo.x]
 	local isBridge = IsBridge(uppertile)
 	if uppertile and uppertile ~= TILE_EMPTY and (not isBridge) and uppertile ~= TILE_CHASM1 and uppertile ~= TILE_CHASM2 then
-		SetTile(x, y, TILE_CHASM1)
+		tilemap[y][x] = TILE_CHASM1
 	elseif uppertile and isBridge then
-		SetTile(x, y, TILE_CHASM2)
+		tilemap[y][x] = TILE_CHASM2
 	end
+	UpdateTilemap()
 end
 
 function StopObject(mo, momx, momy)

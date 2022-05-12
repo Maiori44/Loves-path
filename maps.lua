@@ -89,6 +89,56 @@ for i=0,15 do
 end
 quads[TILE_SUPERDARK] = quads[TILE_FLOOR1] 
 
+function UpdateTilemap(tilesize, rotatebridges)
+	if not tilesize then tilesize = math.floor(scale * GetScaleByScreen() * 32) end
+	if not rotatebridges then rotatebridges = tilesets[tilesetname].rotatebridges end
+	tileset:clear()
+	local scale = tilesize / 32
+	for i,row in ipairs(tilemap) do
+		for j,tile in ipairs(row) do
+			if tile ~= 0 then
+				local rotation = 0
+				local animationtime = tileAnimations[tile] or 1
+				local animationframe = math.floor((leveltime % animationtime) / 10)
+				local x = j * tilesize
+				local y = i * tilesize
+				if tile >= 50 and tile ~= TILE_SUPERDARK then
+					tile = tile - 10
+					if rotatebridges ~= false then
+						rotation = math.pi / 2
+						x = x + tilesize
+					end
+				end
+				if quads[tile+animationframe] then
+					if debugmode and debugmode["Map info"] then
+						love.graphics.print(tile+animationframe, x, y, 0, scale)
+					else
+						tileset:add(quads[tile+animationframe], x, y, rotation, scale)
+					end
+				else
+					love.graphics.draw(GetImage("Sprites/error.png"), x, y, 0, scale)
+					love.graphics.print(tile, x, y, 0, scale)
+				end
+			end
+		end
+	end
+end
+
+function SetTile(x, y, tile)
+	tilemap[y][x] = tile
+	local animationtime = tileAnimations[tile] or 1
+	local animationframe = math.floor((leveltime % animationtime) / 10)
+	local tilesize = math.floor(scale * GetScaleByScreen() * 32)
+	if tile >= 50 and tile ~= TILE_SUPERDARK then
+		tile = tile - 10
+		if tilesets[tilesetname].rotatebridges ~= false then
+			rotation = math.pi / 2
+			x = x + tilesize
+		end
+	end
+	tileset:add(quads[tile+animationframe], x * tilesize, y * tilesize, rotation, tilesize / 32)
+end
+
 local enemysprite = "Sprites/Enemies/forest.png"
 
 function RestartMap()
@@ -350,12 +400,4 @@ function SaveMap(map, mapname, tilesetname, musicname, width, height, reset)
 	file:close()
 	GetAllMaps()
 	return true
-end
-
-function SetTile(x, y, tile)
-	tilemap[y][x] = tile
-	local animationtime = tileAnimations[tile] or 1
-	local animationframe = math.floor((leveltime % animationtime) / 10)
-	local tilesize = math.floor(scale * GetScaleByScreen() * 32)
-	tileset:add(quads[tile+animationframe], x * tilesize, y * tilesize, rotation, tilesize / 32)
 end
