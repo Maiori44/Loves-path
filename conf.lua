@@ -1,5 +1,5 @@
 function love.conf(t)
-	t.window.title = "Love's path"
+	t.window.title = "Love's Path"
 	t.window.icon = "Sprites/player.png"
 	t.window.resizable = true
 	t.window.minwidth = 800
