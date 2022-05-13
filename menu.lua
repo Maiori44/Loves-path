@@ -61,6 +61,7 @@ local function LoadBonusMap(num)
 	seconds = 0
 	minutes = 0
 	hours = 0
+	discord.updateGamePresence()
 end
 
 local function VanillaExtraCheck()
