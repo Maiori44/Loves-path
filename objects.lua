@@ -444,6 +444,7 @@ Good luck!
 		if frame == 2 then
 			sound.playSound("button_off.wav")
 			IterateMap(TILE_CUSTOM1, ResetButtons)
+			return true
 		elseif frame == 1 then
 			obstmo.frame = 2
 			local check = true
@@ -461,6 +462,7 @@ Good luck!
 				for _, button in ipairs(buttons) do button.frame = 3 end
 				sound.playSound("lock.wav")
 			end
+			return true
 		end
 	end,
 	metalbox = PushObject,
