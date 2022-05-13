@@ -369,7 +369,7 @@ local quadDrawingMethods = {
 		love.graphics.draw(sprite, quads[mo.direction+(((mo.momx == 0 and mo.momy == 0) and 0) or 1)], x, y, 0, scale)
 	end,
 	position = function(mo, x, y, sprite, quads)
-		local movingaxis = mo.lastaxis and mo.y or mo.x
+		local movingaxis = mo.lastaxis and mo.x or mo.y
 		love.graphics.draw(sprite, quads[(movingaxis%#quads)+1], x, y, 0, scale)
 	end,
 	hp = function(mo, x, y, sprite, quads)

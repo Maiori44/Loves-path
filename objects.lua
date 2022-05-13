@@ -137,7 +137,7 @@ function PusherCheck(mo)
 end
 
 function PushObject(_, obstmo, momx, momy)
-	obstmo.lastaxis = (momx ~= 0 and false) or true
+	obstmo.lastaxis = (momx ~= 0 and true) or false
 	PusherCheck(obstmo)
 	if not TryMove(obstmo, momx, momy) then return false end
 end
@@ -145,7 +145,7 @@ end
 function SlowPushObject(mo, obstmo, momx, momy)
 	obstmo.momx = momx/1.4
 	obstmo.momy = momy/1.4
-	obstmo.lastaxis = (momx ~= 0 and false) or true
+	obstmo.lastaxis = (momx ~= 0 and true) or false
 	PusherCheck(mo)
 	return false
 end
@@ -233,7 +233,7 @@ local function ThrustObject(mo, thrustx, thrusty)
 	end
 	mo.momx = thrustx
 	mo.momy = thrusty
-	mo.lastaxis = (thrustx ~= 0 and false) or true
+	mo.lastaxis = (thrustx ~= 0 and true) or false
 end
 
 local directionToMomentum = {
