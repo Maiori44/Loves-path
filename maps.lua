@@ -111,10 +111,9 @@ function UpdateTilemap(tilesize, rotatebridges)
 					end
 				end
 				if quads[tile+animationframe] then
+					tileset:add(quads[tile+animationframe], x, y, rotation, scale)
 					if debugmode and debugmode["Map info"] then
-						love.graphics.print(tile+animationframe, x, y, 0, scale)
-					else
-						tileset:add(quads[tile+animationframe], x, y, rotation, scale)
+						love.graphics.print(tile+animationframe, GetStartX() + x, GetStartY() + y, rotation, scale)
 					end
 				else
 					love.graphics.draw(GetImage("Sprites/error.png"), x, y, 0, scale)
@@ -131,6 +130,8 @@ function SetTile(x, y, tile)
 	local animationtime = tileAnimations[tile] or 1
 	local animationframe = math.floor((leveltime % animationtime) / 10)
 	local tilesize = math.floor(scale * GetScaleByScreen() * 32)
+	x = x * tilesize
+	y = y * tilesize
 	if tile >= 50 and tile ~= TILE_SUPERDARK then
 		tile = tile - 10
 		if tilesets[tilesetname].rotatebridges ~= false then
@@ -138,7 +139,7 @@ function SetTile(x, y, tile)
 			x = x + tilesize
 		end
 	end
-	tileset:add(quads[tile+animationframe], x * tilesize, y * tilesize, rotation, tilesize / 32)
+	tileset:add(quads[tile+animationframe], x, y, rotation, tilesize / 32)
 end
 
 local enemysprite = "Sprites/Enemies/forest.png"
