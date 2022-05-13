@@ -239,7 +239,12 @@ menu = {
 			UpdateTilemap()
 		end},
 		{name = "Resume editing", func = function() gamestate = "editing" end},
-		{name = "Return to Title", func = function() gamestate = "title" sound.setMusic("menu.ogg") pointer = 1 end},
+		{name = "Return to Title", func = function()
+			gamestate = "title"
+			sound.setMusic("menu.ogg")
+			pointer = 1
+			discord.updatePresence(discord.menu)
+		end},
 		{name = "Quit", func = function() love.event.quit(0) end}
 	},
 	["the end"] = {

@@ -350,6 +350,12 @@ function LoadEditorMap(mapname)
 	particles.reset()
 	particles.reset(PARTICLE_SNOW)
 	particles.reset(PARTICLE_RAIN)
+	discord.updatePresence({
+		details = "Editing levels",
+		state = gamemapname,
+		startTimestamp = os.time(os.date("*t")),
+		largeImageKey = "logo"
+	})
 	return true
 end
 
