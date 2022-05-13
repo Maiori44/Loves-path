@@ -80,7 +80,7 @@ sound.soundtest = {
 	{name = "Tough Climb", subtitle = "Chapter 2 Act 2", creator = "MAKYUNI", filename = "frost 2.ogg", require = 16},
 	{name = "Castle of Time", subtitle = "Chapter 3 Act 1", creator = "MAKYUNI", filename = "castle 1.ogg", require = 21},
 	{name = "Growing Burden", subtitle = "Chapter 3 Act 2", creator = "MAKYUNI", filename = "castle 2.ogg", require = 26},
-	{name = "Neglected Factory", subtitle = "Chapter 4 Act 1", creator = "MAKYUNI (inspired by Janne Kivilahti)", filename = "factory 1.ogg", require = 31},
+	{name = "Neglected Factory", subtitle = "Chapter 4 Act 1", creator = "MAKYUNI", filename = "factory 1.ogg", require = 31},
 	{name = "Rusted Gears", subtitle = "Chapter 4 Act 2", creator = "MAKYUNI", filename = "factory 2.ogg", require = 36},
 	{name = "Inside the mind", subtitle = "Chapter 5", creator = "Felix44 & MAKYUNI", filename = "mind.ogg", require = 41},
 	{name = "Inside the heart", subtitle = "Vs. Beldurra", creator = "LordXermon", filename = "heart.ogg", require = 50},
