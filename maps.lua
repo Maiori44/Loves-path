@@ -127,6 +127,7 @@ end
 
 function SetTile(x, y, tile)
 	tilemap[y][x] = tile
+	local rotation = 0
 	local animationtime = tileAnimations[tile] or 1
 	local animationframe = math.floor((leveltime % animationtime) / 10)
 	local tilesize = math.floor(scale * GetScaleByScreen() * 32)
