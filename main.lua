@@ -121,14 +121,14 @@ function discord.updateGamePresence()
 	}
 	if customEnv then
 		presence.state = "Modded"
-		presence.smallImageKey = "chapter1" --placeholder
+		presence.smallImageKey = "unknown" --placeholder
 	elseif gamemap == -99 then
 		presence.state = "???"
-		presence.smallImageKey = "chapter1" --placeholder
+		presence.smallImageKey = "unknown" --placeholder
 		presence.smallImageText = "???"
 	elseif gamemap < 0 then
 		presence.state = "Bonus levels"
-		presence.smallImageKey = "chapter1" --placeholder
+		presence.smallImageKey = "unknown" --placeholder
 	else
 		local chapter = math.floor(gamemap / 10) + 1
 		presence.state = "Chapter " .. chapter
