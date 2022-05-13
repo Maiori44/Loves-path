@@ -162,6 +162,8 @@ function RestartMap()
 	end
 end
 
+menu.pause[2].func = RestartMap --blame file load order
+
 local function GetMapData(mapname)
 	return love.filesystem.read(mapspath..mapname)
 end
