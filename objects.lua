@@ -494,7 +494,7 @@ Good luck!
 		return check
 	end,
 	biybridge = PushObject,
-	["pacdot"] = function (_, obstmo)
+	pacdot = function (_, obstmo)
 		RemoveObject(obstmo, "menu_move.wav")
 		local gotAll = true;
 		IterateMap(TILE_FLOOR3, function(x, y)
