@@ -196,7 +196,7 @@ function TryMove(mo, momx, momy)
 		mo.y = mo.y+momy
 		mo.x = mo.x+momx
 		local tile = tilemap[mo.y][mo.x]
-		if tile >= 50 and tile ~= TILE_SUPERDARK then tile = tile - 10 end
+		if tile >= 50 then tile = tile - 10 end
 		if type(moCollisions[tile]) == "function" and not predicting then
 			local check = moCollisions[tile](mo, momx, momy)
 			if check == false and mo then

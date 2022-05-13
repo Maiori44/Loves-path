@@ -73,7 +73,7 @@ TILE_CUSTOM3 = 48
 TILE_BRIDGE_ROTATED = 50
 TILE_CRACKEDBRIDGE_ROTATED = 51
 TILE_WOBBLE = 98
-TILE_SUPERDARK = 99
+TILE_SUPERDARK = -1
 
 lastmap = 1
 
@@ -103,7 +103,7 @@ function UpdateTilemap(tilesize, rotatebridges)
 				local animationframe = math.floor((leveltime % animationtime) / 10)
 				local x = j * tilesize
 				local y = i * tilesize
-				if tile >= 50 and tile ~= TILE_SUPERDARK then
+				if tile >= 50 then
 					tile = tile - 10
 					if rotatebridges ~= false then
 						rotation = math.pi / 2
@@ -132,7 +132,7 @@ function SetTile(x, y, tile)
 	local tilesize = math.floor(scale * GetScaleByScreen() * 32)
 	x = x * tilesize
 	y = y * tilesize
-	if tile >= 50 and tile ~= TILE_SUPERDARK then
+	if tile >= 50 then
 		tile = tile - 10
 		if tilesets[tilesetname].rotatebridges ~= false then
 			rotation = math.pi / 2

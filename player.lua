@@ -259,7 +259,7 @@ function mouse.think()
 			if oldtile ~= TILE_EMPTY then UpdateTilemap() end
 		elseif love.mouse.isDown(3) then
 			local possibleTile = tilemap[mouse.y][mouse.x]
-			mouse.tile = ((possibleTile >= 50 and possibleTile ~= TILE_SUPERDARK) and possibleTile - 10) or (possibleTile > 0 and possibleTile) or mouse.tile
+			mouse.tile = ((possibleTile >= 50) and possibleTile - 10) or (possibleTile > 0 and possibleTile) or mouse.tile
 		end
 	end
 end
