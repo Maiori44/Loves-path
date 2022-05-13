@@ -384,6 +384,7 @@ AddObjectType("player", {
 	[TILE_SUPERDARK] = function()
 		gamemap = -99
 		RestartMap()
+		discord.updateGamePresence()
 	end,
 	coin = function(_, obstmo)
 		coins.hudtimer = 160
