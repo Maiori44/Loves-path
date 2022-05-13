@@ -82,7 +82,7 @@ sound.soundtest = {
 	{name = "Growing Burden", subtitle = "Chapter 3 Act 2", creator = "MAKYUNI", filename = "castle 2.ogg", require = 26},
 	{name = "Neglected Factory", subtitle = "Chapter 4 Act 1", creator = "MAKYUNI", filename = "factory 1.ogg", require = 31},
 	{name = "Rusted Gears", subtitle = "Chapter 4 Act 2", creator = "MAKYUNI", filename = "factory 2.ogg", require = 36},
-	{name = "Inside the mind", subtitle = "Chapter 5", creator = "Felix44 & MAKYUNI", filename = "mind.ogg", require = 41},
+	{name = "Inside the mind", subtitle = "Chapter 5", creator = "Maiori & MAKYUNI", filename = "mind.ogg", require = 41},
 	{name = "Inside the heart", subtitle = "Vs. Beldurra", creator = "LordXermon", filename = "heart.ogg", require = 50},
 	{require = 0xFF} --gets replaced by bonus.ogg when unlocked
 }
