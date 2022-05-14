@@ -37,7 +37,18 @@ function RemoveObject(mo, soundname)
 	table.insert(voids, mo.key)
 	soundname = (type(soundname) == "string" and soundname) or nil
 	soundname = (not soundname and ((mo == player and "heartbreak"..love.math.random(1, 2)..".wav") or "boom.wav")) or soundname
-	if mo == player then particles.spawnShards(player.x, player.y, 1) darkness = 0 player = nil
+	if mo == player then
+		if tilesets[tilesetname].dark or menu.extras[EXTRA_SUPERDARK].value == 1 then
+			local tilesize = math.floor(32 * scale * GetScaleByScreen())
+			local playerx = GetStartX() + player.x * tilesize + tilesize / 2
+			local playery = GetStartY() + player.y * tilesize + tilesize / 2
+			playerx, playery = love.graphics.transformPoint(playerx, playery)
+			darkshader:send("pos", {playerx, playery})
+			darkshader:send("scale", scale)
+		end
+		particles.spawnShards(player.x, player.y, 1)
+		darkness = 0
+		player = nil
 	else particles.spawnShards(mo.x, mo.y, 0.5) end
 	sound.playSound(soundname)
 end
