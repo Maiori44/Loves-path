@@ -88,7 +88,7 @@ for i=0,15 do
 		table.insert(quads, quad)
 	end
 end
-quads[TILE_SUPERDARK] = quads[TILE_FLOOR1] 
+quads[TILE_SUPERDARK] = quads[TILE_FLOOR1]
 
 function UpdateTilemap(tilesize, rotatebridges)
 	if not tilesize then tilesize = math.floor(scale * GetScaleByScreen() * 32) end
