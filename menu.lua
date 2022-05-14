@@ -40,8 +40,7 @@ possibleMusic = {
 	[6] = "castle 2.ogg",
 	[7] = "factory 1.ogg",
 	[8] = "factory 2.ogg",
-	[9] = "mind.ogg",
-	[10] = "bonus.ogg",
+	[9] = "bonus.ogg",
 }
 
 function ChangeGamestate(newgamestate)
