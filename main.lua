@@ -107,16 +107,19 @@ local particles = require "particles"
 local coins = require "coins"
 local discord = require "discordRPC"
 
+startTimestamp = os.time(os.date("*t"))
+
 discord.menu = {
 	state = "In menu",
-	largeImageKey = "logo"
+	largeImageKey = "logo",
+	startTimestamp = startTimestamp
 }
 
 function discord.updateGamePresence()
 	local presence = {
 		details = "Playing",
 		largeImageKey = "logo",
-		startTimestamp = os.time(os.date("*t")),
+		startTimestamp = startTimestamp,
 		smallImageText = "Level " .. gamemap + 1 .. ": " .. gamemapname
 	}
 	if customEnv then

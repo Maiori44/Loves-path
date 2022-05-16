@@ -352,7 +352,7 @@ function LoadEditorMap(mapname)
 	discord.updatePresence({
 		details = "Editing levels",
 		state = gamemapname,
-		startTimestamp = os.time(os.date("*t")),
+		startTimestamp = startTimestamp,
 		largeImageKey = "logo"
 	})
 	return true
