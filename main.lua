@@ -110,7 +110,7 @@ local discord = require "discordRPC"
 startTimestamp = os.time(os.date("*t"))
 
 discord.menu = {
-	state = "In menu",
+	state = "Menu",
 	largeImageKey = "logo",
 	startTimestamp = startTimestamp
 }
