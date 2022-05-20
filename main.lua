@@ -1210,7 +1210,8 @@ Beta tester]], 0, 355, third, "center")
 		end
 		local page = GetImage("Sprites/Cutscenes/" .. cutscenes.num .. "/" .. cutscenes.page .. ".png")
 		local width, height = page:getDimensions()
-		love.graphics.draw(page, screenwidth / 2 - width / 2, screenheight / 2 - height / 2, nil, scale * GetScaleByScreen())
+		local scale = GetScaleByScreen()
+		love.graphics.draw(page, screenwidth / 2 - (width * scale) / 2, screenheight / 2 - (height * scale) / 2, nil, scale)
 		local text = cutscenes.current[cutscenes.page]:sub(0, cutscenes.texttime)
 		local lines = 1
 		for _ in text:gmatch("\n") do
