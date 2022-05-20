@@ -5,4 +5,5 @@ start.bat
 .vscode/
 Screenshots/
 sussy.dat
-# dont ask why I need to ignore the last one
+# dont ask why
+saveold.dat
