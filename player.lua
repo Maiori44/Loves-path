@@ -15,11 +15,15 @@ function love.keypressed(key)
 		return
 	end
 	if gamestate == "cutscene" then
-		cutscenes.page = cutscenes.page + 1
-		cutscenes.texttime = 0
-		if cutscenes.page > #cutscenes.current then
-			gamestate = "ingame"
-			music.setMusic(cutscenes.prevmusic)
+		if cutscenes.texttime >= cutscenes.current[cutscenes.page]:len() then
+			cutscenes.page = cutscenes.page + 1
+			cutscenes.texttime = 0
+			if cutscenes.page > #cutscenes.current then
+				gamestate = "ingame"
+				music.setMusic(cutscenes.prevmusic)
+			end
+		else
+			cutscenes.texttime = cutscenes.current[cutscenes.page]:len()
 		end
 		return
 	elseif gamestate == "title" then
