@@ -300,7 +300,7 @@ function FacePlayer(mo)
 end
 
 function EndLevel()
-	if not customEnv and (lastmap % 10) == 0 and menu.settings[8].value == 1 then
+	if not customEnv and (lastmap % 10) == 0 and gamemap == lastmap - 1 and menu.settings[8].value == 1 then
 		cutscenes.setCutscene(lastmap / 10 + 1)
 		gamestate = "chaptercomplete"
 		gamemapname = "chapter complete"
