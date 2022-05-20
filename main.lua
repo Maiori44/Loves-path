@@ -319,12 +319,8 @@ local updateModes = {
 			sound.playSound("thunder.wav")
 		end
 	end,
-	editing = function(dt)
-		frametime = frametime+dt
-		while frametime > 1/60 do
-			leveltime = leveltime+1
-			frametime = frametime-1/60
-		end
+	editing = function()
+		leveltime = leveltime+1
 		mouse.think()
 	end,
 	["sound test"] = function()
