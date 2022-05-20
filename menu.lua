@@ -478,6 +478,7 @@ menu = {
 				largeImageKey = "logo",
 				startTimestamp = os.time(os.date("*t"))
 			})
+			if menu.settings[8].value == 0 then return end
 			cutscenes.setCutscene(1)
 			gamestate = "the story begins"
 			statetimer = oldstatetimer
