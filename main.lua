@@ -334,6 +334,7 @@ local updateModes = {
 		end
 	end
 }
+updateModes.chaptercomplete = updateModes["the story begins"]
 
 function love.update(dt)
 	if saver then
@@ -1211,9 +1212,14 @@ Beta tester]], 0, 355, third, "center")
 		local width, height = page:getDimensions()
 		love.graphics.draw(page, screenwidth / 2 - width / 2, screenheight / 2 - height / 2, nil, scale * GetScaleByScreen())
 		local text = cutscenes.current[cutscenes.page]:sub(0, cutscenes.texttime)
-		love.graphics.printf(text, 0, screenheight - 40, screenwidth, "center")
+		local lines = 1
+		for _ in text:gmatch("\n") do
+			lines = lines + 1
+		end
+		love.graphics.printf(text, 0, screenheight - 40 * lines, screenwidth, "center")
 	end
 }
+drawModes.chaptercomplete = drawModes.ingame
 
 function debug.collectInfo()
 	local count = collectgarbage("count")

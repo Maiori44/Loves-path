@@ -5,7 +5,12 @@ local cutscenes = {
 	page = 1,
 	texttime = 0,
 	list = {
-		{"This is a test dialogue", "test test test test"}
+		{"This is a test dialogue", "test test test test"},
+		{"This cutscene was still not added yet\nEnjoy chapter 2!"},
+		{"This cutscene was still not added yet\nEnjoy chapter 3!"},
+		{"This cutscene was still not added yet\nEnjoy chapter 4!"},
+		{"Hello person that wanted to check this game source code!"},
+		{"I gotta warn you: most of it is bad..."}
 	}
 }
 

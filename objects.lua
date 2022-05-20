@@ -3,6 +3,7 @@ local particles = require "particles"
 local coins = require "coins"
 local ffi = require "ffi"
 local discord = require "discordRPC"
+local cutscenes = require "cutscenes"
 
 -- DIRECTIONAL OBJECT SPRITE STRUCTURE
 -- 1 2 LEFT
@@ -299,10 +300,18 @@ function FacePlayer(mo)
 end
 
 function EndLevel()
+	if not customEnv and (lastmap % 10) == 0 and menu.settings[8].value == 1 then
+		cutscenes.setCutscene(lastmap / 10 + 1)
+		gamestate = "chaptercomplete"
+		gamemapname = "chapter complete"
+		leveltime = 0
+		notification.setMessage("Unlocked new cutscene")
+		return
+	end
 	gamemap = gamemap + 1
 	if gamemap == lastmap then
 		local unlocks = "Unlocked music:"
-		for k, entry in ipairs(sound.soundtest) do
+		for _, entry in ipairs(sound.soundtest) do
 			if entry.require == gamemap + 1 then
 				unlocks = unlocks.."\n"..entry.name
 			end
@@ -324,7 +333,7 @@ function EndLevel()
 	end
 	local errorcheck = LoadMap("map"..GetMapNum(gamemap)..".map")
 	if errorcheck and errorcheck == "error" then
-		gamemap = gamemap-1
+		gamemap = gamemap - 1
 		messagebox.setMessage("Failed to load next map!", "The current map was reloaded instead", true)
 		local errorcheck2 = LoadMap("map"..GetMapNum(gamemap)..".map")
 		if errorcheck2 and errorcheck2 == "error" then
@@ -336,7 +345,14 @@ function EndLevel()
 		end
 	end
 	sound.reset()
+	-- if chaptercheck then
+	-- 	cutscenes.setCutscene(gamemap / 10 + 1)
+	-- 	gamestate = "chaptercomplete"
+	-- 	gamemapname = "chapter complete"
+	-- 	leveltime = 0
+	-- else
 	sound.playSound("win.wav")
+	-- end
 	discord.updateGamePresence()
 end
 

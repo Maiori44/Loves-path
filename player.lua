@@ -14,13 +14,18 @@ function love.keypressed(key)
 		messagebox.error = false
 		return
 	end
-	if gamestate == "cutscene" then
+	if gamestate == "chaptercomplete" then return
+	elseif gamestate == "cutscene" then
 		if cutscenes.texttime >= cutscenes.current[cutscenes.page]:len() then
 			cutscenes.page = cutscenes.page + 1
 			cutscenes.texttime = 0
 			if cutscenes.page > #cutscenes.current then
 				gamestate = "ingame"
 				music.setMusic(cutscenes.prevmusic)
+				if cutscenes.num > 1 then
+					lastmap = lastmap + 1
+					EndLevel()
+				end
 			end
 		else
 			cutscenes.texttime = cutscenes.current[cutscenes.page]:len()
