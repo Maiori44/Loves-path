@@ -1,6 +1,8 @@
 local sound = require "music"
 local particles = require "particles"
 local nativefs = require "nativefs"
+local cutscenes = require "cutscenes"
+local music = require "music"
 
 local rainbowSecret = {input = {}, needed = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}}
 
@@ -12,7 +14,15 @@ function love.keypressed(key)
 		messagebox.error = false
 		return
 	end
-	if gamestate == "title" then
+	if gamestate == "cutscene" then
+		cutscenes.page = cutscenes.page + 1
+		cutscenes.texttime = 0
+		if cutscenes.page > #cutscenes.current then
+			gamestate = "ingame"
+			music.setMusic(cutscenes.prevmusic)
+		end
+		return
+	elseif gamestate == "title" then
 		table.insert(rainbowSecret.input, key)
 		if rainbowSecret.input[#rainbowSecret.input] ~= rainbowSecret.needed[#rainbowSecret.input] then
 			rainbowSecret.input = {}

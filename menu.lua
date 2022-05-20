@@ -2,6 +2,7 @@ local sound = require "music"
 local coins = require "coins"
 local nativefs = require "nativefs"
 local discord = require "discordRPC"
+local cutscenes = require "cutscenes"
 
 EXTRA_BONUSLEVELS = 3
 EXTRA_WOBBLE = 4
@@ -464,6 +465,7 @@ menu = {
 				return
 			end
 			hisname = newname:match("^%s*(.-)%s*$")
+			local oldstatetimer = statetimer
 			gamemap = 0
 			LoadMap("map00.map")
 			frames = 0
@@ -476,6 +478,13 @@ menu = {
 				largeImageKey = "logo",
 				startTimestamp = os.time(os.date("*t"))
 			})
+			cutscenes.setCutscene(1)
+			gamestate = "the story begins"
+			statetimer = oldstatetimer
+			menu["the story begins"] = {
+				{name = "his name: " .. hisname},
+				{name = "back"}
+			}
 		end},
 		{name = "back", state = "title"}
 	}

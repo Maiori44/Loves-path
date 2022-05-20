@@ -1,4 +1,4 @@
-VERSION = "Version b8.0.191"
+VERSION = "Version b8.0.193"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -106,6 +106,7 @@ local sound = require "music"
 local particles = require "particles"
 local coins = require "coins"
 local discord = require "discordRPC"
+local cutscenes = require "cutscenes"
 
 startTimestamp = os.time(os.date("*t"))
 
@@ -325,6 +326,12 @@ local updateModes = {
 	end,
 	["sound test"] = function()
 		if sound.music and not love.mouse.isDown(1) and not sound.music:isPlaying() then sound.music:play() end
+	end,
+	["the story begins"] = function()
+		flash = flash + 0.02
+		if flash > 1.7 then
+			gamestate = "cutscene"
+		end
 	end
 }
 
@@ -619,6 +626,14 @@ local function DrawCoinHud(time)
 	love.graphics.draw(coins.sprite, coins.quads[math.floor((time%(#coins.quads*10))/10)+1], 10, screenheight-50)
 	local coinsgot, coinstotal = coins.count()
 	love.graphics.print(coinsgot.."/"..coinstotal, 50, screenheight-40)
+end
+
+local function DrawFlash()
+	if menu.settings[7].value == 1 and flash > 0 then
+		love.graphics.setColor(1, 1, 1, flash)
+		love.graphics.rectangle("fill", 0, 0, screenwidth, screenheight)
+		love.graphics.setColor(1, 1, 1, 1)
+	end
 end
 
 local wallDesc = "\nMost objects can't walk in this tile"
@@ -1007,11 +1022,7 @@ local drawModes = {
 			DrawCoinHud(leveltime)
 			love.graphics.setColor(1, 1, 1, 1)
 		end
-		if menu.settings[7].value == 1 and flash > 0 then
-			love.graphics.setColor(1, 1, 1, flash)
-			love.graphics.rectangle("fill", 0, 0, screenwidth, screenheight)
-			love.graphics.setColor(1, 1, 1, 1)
-		end
+		DrawFlash()
 	end,
 	title = DrawMenuWithBG,
 	pause = function()
@@ -1185,7 +1196,23 @@ Beta tester]], 0, 355, third, "center")
 		local tminutes = (minutes < 10 and "0"..minutes) or tostring(minutes)
 		love.graphics.printf("Completed in "..hours..":"..tminutes.."."..tseconds, 0, 90, screenwidth, "center")
 	end,
-	["name him"] = DrawMenuWithBG
+	["name him"] = DrawMenuWithBG,
+	["the story begins"] = function()
+		DrawMenuWithBG()
+		love.graphics.origin()
+		DrawFlash()
+	end,
+	cutscene = function()
+		cutscenes.texttime = cutscenes.texttime + 1
+		if cutscenes.num == 1 then
+			love.graphics.setColor(1, 1, 1, cutscenes.texttime / 10)
+		end
+		local page = GetImage("Sprites/Cutscenes/" .. cutscenes.num .. "/" .. cutscenes.page .. ".png")
+		local width, height = page:getDimensions()
+		love.graphics.draw(page, screenwidth / 2 - width / 2, screenheight / 2 - height / 2, nil, scale * GetScaleByScreen())
+		local text = cutscenes.current[cutscenes.page]:sub(0, cutscenes.texttime)
+		love.graphics.printf(text, 0, screenheight - 40, screenwidth, "center")
+	end
 }
 
 function debug.collectInfo()
