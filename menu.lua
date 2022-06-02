@@ -346,7 +346,7 @@ menu = {
 					table.insert(list, {name = cutscene.name})
 				end
 			end
-			table.insert(list, {name = "Back", func = function() ChangeGamestate("extras") pointer = 2 end})
+			table.insert(list, {name = "back", func = function() ChangeGamestate("extras") pointer = 2 end})
 			menu["select cutscene"] = list
 		end},
 		{name = "????? ??????", func = function()
