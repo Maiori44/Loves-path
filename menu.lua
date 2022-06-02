@@ -536,9 +536,11 @@ function SaveData()
 	file:write(l..l)
 	SaverYield()
 	if not customEnv then
-		local extras = (menu.extras[EXTRA_SUPERDARK].value and 1 or 0) + (menu.extras[EXTRA_WOBBLE].value and 2 or 0)
+		local extras = menu.extras
+		local superdark = extras[EXTRA_SUPERDARK].value and 3 or 1
+		local wobble = extras[EXTRA_WOBBLE].value and 4 or 1
 		SaverYield()
-		file:write(hisname.."\0"..string.char(extras))
+		file:write(hisname.."\0"..string.char(superdark * wobble))
 		SaverYield()
 	end
 	for k, coin in pairs(coins) do
@@ -559,13 +561,13 @@ local function TryLoadData(savefile)
 			char = savefile:read(1)
 		end
 		local extras = savefile:read(1):byte()
-		if extras == 3 or extras == 1 then
+		if (extras % 3) == 0 then
 			local superdark = menu.extras[EXTRA_SUPERDARK]
 			superdark.name = "superdark"
 			superdark.value = 0
 			superdark.values = valuesnames
 		end
-		if extras == 3 or extras == 2 then
+		if (extras % 4) == 0 then
 			local wobble = menu.extras[EXTRA_WOBBLE]
 			wobble.name = "wobble"
 			wobble.value = 0
