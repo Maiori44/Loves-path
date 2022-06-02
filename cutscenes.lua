@@ -38,7 +38,7 @@ function cutscenes.setCutscene(num)
 	cutscenes.num = num
 	cutscenes.page = 1
 	cutscenes.texttime = 0
-	cutscenes.prevmusic = sound.musicname
+	cutscenes.prevmusic = sound.musicname or ""
 	sound.setMusic("none")
 	flash = 0
 end
