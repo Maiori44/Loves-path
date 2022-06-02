@@ -4,6 +4,7 @@ local nativefs = require "nativefs"
 local discord = require "discordRPC"
 local cutscenes = require "cutscenes"
 
+EXTRA_THEATER = 2
 EXTRA_BONUSLEVELS = 3
 EXTRA_WOBBLE = 4
 EXTRA_SUPERDARK = 5
@@ -137,6 +138,7 @@ menu = {
 					end
 				end
 				sound.soundtest[#sound.soundtest] = {require = 0xFF}
+				menu.extras[EXTRA_THEATER].name = "???????"
 				menu.extras[EXTRA_BONUSLEVELS].name = "????? ??????"
 				menu.extras[EXTRA_WOBBLE].name = "???????"
 				menu.extras[EXTRA_WOBBLE].value = nil
@@ -327,8 +329,14 @@ menu = {
 			sound.soundtestpointer = 1
 			menu["sound test"][1].name = "< Love's path >"
 		end},
-		{name = "Theater", func = function()
-			messagebox.setMessage("Coming Soon!", ":)")
+		{name = "???????", func = function()
+			local coinsgot = coins.count()
+			if coinsgot < 2 then
+				messagebox.setMessage("This extra is locked...", "You need "..2 - coinsgot.." more coins to unlock this extra!")
+				return
+			end
+			ChangeGamestate("theater")
+			pointer = 1
 		end},
 		{name = "????? ??????", func = function()
 			local coinsgot, coinstotal = coins.count()
@@ -539,8 +547,9 @@ function SaveData()
 		local extras = menu.extras
 		local superdark = extras[EXTRA_SUPERDARK].value and 3 or 1
 		local wobble = extras[EXTRA_WOBBLE].value and 4 or 1
+		local theater = extras[EXTRA_THEATER].name ~= "???????" and 7 or 1
 		SaverYield()
-		file:write(hisname.."\0"..string.char(superdark * wobble))
+		file:write(hisname.."\0"..string.char(superdark * wobble * theater))
 		SaverYield()
 	end
 	for k, coin in pairs(coins) do
@@ -572,6 +581,9 @@ local function TryLoadData(savefile)
 			wobble.name = "wobble"
 			wobble.value = 0
 			wobble.values = valuesnames
+		end
+		if (extras % 7) == 0 then
+			menu.extras[EXTRA_THEATER].name = "theater"
 		end
 	end
 	repeat

@@ -421,7 +421,13 @@ AddObjectType("player", {
 		EraseObject(obstmo)
 		if not customEnv then
 			local coinsgot, coinstotal = coins.count()
-			if coinsgot == math.floor(coinstotal / 2) then
+			if coinsgot == 2 then
+				menu.extras[EXTRA_THEATER].name = "theater"
+				messagebox.setMessage("theater unlocked!", [[
+Every cutscene watched will be unlocked in the theater
+Where you can rewatch them whenever you want!
+(the theater can be accessed from the extras menu)]])
+			elseif coinsgot == math.floor(coinstotal / 2) then
 				local wobble = menu.extras[EXTRA_WOBBLE]
 				wobble.name = "wobble"
 				wobble.value = 0
