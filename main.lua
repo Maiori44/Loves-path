@@ -1,4 +1,4 @@
-VERSION = "Version b8.0.194"
+VERSION = "Version b8.0.195"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -253,6 +253,13 @@ local bumps =  {
 	["falsefalsetruetrue10"] = -math.pi / 16
 }
 
+local function FlashCutscene()
+	flash = flash + 0.02
+	if flash > 1.7 then
+		gamestate = "cutscene"
+	end
+end
+
 local updateModes = {
 	ingame = function()
 		if not player then darkness = math.min(darkness + 0.2, 70) end
@@ -327,14 +334,10 @@ local updateModes = {
 	["sound test"] = function()
 		if sound.music and not love.mouse.isDown(1) and not sound.music:isPlaying() then sound.music:play() end
 	end,
-	["the story begins"] = function()
-		flash = flash + 0.02
-		if flash > 1.7 then
-			gamestate = "cutscene"
-		end
-	end
+	["the story begins"] = FlashCutscene,
+	chaptercomplete = FlashCutscene,
+	["cutscene selected"] = FlashCutscene
 }
-updateModes.chaptercomplete = updateModes["the story begins"]
 
 function love.update(dt)
 	if saver then
