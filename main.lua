@@ -1,4 +1,4 @@
-VERSION = "Version b8.0.196"
+VERSION = "Version b8.0.198"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -999,6 +999,12 @@ local tileDescriptions = {
 	[TILE_CUSTOM3] = "You're not supposed to see this message"
 }
 
+local function DrawPage(page)
+	local width, height = page:getDimensions()
+	local scale = GetScaleByScreen()
+	love.graphics.draw(page, screenwidth / 2 - (width * scale) / 2, screenheight / 2 - (height * scale) / 2, nil, scale)
+end
+
 local drawModes = {
 	ingame = function()
 		particles.update(love.timer.getDelta())
@@ -1211,10 +1217,7 @@ Beta tester]], 0, 355, third, "center")
 		if cutscenes.num == 1 then
 			love.graphics.setColor(1, 1, 1, cutscenes.texttime / 10)
 		end
-		local page = GetImage("Sprites/Cutscenes/" .. cutscenes.num .. "/" .. cutscenes.page .. ".png")
-		local width, height = page:getDimensions()
-		local scale = GetScaleByScreen()
-		love.graphics.draw(page, screenwidth / 2 - (width * scale) / 2, screenheight / 2 - (height * scale) / 2, nil, scale)
+		DrawPage(GetImage("Sprites/Cutscenes/" .. cutscenes.num .. "/" .. cutscenes.page .. ".png"))
 		local text = cutscenes.current[cutscenes.page]:sub(0, cutscenes.texttime)
 		local lines = 1
 		for _ in text:gmatch("\n") do
@@ -1222,7 +1225,18 @@ Beta tester]], 0, 355, third, "center")
 		end
 		love.graphics.printf(text, 0, screenheight - 40 * lines, screenwidth, "center")
 	end,
-	["select cutscene"] = DrawMenu
+	["select cutscene"] = function()
+		if pointer < #menu["select cutscene"] then
+			DrawPage(GetImage("Sprites/Cutscenes/" .. pointer .. "/1.png"))
+		end
+		DrawMenu()
+	end,
+	["cutscene selected"] = function()
+		DrawPage(GetImage("Sprites/Cutscenes/" .. pointer .. "/1.png"))
+		DrawMenu()
+		love.graphics.origin()
+		DrawFlash()
+	end
 }
 drawModes.chaptercomplete = drawModes.ingame
 

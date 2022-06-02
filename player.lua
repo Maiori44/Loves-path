@@ -20,9 +20,9 @@ function love.keypressed(key)
 			cutscenes.page = cutscenes.page + 1
 			cutscenes.texttime = 0
 			if cutscenes.page > #cutscenes.current then
-				gamestate = "ingame"
+				gamestate = cutscenes.nextgamestate
 				sound.setMusic(cutscenes.prevmusic)
-				if cutscenes.num > 1 then
+				if cutscenes.num > 1 and gamestate == "ingame" then
 					lastmap = lastmap + 1
 					EndLevel()
 				end

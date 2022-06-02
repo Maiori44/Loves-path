@@ -33,12 +33,13 @@ local cutscenes = {
 	}
 }
 
-function cutscenes.setCutscene(num)
+function cutscenes.setCutscene(num, nextgamestate)
 	cutscenes.current = cutscenes.list[num]
 	cutscenes.num = num
 	cutscenes.page = 1
 	cutscenes.texttime = 0
 	cutscenes.prevmusic = sound.musicname or ""
+	cutscenes.nextgamestate = nextgamestate or "ingame"
 	sound.setMusic("none")
 	flash = 0
 end

@@ -72,6 +72,10 @@ local function VanillaExtraCheck()
 	end
 end
 
+local function LockedCutscene()
+	messagebox.setMessage("This cutscene is locked!", "Complete more levels to unlock it!")
+end
+
 menu = {
 	title = {
 		{name = "Start Game", func = function()
@@ -341,9 +345,14 @@ menu = {
 			local list = {}
 			for num, cutscene in ipairs(cutscenes.list) do
 				if num >= lastscene then
-					table.insert(list, {name = cutscene.name:gsub("[%a%.]", "?")})
+					table.insert(list, {name = cutscene.name:gsub("[%a%p%.]", "?"), func = LockedCutscene})
 				else
-					table.insert(list, {name = cutscene.name})
+					table.insert(list, {name = cutscene.name, func = function()
+						if gamestate == "cutscene selected" then return end
+						cutscenes.setCutscene(num, "select cutscene")
+						gamestate = "cutscene selected"
+						menu["cutscene selected"] = list
+					end})
 				end
 			end
 			table.insert(list, {name = "back", func = function() ChangeGamestate("extras") pointer = 2 end})
