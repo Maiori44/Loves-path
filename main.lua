@@ -1221,7 +1221,8 @@ Beta tester]], 0, 355, third, "center")
 			lines = lines + 1
 		end
 		love.graphics.printf(text, 0, screenheight - 40 * lines, screenwidth, "center")
-	end
+	end,
+	["select cutscene"] = DrawMenu
 }
 drawModes.chaptercomplete = drawModes.ingame
 

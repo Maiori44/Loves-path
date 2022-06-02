@@ -1,7 +1,6 @@
 local music = require "music"
 
 local cutscenes = {
-	pointer = 1,
 	num = 1,
 	page = 1,
 	texttime = 0,

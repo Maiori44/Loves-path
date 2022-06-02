@@ -335,8 +335,19 @@ menu = {
 				messagebox.setMessage("This extra is locked...", "You need "..2 - coinsgot.." more coins to unlock this extra!")
 				return
 			end
-			ChangeGamestate("theater")
+			ChangeGamestate("select cutscene")
 			pointer = 1
+			local lastscene = lastmap / 10 + 1
+			local list = {}
+			for num, cutscene in ipairs(cutscenes.list) do
+				if num >= lastscene then
+					table.insert(list, {name = cutscene.name:gsub("[%a%.]", "?")})
+				else
+					table.insert(list, {name = cutscene.name})
+				end
+			end
+			table.insert(list, {name = "Back", func = function() ChangeGamestate("extras") pointer = 2 end})
+			menu["select cutscene"] = list
 		end},
 		{name = "????? ??????", func = function()
 			local coinsgot, coinstotal = coins.count()
@@ -496,7 +507,7 @@ menu = {
 			}
 		end},
 		{name = "back", state = "title"}
-	}
+	},
 }
 
 function SaveSettings()
