@@ -1,4 +1,4 @@
-local music = require "music"
+local sound = require "music"
 
 local cutscenes = {
 	num = 1,
@@ -38,8 +38,8 @@ function cutscenes.setCutscene(num)
 	cutscenes.num = num
 	cutscenes.page = 1
 	cutscenes.texttime = 0
-	cutscenes.prevmusic = music.musicname
-	music.setMusic("none")
+	cutscenes.prevmusic = sound.musicname
+	sound.setMusic("none")
 	flash = 0
 end
 

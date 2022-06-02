@@ -2,7 +2,7 @@ local sound = require "music"
 local particles = require "particles"
 local nativefs = require "nativefs"
 local cutscenes = require "cutscenes"
-local music = require "music"
+local sound = require "music"
 
 local rainbowSecret = {input = {}, needed = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}}
 
@@ -21,7 +21,7 @@ function love.keypressed(key)
 			cutscenes.texttime = 0
 			if cutscenes.page > #cutscenes.current then
 				gamestate = "ingame"
-				music.setMusic(cutscenes.prevmusic)
+				sound.setMusic(cutscenes.prevmusic)
 				if cutscenes.num > 1 then
 					lastmap = lastmap + 1
 					EndLevel()
