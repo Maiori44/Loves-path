@@ -1,16 +1,36 @@
 local music = require "music"
 
 local cutscenes = {
+	pointer = 1,
 	num = 1,
 	page = 1,
 	texttime = 0,
-	list = {
-		{"This is a test dialogue", "test test test test"},
-		{"This cutscene was still not added yet\nEnjoy chapter 2!"},
-		{"This cutscene was still not added yet\nEnjoy chapter 3!"},
-		{"This cutscene was still not added yet\nEnjoy chapter 4!"},
-		{"Hello person that wanted to check this game source code!"},
-		{"I gotta warn you: most of it is bad..."}
+	list = { --SPOILERS AHEAD IF YOU HAVEN'T FINISHED THE GAME!
+		{
+			name = "The story begins...",
+			"This is a test dialogue",
+			"test test test test"
+		},
+		{
+			name = "WIP",
+			"This cutscene was still not added yet\nEnjoy chapter 2!"
+		},
+		{
+			name = "also WIP",
+			"This cutscene was still not added yet\nEnjoy chapter 3!"
+		},
+		{
+			name = "yet another WIP",
+			"This cutscene was still not added yet\nEnjoy chapter 4!"
+		},
+		{
+			name = "This name will not appear, yet",
+			"Hello person that wanted to check this game source code!"
+		},
+		{
+			name = "This one too won't appear yet",
+			"I gotta warn you: most of it is bad..."
+		}
 	}
 }
 
