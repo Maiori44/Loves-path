@@ -1,4 +1,4 @@
-VERSION = "Version b8.0.198"
+VERSION = "Version b8.0.199"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -257,6 +257,7 @@ local function FlashCutscene()
 	flash = flash + 0.02
 	if flash > 1.7 then
 		gamestate = "cutscene"
+		sound.setMusic("cutscene "..cutscenes.num..".ogg")
 	end
 end
 
