@@ -1,4 +1,4 @@
-VERSION = "Version b8.0.199"
+VERSION = "Version b8.0.200"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -1222,7 +1222,7 @@ Beta tester]], 0, 355, third, "center")
 		local text = cutscenes.current[cutscenes.page]:sub(0, cutscenes.texttime)
 		local lines = 1
 		for _ in text:gmatch("\n") do
-			lines = lines + 1
+			lines = lines + 0.5
 		end
 		love.graphics.printf(text, 0, screenheight - 40 * lines, screenwidth, "center")
 	end,
