@@ -178,6 +178,7 @@ function love.load(args)
 	if args[1] == "-debug" then
 		debugmode = {["Game info"] = true}
 		table.insert(possibleTilesets, "bonus.png")
+		table.insert(possibleMusic, "mind.ogg")
 		table.insert(menu["level editor"], 3, {name = "Load file: ", string = "", func = function()
 			mouse.tile = TILE_WALL1
 			gamestate = LoadEditorMap(menu["level editor"][3].string) and "editing" or "level editor"
