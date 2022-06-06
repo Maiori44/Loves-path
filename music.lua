@@ -43,7 +43,7 @@ function sound.playSound(filename)
 	if menu.settings[5].value == 0 then return end
 	local isFromMod = sound.sounds[filename]
 	if isFromMod == nil then
-		messagebox.setMessage("Sound file not found!", "Sound \""..filename.."\" does not exist.\n(Sound files are searched on mod load,\nif you added the file later restart the game!)")
+		messagebox.setMessage("Sound file not found!", "Sound \""..filename.."\" does not exist.\n(Sound files are searched on mod load,\nif you added the file later restart the game!)", true)
 		return
 	end
 	local path = isFromMod and path.."/Sounds/" or "Sounds/"
