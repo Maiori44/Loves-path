@@ -738,12 +738,14 @@ AddObjectType("metalbox", {
 
 --MINIMAN
 AddObjectType("miniman", {metalbox = false}, function(mo)
-	if not player or (leveltime % 8) ~= 0 then return end
+	if not player then return end
+	if mo.var1 > 0 then mo.var1 = mo.var1 - 1 return end
 	FacePlayer(mo)
 	if ((mo.direction == DIR_DOWN or mo.direction == DIR_UP) and mo.x == player.x
 	or (mo.direction == DIR_LEFT or mo.direction == DIR_RIGHT) and mo.y == player.y)
 	and PredictMove(mo, DirectionMomentum(mo.direction)) then
 		FireShot(mo, mo.sprite, GetExtraQuad(mo.sprite))
+		mo.var1 = 3
 	end
 end)
 
