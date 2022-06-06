@@ -628,8 +628,9 @@ local function DrawMenuWithBG()
 end
 
 local function DrawCoinHud(time)
-	love.graphics.draw(coins.sprite, coins.quads[math.floor((time%(#coins.quads*10))/10)+1], 10, screenheight-50)
 	local coinsgot, coinstotal = coins.count()
+	if coinstotal == 0 then return end
+	love.graphics.draw(coins.sprite, coins.quads[math.floor((time%(#coins.quads*10))/10)+1], 10, screenheight-50)
 	love.graphics.print(coinsgot.."/"..coinstotal, 50, screenheight-40)
 end
 
