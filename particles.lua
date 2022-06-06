@@ -79,7 +79,8 @@ function particles.spawnBridgeShards(x, y, amount, alpha)
 			particles.list[i] = {x = x, y = y}
 			particles.list[i].particle = love.graphics.newParticleSystem(GetImage(path.."bridge.png"), amount)
 			local particle = particles.list[i].particle
-			particle:setParticleLifetime(0.5, (tilemap[y + 1][x] ~= TILE_EMPTY and 0.5) or 1.3)
+			local nextrow = tilemap[y + 1]
+			particle:setParticleLifetime(0.5, (nextrow and (nextrow[x] ~= TILE_EMPTY and 0.5)) or 1.3)
 			particle:setLinearAcceleration(0, 30, 0, 40)
 			particle:setSpin(-3, 3)
 			if tilesets[tilesetname].bridgeshardcolor then
