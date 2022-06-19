@@ -1,4 +1,4 @@
-VERSION = "Version b8.0.201"
+VERSION = "Version b8.0.202"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -423,7 +423,7 @@ local function DrawTilemap()
 		local playerx = centerx + player.x * tilesize + tilesize / 2
 		local playery = centery + player.y * tilesize + tilesize / 2
 		playerx, playery = love.graphics.transformPoint(playerx, playery)
-		if debugmode and not debugmode["Free Camera"] or true then
+		if not love.mouse.isDown(1) then
 			if playerx > screenwidth - 100 then
 				mouse.camerax = mouse.camerax - 2 * mouse.speed
 				mouse.speed = mouse.speed + 2
