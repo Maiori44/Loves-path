@@ -7,8 +7,8 @@ local cutscenes = {
 	list = { --SPOILERS AHEAD IF YOU HAVEN'T FINISHED THE GAME!
 		{
 			name = "The story begins...",
-			"This is a test dialogue",
-			"test test test test"
+			"The cutscenes were not added yet",
+			"They will be added in the next beta!"
 		},
 		{
 			name = "WIP",
