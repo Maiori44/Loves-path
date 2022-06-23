@@ -329,7 +329,7 @@ menu = {
 		{name = "Sound test", func = function()
 			ChangeGamestate("sound test")
 			pointer = 1
-			sound.setMusic("")
+			sound.stopMusic()
 			sound.soundtestpointer = 1
 			menu["sound test"][1].name = "< Love's path >"
 		end},

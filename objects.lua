@@ -327,7 +327,7 @@ function EndLevel()
 		pointer = 1
 		gamestate = "the end"
 		sound.reset()
-		sound.setMusic("")
+		sound.stopMusic()
 		discord.updatePresence(discord.menu)
 		return
 	end

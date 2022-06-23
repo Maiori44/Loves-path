@@ -40,7 +40,7 @@ function cutscenes.setCutscene(num, nextgamestate)
 	cutscenes.texttime = 0
 	cutscenes.prevmusic = sound.musicname or ""
 	cutscenes.nextgamestate = nextgamestate or "ingame"
-	sound.setMusic("none")
+	sound.stopMusic()
 	flash = 0
 end
 
