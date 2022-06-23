@@ -13,9 +13,9 @@ function sound.setMusic(filename)
 		sound.stopMusic()
 		return
 	end
-	if not pcall(love.audio.newSource, filepath, "stream") then
+	if not love.filesystem.getInfo(filepath, "file") then
 		filepath = mapspath:sub(1, -7).."/Music/"..filename
-		if not pcall(love.audio.newSource, filepath, "stream") then
+		if not love.filesystem.getInfo(filepath, "file") then
 			sound.stopMusic()
 			return
 		end
