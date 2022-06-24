@@ -212,10 +212,10 @@ function love.load(args)
 	rotation = 0
 	screenwidth = love.graphics.getWidth()
 	screenheight = love.graphics.getHeight()
-	tileset = nil
+	tileset = love.graphics.newSpriteBatch(GetImage("Sprites/Tiles/forest.png"), 1225, "dynamic")
 	wheelmoved = 0
 	player = nil
-	gamemapname = ""
+	gamemapname = "forest.png"
 	musicname = ""
 	pcall(LoadSettings)
 	GetAllMaps()

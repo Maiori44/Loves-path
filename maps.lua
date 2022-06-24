@@ -75,12 +75,10 @@ TILE_CRACKEDBRIDGE_ROTATED = 51
 TILE_SUPERDARK = -1
 
 lastmap = 1
-
 mapspath = "Maps/"
-
 tilemap = {}
-
 quads = {}
+
 for i=0,15 do
 	for j=0,2 do
 		local quad = love.graphics.newQuad(1+j*(32+2), 1+i*(32+2), 32, 32, 102, 544)
@@ -194,7 +192,7 @@ function LoadMap(mapname, oldscale)
 	end
 	if oldtileset ~= tilesetname then
 		enemysprite = path.."Enemies/"..tilesetname
-		tileset = love.graphics.newSpriteBatch(GetImage(path.."Tiles/"..tilesetname), 1225, "dynamic")
+		tileset:setTexture(GetImage(path.."Tiles/"..tilesetname))
 	end
 	local playerx, playery
 	tilemap = {}
