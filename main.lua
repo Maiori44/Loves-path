@@ -176,7 +176,7 @@ end
 
 function love.load(args)
 	if args[1] == "-debug" then
-		debugmode = {["Game info"] = true}
+		debugmode = {}
 		table.insert(possibleTilesets, "bonus.png")
 		table.insert(possibleMusic, "mind.ogg")
 		table.insert(menu["level editor"], 3, {name = "Load file: ", string = "", func = function()
