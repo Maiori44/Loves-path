@@ -66,11 +66,11 @@ end
 function GetCacheInfo()
 	local cacheinfo = ""
 	for k, _ in pairs(imagecache) do
-		cacheinfo = cacheinfo .. k .. "\n"
+		cacheinfo = cacheinfo .. ffiString(k) .. "\n"
 	end
 	local scale = 1.1
 	for _ in cacheinfo:gmatch("\n") do
-		scale = scale * 0.99
+		scale = scale * 0.95
 	end
 	return cacheinfo, scale
 end
