@@ -70,7 +70,7 @@ function GetCacheInfo()
 	end
 	local scale = 1.1
 	for _ in cacheinfo:gmatch("\n") do
-		scale = scale * 0.95
+		scale = math.max(scale * 0.985, 0.4)
 	end
 	return cacheinfo, scale
 end
