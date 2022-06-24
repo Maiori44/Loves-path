@@ -194,7 +194,7 @@ function LoadMap(mapname, oldscale)
 	end
 	if oldtileset ~= tilesetname then
 		enemysprite = path.."Enemies/"..tilesetname
-		tileset = love.graphics.newSpriteBatch(GetImage(path.."Tiles/"..tilesetname), 1225, "static")
+		tileset = love.graphics.newSpriteBatch(GetImage(path.."Tiles/"..tilesetname), 1225, "dynamic")
 	end
 	local playerx, playery
 	tilemap = {}
