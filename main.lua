@@ -1370,6 +1370,10 @@ function love.draw()
 	love.graphics.printf(VERSION, 0, screenheight-20, screenwidth, "right")
 	if saver then
 		love.graphics.printf("Saving...", 0, screenheight-40, screenwidth, "right")
+	elseif debugmode then
+		love.graphics.setColor(1, 1, 0, 1)
+		love.graphics.printf("debug mode", 0, screenheight-40, screenwidth, "right")
+		love.graphics.setColor(1, 1, 1, 1)
 	end
 	if notification.timer > 0 then
 		love.graphics.setColor(1, 1, 1, ((math.min(math.max(notification.timer, 0), 60) % 120) / 60))
