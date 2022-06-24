@@ -345,14 +345,7 @@ function EndLevel()
 		end
 	end
 	sound.reset()
-	-- if chaptercheck then
-	-- 	cutscenes.setCutscene(gamemap / 10 + 1)
-	-- 	gamestate = "chaptercomplete"
-	-- 	gamemapname = "chapter complete"
-	-- 	leveltime = 0
-	-- else
 	sound.playSound("win.wav")
-	-- end
 	discord.updateGamePresence()
 end
 
