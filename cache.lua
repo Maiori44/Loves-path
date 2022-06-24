@@ -62,3 +62,11 @@ function GetImage(path)
 	end
 	return imagecache[path]
 end
+
+function GetCacheInfo()
+	local cacheinfo = ""
+	for k, _ in pairs(imagecache) do
+		cacheinfo = cacheinfo .. k .. "\n"
+	end
+	return cacheinfo
+end

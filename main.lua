@@ -1349,21 +1349,28 @@ function love.draw()
 		love.graphics.print(debuginfo, 10, 10, 0, scale)
 		love.graphics.setColor(1, 1, 1, 1)
 	end
-	if debugmode and debugmode["Graphic info"] then
-		local graphicinfo = ""
-		local rendererInfo = {love.graphics.getRendererInfo()}
-		for k, v in ipairs(rendererInfo) do
-			graphicinfo = graphicinfo..v.."\n"
-		end
-		graphicinfo = graphicinfo.."\n"
-		for k, v in pairs(love.graphics.getStats()) do
-			if k ~= "canvases" and k ~= "canvasswitches" then
-				graphicinfo = graphicinfo..k..": "..v.."\n"
+	if debugmode then
+		if debugmode["Graphic info"] then
+			local graphicinfo = ""
+			local rendererInfo = {love.graphics.getRendererInfo()}
+			for k, v in ipairs(rendererInfo) do
+				graphicinfo = graphicinfo..v.."\n"
 			end
+			graphicinfo = graphicinfo.."\n"
+			for k, v in pairs(love.graphics.getStats()) do
+				if k ~= "canvases" and k ~= "canvasswitches" then
+					graphicinfo = graphicinfo..k..": "..v.."\n"
+				end
+			end
+			love.graphics.setColor(1, 1, 0, 1)
+			love.graphics.printf(graphicinfo, 0, 10, screenwidth, "right")
+			love.graphics.setColor(1, 1, 1, 1)
 		end
-		love.graphics.setColor(1, 1, 0, 1)
-		love.graphics.printf(graphicinfo, 0, 10, screenwidth, "right")
-		love.graphics.setColor(1, 1, 1, 1)
+		if debugmode["Cahce info"] then
+			love.graphics.setColor(1, 1, 0, 1)
+			love.graphics.print(GetCacheInfo(), 10, 10, 0, scale)
+			love.graphics.setColor(1, 1, 1, 1)
+		end
 	end
 	love.graphics.printf(VERSION, 0, screenheight-20, screenwidth, "right")
 	if saver then
