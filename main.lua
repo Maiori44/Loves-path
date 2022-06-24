@@ -1317,12 +1317,6 @@ function debug.collectInfo()
 		sound.musicname.."\n"..
 		sound.music:tell().."/"..sound.music:getDuration().."\n"
 	end
-	--[[debuginfo = debuginfo.."\nCoins:".."\n"
-	for k, coin in pairs(coins) do
-		if type(k) == "number" then
-			debuginfo = debuginfo..k..": "..tostring(coin.got).."\n"
-		end
-	end]]
 	local scale = 0.7
 	local i = 0
 	for w in debuginfo:gmatch("\n") do
@@ -1366,9 +1360,10 @@ function love.draw()
 			love.graphics.printf(graphicinfo, 0, 10, screenwidth, "right")
 			love.graphics.setColor(1, 1, 1, 1)
 		end
-		if debugmode["Cahce info"] then
+		if debugmode["Cache info"] then
 			love.graphics.setColor(1, 1, 0, 1)
-			love.graphics.print(GetCacheInfo(), 10, 10, 0, scale)
+			local cacheinfo, scale = GetCacheInfo()
+			love.graphics.print(cacheinfo, 10, 10, 0, scale)
 			love.graphics.setColor(1, 1, 1, 1)
 		end
 	end

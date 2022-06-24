@@ -68,5 +68,9 @@ function GetCacheInfo()
 	for k, _ in pairs(imagecache) do
 		cacheinfo = cacheinfo .. k .. "\n"
 	end
-	return cacheinfo
+	local scale = 1.1
+	for _ in cacheinfo:gmatch("\n") do
+		scale = scale * 0.99
+	end
+	return cacheinfo, scale
 end
