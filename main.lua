@@ -193,7 +193,6 @@ function love.load(args)
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	font = love.graphics.newFont("editundo.ttf", 24, "mono")
 	love.graphics.setFont(font)
-	font:setFilter("nearest", "nearest", 1)
 	hisname = ""
 	leveltime = 0
 	frametime = 0
