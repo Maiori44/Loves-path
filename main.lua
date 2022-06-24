@@ -211,13 +211,14 @@ function love.load(args)
 	rotation = 0
 	screenwidth = love.graphics.getWidth()
 	screenheight = love.graphics.getHeight()
-	tileset = love.graphics.newSpriteBatch(GetImage("Sprites/Tiles/forest.png"), 1225, "dynamic")
 	wheelmoved = 0
 	player = nil
 	gamemapname = "forest.png"
 	musicname = ""
 	pcall(LoadSettings)
 	GetAllMaps()
+	local tilesetimage = GetImage(possibleTilesets[math.ceil(lastmap/10)-1])
+	tileset = love.graphics.newSpriteBatch(tilesetimage, 1225, "dynamic")
 	sound.setMusic("menu.ogg")
 	local coinsgot, coinstotal = coins.count()
 	if coinsgot == coinstotal then
