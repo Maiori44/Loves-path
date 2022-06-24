@@ -399,6 +399,35 @@ local function ResetButtons(x, y)
 	button.frame = 1
 end
 
+local function PressButton(mo, obstmo, momx, momy)
+	local frame = obstmo.frame
+	if (mo.momx == 0 and mo.momy == 0) or (momx == 0 and momy == 0) or frame == 3 then return end
+	sound.playSound("button.wav")
+	if frame == 2 then
+		sound.playSound("button_off.wav")
+		IterateMap(TILE_CUSTOM1, ResetButtons)
+		return true
+	elseif frame == 1 then
+		obstmo.frame = 2
+		local check = true
+		local buttons = {}
+		IterateMap(TILE_CUSTOM1, function(x, y)
+			local button = SearchObject(x, y)
+			if button.frame == 1 then
+				check = false
+				return true
+			end
+			table.insert(buttons, button)
+		end)
+		if check then
+			CheckMap(TILE_LOCK, TILE_FLOOR2)
+			for _, button in ipairs(buttons) do button.frame = 3 end
+			sound.playSound("lock.wav")
+		end
+		return true
+	end
+end
+
 AddObjectType("player", {
 	[TILE_GOAL] = EndLevel,
 	[TILE_SUPERDARK] = function()
@@ -463,34 +492,7 @@ Good luck!
 	bullet = RemoveObject,
 	snowball = SlowPushObject,
 	snowman = RemoveObject,
-	masterbutton = function(mo, obstmo, momx, momy)
-		local frame = obstmo.frame
-		if (mo.momx == 0 and mo.momy == 0) or (momx == 0 and momy == 0) or frame == 3 then return end
-		sound.playSound("button.wav")
-		if frame == 2 then
-			sound.playSound("button_off.wav")
-			IterateMap(TILE_CUSTOM1, ResetButtons)
-			return true
-		elseif frame == 1 then
-			obstmo.frame = 2
-			local check = true
-			local buttons = {}
-			IterateMap(TILE_CUSTOM1, function(x, y)
-				local button = SearchObject(x, y)
-				if button.frame == 1 then
-					check = false
-					return true
-				end
-				table.insert(buttons, button)
-			end)
-			if check then
-				CheckMap(TILE_LOCK, TILE_FLOOR2)
-				for _, button in ipairs(buttons) do button.frame = 3 end
-				sound.playSound("lock.wav")
-			end
-			return true
-		end
-	end,
+	masterbutton = PressButton,
 	metalbox = PushObject,
 	miniman = RemoveObject,
 	bfmonitor = function(_, obstmo, momx, momy)
@@ -587,7 +589,13 @@ AddObjectType("key", {
 })
 
 --ENEMY
-AddObjectType("enemy", {player = RemoveCollidedObject, key = PushObject, box = PusherCheck, pacdot = true}, function(mo)
+AddObjectType("enemy", {
+	player = RemoveCollidedObject,
+	key = PushObject,
+	box = PusherCheck,
+	masterbutton = PressButton,
+	pacdot = true
+}, function(mo)
 	if not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
 	local time = leveltime % 100
 	if time == 40 then
