@@ -217,7 +217,7 @@ function love.load(args)
 	musicname = ""
 	pcall(LoadSettings)
 	GetAllMaps()
-	local tilesetimage = GetImage(possibleTilesets[math.ceil(lastmap/10)-1])
+	local tilesetimage = GetImage("Sprites/Tiles/" .. possibleTilesets[math.ceil(lastmap / 10) - 1])
 	tileset = love.graphics.newSpriteBatch(tilesetimage, 1225, "dynamic")
 	sound.setMusic("menu.ogg")
 	local coinsgot, coinstotal = coins.count()
