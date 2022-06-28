@@ -4,18 +4,149 @@ local nativefs = require "nativefs"
 local cutscenes = require "cutscenes"
 local sound = require "music"
 
-local rainbowSecret = {input = {}, needed = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}}
+local rainbowSecret = {
+	input = {},
+	needed = {"up", "up", "down", "down", "left", "right", "left", "right", "b", "a"}
+}
 
 hidecontrols = false
 
-function love.keypressed(key)
-	if messagebox.show then
-		messagebox.show = false
-		messagebox.error = false
-		return
+local debugOptions = {
+	"Cache info",
+	"Camera info",
+	"Noclip",
+	"Slowdown",
+	"Map info",
+	"Graphic info",
+	"Game info",
+	"Cancel",
+	escapebutton = 1
+}
+
+local function SaveScreenshot(imagedata)
+	if not love.filesystem.getInfo("Source/Screenshots", "directory") then
+		nativefs.createDirectory("Screenshots")
 	end
-	if gamestate == "chaptercomplete" then return
-	elseif gamestate == "cutscene" then
+	local date = os.date("%Y%m%d%H%M%S")..".png"
+	nativefs.write("Screenshots/"..date, imagedata:encode("png"))
+	notification.setMessage("Sreenshot saved as:\n"..date)
+end
+
+local function GetLSMax(cmenu)
+	return math.min((debugmode and 255) or lastmap, #cmenu - 1)
+end
+
+local function LSCheck(cmenu, max)
+	if pointer < 1 or pointer > #cmenu or pointer > max then
+		pointer = #cmenu
+	end
+end
+
+local functonInputs = {
+	__index = {
+		f3 = function()
+			if not debugmode then return end
+			local text = "Choose which option to toggle:\n"
+			for _, v in ipairs(debugOptions) do
+				text = text .. v .. " = " .. tostring(debugmode[v] or false) .. "\n"
+			end
+			local button = love.window.showMessageBox("Debug mode settings", text, debugOptions, "info")
+			if button < #debugOptions then
+				debugmode[debugOptions[button]] = not debugmode[debugOptions[button]]
+			end
+		end,
+		f8 = function()
+			love.graphics.captureScreenshot(SaveScreenshot)
+		end
+	}
+}
+
+local menuInputs = setmetatable({
+	up = function(cmenu)
+		pointer = pointer - 1
+		if pointer == 0 then pointer = #cmenu end
+		sound.playSound("menu_move.wav")
+	end,
+	down = function(cmenu)
+		pointer = pointer + 1
+		if pointer > #cmenu then pointer = 1 end
+		sound.playSound("menu_move.wav")
+	end,
+	["return"] = function(cmenu)
+		local selected = cmenu[pointer]
+		if selected.state then
+			ChangeGamestate(selected.state)
+			pointer = 1
+			sound.playSound("menu_select.wav")
+		elseif selected.func then
+			selected.func(menu[gamestate][pointer])
+			sound.playSound("menu_select.wav")
+		end
+	end,
+	escape = function(cmenu)
+		local pback = cmenu[#cmenu]
+		if pback.name == "back" then
+			if pback.state then
+				ChangeGamestate(pback.state)
+				pointer = 1
+			elseif pback.func then
+				pback.func()
+			end
+			sound.playSound("menu_back.wav")
+		end
+	end,
+	right = function(cmenu)
+		local setting = cmenu[pointer]
+		if not setting.value then return end
+		setting.value = (setting.value + 1) % (#setting.values + 1)
+		if cmenu[pointer].func then
+			cmenu[pointer].func(setting)
+		end
+		sound.playSound("menu_move.wav")
+	end,
+	left = function(cmenu)
+		local setting = cmenu[pointer]
+		if not setting.value then return end
+		setting.value = (setting.value == 0 and #setting.values) or setting.value - 1
+		if cmenu[pointer].func then
+			cmenu[pointer].func(setting)
+		end
+		sound.playSound("menu_move.wav")
+	end,
+	backspace = function(cmenu)
+		local setting = cmenu[pointer]
+		if setting.int and utf8.len(setting.int) > 0 then
+			setting.int = setting.int:sub(1, utf8.len(setting.int) - 1)
+		elseif setting.string and utf8.len(setting.string) > 0 then
+			local byteoffset = utf8.offset(setting.string, -1)
+			if byteoffset then
+				setting.string = setting.string:sub(1, byteoffset - 1)
+			end
+		end
+	end,
+}, functonInputs)
+
+local defaultInputs = {__index = menuInputs}
+
+local cameraInputs = {
+	__index = setmetatable({
+		["+"] = function()
+			scale = math.min(scale + 0.1, 2)
+			mouse.mode = "camera"
+			wheelmoved = 120
+			UpdateTilemap()
+		end,
+		["-"] = function()
+			scale = math.min(scale - 0.1, 2)
+			mouse.mode = "camera"
+			wheelmoved = 120
+			UpdateTilemap()
+		end
+	}, functonInputs)
+}
+
+local inputModes = {
+	cutscene = function()
 		if cutscenes.texttime >= cutscenes.current[cutscenes.page]:len() then
 			cutscenes.page = cutscenes.page + 1
 			cutscenes.texttime = 0
@@ -30,8 +161,8 @@ function love.keypressed(key)
 		else
 			cutscenes.texttime = cutscenes.current[cutscenes.page]:len()
 		end
-		return
-	elseif gamestate == "title" then
+	end,
+	title = function(key)
 		table.insert(rainbowSecret.input, key)
 		if rainbowSecret.input[#rainbowSecret.input] ~= rainbowSecret.needed[#rainbowSecret.input] then
 			rainbowSecret.input = {}
@@ -40,199 +171,171 @@ function love.keypressed(key)
 			rainbowmode = not rainbowmode
 			rainbowSecret.input = {}
 		end
-	end
-	if gamestate == "ingame" and customEnv and customEnv.KeyPressed then
-		customEnv.KeyPressed(key)
-	end
-	if key == "f3" and debugmode then
-		local options = {"Cache info", "Camera info", "Noclip", "Slowdown", "Map info", "Graphic info", "Game info", "Cancel", escapebutton = 1}
-		local text = "Choose which option to toggle:\n"..
-		"Game info = "..tostring(debugmode["Game info"] or false).."\n"..
-		"Graphic info = "..tostring(debugmode["Graphic info"] or false).."\n"..
-		"Map info = "..tostring(debugmode["Map info"] or false).."\n"..
-		"Slowdown = "..tostring(debugmode["Slowdown"] or false).."\n"..
-		"Noclip = "..tostring(debugmode["Noclip"] or false).."\n"..
-		"Camera info = "..tostring(debugmode["Camera info"] or false).."\n"..
-		"Cache info = "..tostring(debugmode["Cache info"] or false)
-		local button = love.window.showMessageBox("Debug mode settings", text, options, "info")
-		if button < #options then
-			debugmode[options[button]] = (debugmode[options[button]] == nil and true) or (not debugmode[options[button]]) 
+		local func = menuInputs[key]
+		if func then
+			func(menu.title)
 		end
-	elseif key == "f8" then
-		love.graphics.captureScreenshot(function(imagedata)
-			if not love.filesystem.getInfo("Source/Screenshots", "directory") then
-				nativefs.createDirectory("Screenshots")
-			end
-			local date = os.date("%Y%m%d%H%M%S")..".png"
-			nativefs.write("Screenshots/"..date, imagedata:encode("png"))
-			notification.setMessage("Sreenshot saved as:\n"..date)
-		end)
-	elseif key == "+" and (gamestate == "ingame" or gamestate == "editing") then
-		scale = math.min(scale+0.1, 2)
-		mouse.mode = "camera"
-		wheelmoved = 120
-	elseif key == "-" and (gamestate == "ingame" or gamestate == "editing") then
-		scale = math.max(scale-0.1, 0.5)
-		mouse.mode = "camera"
-		wheelmoved = 120
-	elseif gamestate == "editing" then
-		if key == "c" then
+	end,
+	ingame = setmetatable({
+		r = RestartMap,
+		escape = function()
+			gamestate = "pause"
+			pointer = 1
+			sound.reset()
+			sound.playSound("menu_back.wav")
+		end,
+		space = function()
+			if not player then return end
+			particles.spawnHelp(player.x, player.y)
+		end,
+		left = function()
+			if not player then return end
+			player.fmomx = -1
+			player.fmomy = 0
+			player.ftime = 5
+		end,
+		a = "left",
+		right = function()
+			if not player then return end
+			player.fmomx = 1
+			player.fmomy = 0
+			player.ftime = 5
+		end,
+		d = "right",
+		up = function()
+			if not player then return end
+			player.fmomx = 0
+			player.fmomy = -1
+			player.ftime = 5
+		end,
+		w = "up",
+		down = function()
+			if not player then return end
+			player.fmomx = 0
+			player.fmomy = 1
+			player.ftime = 5
+		end,
+		s = "down",
+	}, cameraInputs),
+	editing = setmetatable({
+		c = function()
 			hidecontrols = not hidecontrols
-		elseif key == "escape" then
+		end,
+		escape = function()
 			gamestate = "map settings"
 			pointer = 1
-			menu["map settings"][1].string = gamemapname
-			menu["map settings"][2].value = 0
-			menu["map settings"][3].value = 0
-			menu["map settings"][4].int = tostring(mapwidth)
-			menu["map settings"][5].int = tostring(mapheight)
+			local settings = menu["map settings"]
+			settings[1].string = gamemapname
+			settings[2].value = 0
+			settings[3].value = 0
+			settings[4].int = tostring(mapwidth)
+			settings[5].int = tostring(mapheight)
 			for k, v in ipairs(possibleTilesets) do
 				if tilesetname == v then
-					menu["map settings"][2].value = k
+					settings[2].value = k
 					break
 				end
 			end
 			for k, v in ipairs(possibleMusic) do
 				if sound.musicname == v then
-					menu["map settings"][3].value = k
+					settings[3].value = k
 					break
 				end
 			end
 			sound.playSound("menu_back.wav")
-		elseif key == "tab" then
+		end,
+		tab = function()
 			mouse.mode = (mouse.mode == "camera" and "editing") or "camera"
 			wheelmoved = 0
 		end
-	elseif gamestate == "map settings" and key == "escape" then
-		gamestate = "editing"
-		sound.playSound("menu_select.wav")
-	elseif gamestate == "ingame" then
-		if key == "r" then
-			RestartMap()
-		elseif key == "escape" then
-			gamestate = "pause"
-			pointer = 1
-			sound.reset()
-			sound.playSound("menu_back.wav")
-		elseif key == "space" then
-			if not player then return end
-			particles.spawnHelp(player.x, player.y)
-		end
-		if player then
-			if key == "left" or key == "a" then
-				player.fmomx = -1
-				player.fmomy = 0
-				player.ftime = 5
-			elseif key == "right" or key == "d" then
-				player.fmomx = 1
-				player.fmomy = 0
-				player.ftime = 5
-			elseif key == "up" or key == "w" then
-				player.fmomx = 0
-				player.fmomy = -1
-				player.ftime = 5
-			elseif key == "down" or key == "s" then
-				player.fmomx = 0
-				player.fmomy = 1
-				player.ftime = 5
-			end
-		end
-	elseif gamestate == "pause" and key == "escape" then
-		gamestate = "ingame"
-		sound.playSound("menu_select.wav")
-	elseif key == "escape" then
-		local pback = menu[gamestate][#menu[gamestate]]
-		if pback.name == "back" then
-			if pback.state then
-				ChangeGamestate(pback.state)
-				pointer = 1
-			elseif pback.func then
-				pback.func()
-			end
-			sound.playSound("menu_back.wav")
-		end
-	elseif gamestate == "select level" then
-		local max = math.min((debugmode and 255) or lastmap, #menu["select level"]-1)
-		if key == "left" then
-			pointer = (pointer-1 <= max and pointer-1) or max
+	}, cameraInputs),
+	["select level"] = setmetatable({
+		left = function(cmenu)
+			local max = GetLSMax(cmenu)
+			pointer = (pointer - 1 <= max and pointer - 1) or max
 			sound.playSound("menu_move.wav")
-		elseif key == "right" then
-			pointer = (pointer+1 <= max and pointer+1) or (pointer == #menu["select level"] and 1) or #menu["select level"]
+			LSCheck(cmenu, max)
+		end,
+		right = function(cmenu)
+			local max = GetLSMax(cmenu)
+			pointer = (pointer + 1 <= max and pointer + 1) or (pointer == #cmenu and 1) or #cmenu
 			sound.playSound("menu_move.wav")
-		elseif key == "up" then
-			pointer = (pointer-10 <= max and pointer ~= #menu["select level"] and pointer-10) or max
+			LSCheck(cmenu, max)
+		end,
+		up = function(cmenu)
+			local max = GetLSMax(cmenu)
+			pointer = (pointer - 10 <= max and pointer ~= #cmenu and pointer - 10) or max
 			sound.playSound("menu_move.wav")
-		elseif key == "down" then
-			pointer = (pointer+10 <= max and pointer+10) or (pointer == #menu["select level"] and 1) or #menu["select level"]
+			LSCheck(cmenu, max)
+		end,
+		down = function(cmenu)
+			local max = GetLSMax(cmenu)
+			pointer = (pointer + 10 <= max and pointer + 10) or (pointer == #cmenu and 1) or #cmenu
 			sound.playSound("menu_move.wav")
-		elseif key == "return" then
-			menu["select level"][pointer].func()
+			LSCheck(cmenu, max)
+		end,
+		["return"] = function(cmenu)
+			cmenu[pointer].func()
 			sound.playSound("menu_select.wav")
 		end
-		if pointer < 1 or pointer > #menu["select level"] or pointer > max then
-			pointer = #menu["select level"]
+	}, defaultInputs),
+	["menu settings"] = setmetatable({
+		escape = function()
+			gamestate = "editing"
+			sound.playSound("menu_select.wav")
 		end
-	elseif key == "backspace" then
-		local setting = menu[gamestate][pointer]
-		if setting.int and utf8.len(setting.int) > 0 then
-			setting.int = setting.int:sub(1, utf8.len(setting.int)-1)
-		elseif setting.string and utf8.len(setting.string) > 0 then
-			local byteoffset = utf8.offset(setting.string, -1)
-			if byteoffset then
-				setting.string = setting.string:sub(1, byteoffset - 1)
-			end
+	}, defaultInputs),
+	pause = setmetatable({
+		escape = function()
+			gamestate = "ingame"
+			sound.playSound("menu_select.wav")
 		end
-	elseif gamestate ~= "editing" then
-		if key == "up" then
-			pointer = pointer-1
-			if pointer == 0 then pointer = #menu[gamestate] end
+	}, defaultInputs),
+	["sound test"] = setmetatable({
+		right = function(cmenu)
+			if pointer ~= 1 then return end
+			repeat
+				sound.soundtestpointer = sound.soundtestpointer + 1
+				if sound.soundtestpointer > #sound.soundtest then sound.soundtestpointer = 1 end
+			until lastmap >= (sound.soundtest[sound.soundtestpointer].require or 0)
+			cmenu[1].name = "< " .. sound.soundtest[sound.soundtestpointer].name .. " >"
 			sound.playSound("menu_move.wav")
-		elseif key == "down" then
-			pointer = pointer+1
-			if pointer > #menu[gamestate] then pointer = 1 end
+		end,
+		left = function(cmenu)
+			if pointer ~= 1 then return end
+			repeat
+				sound.soundtestpointer = sound.soundtestpointer - 1
+				if sound.soundtestpointer < 1 then sound.soundtestpointer = #sound.soundtest end
+			until lastmap >= (sound.soundtest[sound.soundtestpointer].require or 0)
+			cmenu[1].name = "< " .. sound.soundtest[sound.soundtestpointer].name .. " >"
 			sound.playSound("menu_move.wav")
-		elseif menu[gamestate][pointer].values then
-			local setting = menu[gamestate][pointer]
-			if key == "right" then
-				setting.value = (setting.value + 1) % (#setting.values + 1)
-				if menu[gamestate][pointer].func then 
-					menu[gamestate][pointer].func(setting)
-				end
-				sound.playSound("menu_move.wav")
-			elseif key == "left" then
-				setting.value = (setting.value == 0 and #setting.values) or setting.value - 1
-				if menu[gamestate][pointer].func then 
-					menu[gamestate][pointer].func(setting)
-				end
-				sound.playSound("menu_move.wav")
-			end
-		elseif key == "return" then
-			local selected = menu[gamestate][pointer]
-			if selected.state then
-				ChangeGamestate(selected.state)
-				pointer = 1
-				sound.playSound("menu_select.wav")
-			elseif selected.func then
-				selected.func(menu[gamestate][pointer])
-				sound.playSound("menu_select.wav")
-			end
-		elseif gamestate == "sound test" and pointer == 1 then
-			if key == "right" then
-				repeat
-					sound.soundtestpointer = sound.soundtestpointer+1
-					if sound.soundtestpointer > #sound.soundtest then sound.soundtestpointer = 1 end
-				until lastmap >= (sound.soundtest[sound.soundtestpointer].require or 0)
-				menu["sound test"][1].name = "< "..sound.soundtest[sound.soundtestpointer].name.." >"
-				sound.playSound("menu_move.wav")
-			elseif key == "left" then
-				repeat
-					sound.soundtestpointer = sound.soundtestpointer-1
-					if sound.soundtestpointer < 1 then sound.soundtestpointer = #sound.soundtest end
-				until lastmap >= (sound.soundtest[sound.soundtestpointer].require or 0)
-				menu["sound test"][1].name = "< "..sound.soundtest[sound.soundtestpointer].name.." >"
-				sound.playSound("menu_move.wav")
-			end
 		end
+	}, defaultInputs)
+}
+
+function love.keypressed(key)
+	if messagebox.show then
+		messagebox.show = false
+		messagebox.error = false
+		return
+	end
+	if customEnv and customEnv.KeyPressed and gamestate == "ingame" then
+		customEnv.KeyPressed(key)
+	end
+	local inputs = (inputModes[gamestate] or inputModes[key])
+	if not inputs then
+		inputModes[gamestate] = menuInputs
+		inputs = menuInputs
+	end
+	if type(inputs) == "function" then
+		inputs(key)
+	else
+		local func = inputs[key]
+		if not func then return end
+		if type(func) == "string" then
+			func = inputs[func]
+		end
+		func(menu[gamestate])
 	end
 end
 
