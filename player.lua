@@ -42,6 +42,28 @@ local function LSCheck(cmenu, max)
 	end
 end
 
+local function MoveTilemap(momx, momy)
+	local newmap = {}
+	for y = 1, mapheight do
+		newmap[y] = newmap[y] or {}
+		for x = 1, mapwidth do
+			local newy = y + momy
+			local newline = newmap[newy]
+			if not newline and newy <= mapheight and newy > 0 then
+				newmap[newy] = {}
+				newline = newmap[newy]
+			end
+			local newx = x + momx
+			if newline and newx <= mapwidth and newx > 0 then
+				newline[newx] = tilemap[y][x]
+			end
+			newmap[y][x] = newmap[y][x] or TILE_EMPTY
+		end
+	end
+	tilemap = newmap
+	UpdateTilemap()
+end
+
 local functonInputs = {
 	__index = {
 		f3 = function()
@@ -247,7 +269,23 @@ local inputModes = {
 		tab = function()
 			mouse.mode = (mouse.mode == "camera" and "editing") or "camera"
 			wheelmoved = 0
-		end
+		end,
+		left = function()
+			MoveTilemap(-1, 0)
+		end,
+		a = "left",
+		right = function()
+			MoveTilemap(1, 0)
+		end,
+		d = "right",
+		up = function()
+			MoveTilemap(0, -1)
+		end,
+		w = "up",
+		down = function()
+			MoveTilemap(0, 1)
+		end,
+		s = "down",
 	}, cameraInputs),
 	["select level"] = setmetatable({
 		left = function(cmenu)
