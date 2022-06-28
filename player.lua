@@ -279,7 +279,7 @@ local inputModes = {
 			sound.playSound("menu_select.wav")
 		end
 	}, defaultInputs),
-	["menu settings"] = setmetatable({
+	["map settings"] = setmetatable({
 		escape = function()
 			gamestate = "editing"
 			sound.playSound("menu_select.wav")
