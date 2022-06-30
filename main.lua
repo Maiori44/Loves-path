@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.218"
+VERSION = "Version b9.0.219"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -1094,7 +1094,7 @@ Beta tester]], 0, 355, third, "center")
 		if not hidecontrols then
 			local controls = "CONTROLS:"
 			if mouse.mode == "editing" then
-				controls = controls.."\nLEFT CLICK: Place tile\nRIGHT CLICK: Delete tile\nMIDDLE CLICK: Select tile\nMOUSE WHEEL: Change tile\nTAB: Change mode\nC: Hide controls\nESC: Map settings"
+				controls = controls.."\nLEFT CLICK: Place tile\nRIGHT CLICK: Delete tile\nMIDDLE CLICK: Select tile\nMOUSE WHEEL: Change tile\nWASD/ARROWS: Move map\nTAB: Change mode\nC: Hide controls\nESC: Map settings"
 			else
 				controls = controls.."\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nTAB: Change mode\nC: Hide controls\nESC: Map settings"
 			end
