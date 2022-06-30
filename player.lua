@@ -271,18 +271,44 @@ local inputModes = {
 			wheelmoved = 0
 		end,
 		left = function()
+			for y = 1, mapheight do
+				if tilemap[y][1] ~= TILE_EMPTY then
+					notification.setMessage("Can't move the map past the border!")
+					return
+				end
+			end
 			MoveTilemap(-1, 0)
 		end,
 		a = "left",
 		right = function()
+			for y = 1, mapheight do
+				if tilemap[y][mapwidth] ~= TILE_EMPTY then
+					notification.setMessage("Can't move the map past the border!")
+					return
+				end
+			end
 			MoveTilemap(1, 0)
 		end,
 		d = "right",
 		up = function()
+			local line = tilemap[1]
+			for x = 1, mapwidth do
+				if line[x] ~= TILE_EMPTY then
+					notification.setMessage("Can't move the map past the border!")
+					return
+				end
+			end
 			MoveTilemap(0, -1)
 		end,
 		w = "up",
 		down = function()
+			local line = tilemap[mapwidth]
+			for x = 1, mapwidth do
+				if line[x] ~= TILE_EMPTY then
+					notification.setMessage("Can't move the map past the border!")
+					return
+				end
+			end
 			MoveTilemap(0, 1)
 		end,
 		s = "down",
