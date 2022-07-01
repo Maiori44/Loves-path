@@ -302,7 +302,7 @@ local inputModes = {
 		end,
 		w = "up",
 		down = function()
-			local line = tilemap[mapwidth]
+			local line = tilemap[mapheight]
 			for x = 1, mapwidth do
 				if line[x] ~= TILE_EMPTY then
 					notification.setMessage("Can't move the map past the border!")
