@@ -1401,6 +1401,9 @@ end
 function love.resize(width, height)
 	screenwidth = width
 	screenheight = height
+	if #tilemap > 0 then
+		UpdateTilemap()
+	end
 end
 
 function love.quit()
