@@ -467,7 +467,10 @@ function love.mousemoved(x, y, dx, dy)
 	if menuButtons then
 		for i, button in ipairs(menuButtons) do
 			if IsMouseOnButton(x, y, button) then
-				pointer = i
+				if pointer ~= i then
+					pointer = i
+					sound.playSound("menu_move.wav")
+				end
 				return
 			end
 		end
