@@ -415,16 +415,13 @@ end
 
 mouse = {x = 0, y = 0, tile = TILE_EMPTY, camerax = 0, cameray = 0, mode = "camera", speed = 1}
 function mouse.boundsCheck()
-	if mouse.x <= mapwidth and mouse.y <= mapheight and mouse.x > 0 and mouse.y > 0 then
-		return true
-	end
-	return false
+	return mouse.x <= mapwidth and mouse.y <= mapheight and mouse.x > 0 and mouse.y > 0
 end
 
 function mouse.think()
+	mouse.x = math.floor((love.mouse.getX() - GetStartX()) / math.floor(32 * scale * GetScaleByScreen()))
+	mouse.y = math.floor((love.mouse.getY() - GetStartY()) / math.floor(32 * scale * GetScaleByScreen()))
 	if mouse.mode == "editing" and mouse.boundsCheck() then
-		mouse.x = math.floor((love.mouse.getX() - GetStartX()) / math.floor(32 * scale * GetScaleByScreen()))
-		mouse.y = math.floor((love.mouse.getY() - GetStartY()) / math.floor(32 * scale * GetScaleByScreen()))
 		if love.mouse.isDown(1) then
 			local tile = mouse.tile
 			local x = mouse.x
@@ -461,14 +458,15 @@ function love.wheelmoved(x, y)
 	end
 end
 
+local function IsMouseOnButton(mousex, mousey, button)
+	local x, y, width, height = button.x, button.y, button.width, button.height
+	return mousex <= width and mousey <= height and mousex > x and mousey > y
+end
+
 function love.mousemoved(x, y, dx, dy)
 	if menuButtons then
-		local mousex = love.mouse.getX()
-		local mousey = love.mouse.getY()
 		for i, button in ipairs(menuButtons) do
-			local x, y, width, height = button.x, button.y, button.width, button.height
-			print(mousex, mousey, x, y, width, height)
-			if mousex <= width and mousey <= height and mousex > x and mousey > y then
+			if IsMouseOnButton(x, y, button) then
 				pointer = i
 				return
 			end
@@ -483,6 +481,18 @@ function love.mousemoved(x, y, dx, dy)
 		local duration = sound.music:getDuration()
 		sound.music:seek(math.min(((x-((screenwidth/2)-150))/300)*duration, duration-1))
 		sound.music:pause()
+	end
+end
+
+function love.mousereleased(x, y, button)
+	if messagebox.show then
+		messagebox.show = false
+		messagebox.error = false
+		return
+	end
+	if button ~= 1 or not menuButtons then return end
+	if IsMouseOnButton(x, y, menuButtons[pointer]) then
+		love.keypressed("return")
 	end
 end
 
