@@ -332,6 +332,7 @@ local updateModes = {
 	end,
 	editing = function()
 		leveltime = leveltime + 1
+		mouse.think()
 	end,
 	["sound test"] = function()
 		if sound.music and not love.mouse.isDown(1) and not sound.music:isPlaying() then sound.music:play() end
@@ -356,7 +357,6 @@ function love.update(dt)
 		if #sound.list >= 10 then sound.collectGarbage() end
 		if #particles.list >= 20 then particles.collectGarbage() end
 		if updateModes[gamestate] then updateModes[gamestate](dt) end
-		mouse.think()
 	end
 end
 
@@ -541,17 +541,16 @@ local iconsquads = GetQuads(4, icons)
 local brownie = love.graphics.newImage("Sprites/brownie.png")
 local girl = love.graphics.newImage("Sprites/girl.png")
 
-local function DrawMenu(gs)
-	local gamestate = gs or gamestate
-	local drawingcurrent = gamestate ~= laststate
-	if drawingcurrent then
+local function DrawMenu(gs, prev)
+	if not prev then
 		menuButtons = {}
-		if statetimer < 0.999 then
-			love.graphics.translate(0, screenwidth - ((1 -statetimer) * screenwidth))
-			DrawMenu(laststate)
-			love.graphics.origin()
-			love.graphics.translate(0, (1 - statetimer) * screenwidth)
-		end
+	end
+	local gamestate = gs or gamestate
+	if gamestate ~= laststate and statetimer < 0.999 then
+		love.graphics.translate(0, screenwidth - ((1 -statetimer) * screenwidth))
+		DrawMenu(laststate, true)
+		love.graphics.origin()
+		love.graphics.translate(0, (1 - statetimer) * screenwidth)
 	end
 	local wave
 	if gamestate == "title" or gamestate == "select level" then
@@ -597,8 +596,8 @@ local function DrawMenu(gs)
 			end
 			local width = font:getWidth(name);
 			local x = rectangle / 2 - width / 2
-			if drawingcurrent then
-				menuButtons[i] = {x = x, y = y, width = width}
+			if not prev then
+				menuButtons[i] = {x = x, y = y, width = x + width, height = y + font:getHeight()}
 				if debugmode and debugmode["Button info"] then
 					love.graphics.rectangle("line", x, y, width, font:getHeight())
 				end

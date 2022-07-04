@@ -447,8 +447,6 @@ function mouse.think()
 			local possibleTile = tilemap[mouse.y][mouse.x]
 			mouse.tile = ((possibleTile >= 50) and possibleTile - 10) or (possibleTile > 0 and possibleTile) or mouse.tile
 		end
-	elseif menuButtons then
-
 	end
 end
 
@@ -464,6 +462,19 @@ function love.wheelmoved(x, y)
 end
 
 function love.mousemoved(x, y, dx, dy)
+	if menuButtons then
+		local mousex = love.mouse.getX()
+		local mousey = love.mouse.getY()
+		for i, button in ipairs(menuButtons) do
+			local x, y, width, height = button.x, button.y, button.width, button.height
+			print(mousex, mousey, x, y, width, height)
+			if mousex <= width and mousey <= height and mousex > x and mousey > y then
+				pointer = i
+				return
+			end
+		end
+		return
+	end
 	if not love.mouse.isDown(1) then return end
 	if (gamestate == "ingame" or gamestate == "editing") and mouse.mode == "camera" then
 		mouse.camerax = mouse.camerax+dx
