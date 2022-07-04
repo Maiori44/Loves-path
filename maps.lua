@@ -109,9 +109,6 @@ function UpdateTilemap(tilesize, rotatebridges)
 				end
 				if quads[tile+animationframe] then
 					tileset:add(quads[tile+animationframe], x, y, rotation, scale)
-					if debugmode and debugmode["Map info"] then
-						love.graphics.print(tile+animationframe, GetStartX() + x, GetStartY() + y, rotation, scale)
-					end
 				else
 					love.graphics.draw(GetImage("Sprites/error.png"), x, y, 0, scale)
 					love.graphics.print(tile, x, y, 0, scale)

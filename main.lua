@@ -599,6 +599,9 @@ local function DrawMenu(gs)
 			local x = rectangle / 2 - width / 2
 			if drawingcurrent then
 				menuButtons[i] = {x = x, y = y, width = width}
+				if debugmode and debugmode["Button info"] then
+					love.graphics.rectangle("line", x, y, width, font:getHeight())
+				end
 			end
 			(i == pointer and AnimatedPrint or love.graphics.print)(name, x, y)
 		else

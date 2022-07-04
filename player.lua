@@ -16,7 +16,7 @@ local debugOptions = {
 	"Camera info",
 	"Noclip",
 	"Slowdown",
-	"Map info",
+	"Button info",
 	"Graphic info",
 	"Game info",
 	"Cancel",
@@ -448,7 +448,7 @@ function mouse.think()
 			mouse.tile = ((possibleTile >= 50) and possibleTile - 10) or (possibleTile > 0 and possibleTile) or mouse.tile
 		end
 	elseif menuButtons then
-		
+
 	end
 end
 
