@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.221"
+VERSION = "Version b9.0.222"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -215,6 +215,7 @@ function love.load(args)
 	player = nil
 	gamemapname = "forest.png"
 	musicname = ""
+	menuButtons = nil
 	pcall(LoadSettings)
 	GetAllMaps()
 	local tilesetimage = GetImage("Sprites/Tiles/" .. (possibleTilesets[math.ceil(lastmap / 10) - 1] or "forest.png"))
@@ -330,8 +331,7 @@ local updateModes = {
 		end
 	end,
 	editing = function()
-		leveltime = leveltime+1
-		mouse.think()
+		leveltime = leveltime + 1
 	end,
 	["sound test"] = function()
 		if sound.music and not love.mouse.isDown(1) and not sound.music:isPlaying() then sound.music:play() end
@@ -356,6 +356,7 @@ function love.update(dt)
 		if #sound.list >= 10 then sound.collectGarbage() end
 		if #particles.list >= 20 then particles.collectGarbage() end
 		if updateModes[gamestate] then updateModes[gamestate](dt) end
+		mouse.think()
 	end
 end
 
@@ -542,11 +543,15 @@ local girl = love.graphics.newImage("Sprites/girl.png")
 
 local function DrawMenu(gs)
 	local gamestate = gs or gamestate
-	if gamestate ~= laststate and statetimer < 0.999 then
-		love.graphics.translate(0, screenwidth - ((1 -statetimer) * screenwidth))
-		DrawMenu(laststate)
-		love.graphics.origin()
-		love.graphics.translate(0, (1 - statetimer) * screenwidth)
+	local drawingcurrent = gamestate ~= laststate
+	if drawingcurrent then
+		menuButtons = {}
+		if statetimer < 0.999 then
+			love.graphics.translate(0, screenwidth - ((1 -statetimer) * screenwidth))
+			DrawMenu(laststate)
+			love.graphics.origin()
+			love.graphics.translate(0, (1 - statetimer) * screenwidth)
+		end
 	end
 	local wave
 	if gamestate == "title" or gamestate == "select level" then
@@ -590,7 +595,12 @@ local function DrawMenu(gs)
 			or (menu[gamestate][i].int and menu[gamestate][i].int:len() < 2)) then
 				name = name.."_"
 			end
-			(i == pointer and AnimatedPrint or love.graphics.print)(name, rectangle / 2 - font:getWidth(name) / 2, y)
+			local width = font:getWidth(name);
+			local x = rectangle / 2 - width / 2
+			if drawingcurrent then
+				menuButtons[i] = {x = x, y = y, width = width}
+			end
+			(i == pointer and AnimatedPrint or love.graphics.print)(name, x, y)
 		else
 			local unit = GetUnit(i)-1
 			local offset = (unit >= 0 and unit) or 9
@@ -1327,6 +1337,7 @@ function debug.collectInfo()
 end
 
 function love.draw()
+	menuButtons = nil
 	love.graphics.setColor(1, 1, 1, 1);
 	(assert(drawModes[gamestate], "invalid gamestate!"))()
 	love.graphics.origin()
