@@ -612,10 +612,24 @@ local function DrawMenu(gs, prev)
 				x = (screenwidth / 2) - 225
 			end
 			if menu[gamestate][i].name == "back" then
-				(i == pointer and AnimatedPrint or love.graphics.print)("back", screenwidth / 2 - 24, 470)
+				local x = screenwidth / 2 - 24
+				(i == pointer and AnimatedPrint or love.graphics.print)("back", x, 470)
+				if not prev then
+					menuButtons[i] = {x = x, y = 470, width = x + 48, height = 470 + font:getHeight()}
+					if debugmode and debugmode["Button info"] then
+						love.graphics.rectangle("line", x, 470, 48, font:getHeight())
+					end
+				end
 			else
 				local n = menu[gamestate][i].name
 				love.graphics.print(n, x, ly)
+				if not prev then
+					local width = font:getWidth(n)
+					menuButtons[i] = {x = x, y = ly, width = x + width, height = ly + font:getHeight()}
+					if debugmode and debugmode["Button info"] then
+						love.graphics.rectangle("line", x, ly, width, font:getHeight())
+					end
+				end
 				local coin = coins[i-1]
 				if coin then
 					local quad = (coin.got and "got") or "notgot"
