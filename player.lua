@@ -360,8 +360,9 @@ local inputModes = {
 	}, defaultInputs)
 }
 
-function love.keypressed(key)
+function love.keypressed(key, _, isrepeat)
 	if debugmode and lovebug.keypressed(key) then return end
+	if isrepeat and gamestate == "ingame" then return end
 	if messagebox.show then
 		messagebox.show = false
 		messagebox.error = false
