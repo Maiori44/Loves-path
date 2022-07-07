@@ -70,7 +70,6 @@ local function changeFontSize(size)
 	d.log("Font size set to " .. size .. ".")
 end
 
-
 function lovebug.keypressed(key, scan, isTouch)
 	if key == "f3" then lovebug.toggle() return true end
 	if d.active then
