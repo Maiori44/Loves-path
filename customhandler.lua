@@ -119,6 +119,7 @@ function SearchCustom(modname)
 		--MISCELLANEOUS LIBRARY--
 		VERSION = VERSION,
 		print = print,
+		log = debugmode and lovebug.log or print,
 		error = error,
 		type = type,
 		tostring = tostring,
