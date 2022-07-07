@@ -63,6 +63,14 @@ function lovebug.toggle()
 	d.active = d.show
 end
 
+local function changeFontSize(size)
+	d.fontSize = love.graphics.getDPIScale()*size
+	d.font = love.graphics.newFont(d.fontSize)
+	lovebug.updateWindow()
+	d.log("Font size set to " .. size .. ".")
+end
+
+
 function lovebug.keypressed(key, scan, isTouch)
 	if key == "f3" then lovebug.toggle() return true end
 	if d.active then
@@ -153,13 +161,6 @@ function lovebug.interpret()
 	end
 	d.input = ""
 	d.indicator = 0
-end
-
-function changeFontSize(size)
-	d.fontSize = love.graphics.getDPIScale()*size
-	d.font = love.graphics.newFont(d.fontSize)
-	lovebug.updateWindow()
-	d.log("Font size set to " .. size .. ".")
 end
 
 function lovebug.updateWindow()
