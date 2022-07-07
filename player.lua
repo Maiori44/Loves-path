@@ -12,12 +12,6 @@ local rainbowSecret = {
 hidecontrols = false
 
 local debugOptions = {
-	"Cache info",
-	"Camera info",
-	"Noclip",
-	"Slowdown",
-	"Button info",
-	"Graphic info",
 	"Game info",
 	"Cancel",
 	escapebutton = 1
@@ -66,17 +60,6 @@ end
 
 local functonInputs = {
 	__index = {
-		f3 = function()
-			if not debugmode then return end
-			local text = "Choose which option to toggle:\n"
-			for _, v in ipairs(debugOptions) do
-				text = text .. v .. " = " .. tostring(debugmode[v] or false) .. "\n"
-			end
-			local button = love.window.showMessageBox("Debug mode settings", text, debugOptions, "info")
-			if button < #debugOptions then
-				debugmode[debugOptions[button]] = not debugmode[debugOptions[button]]
-			end
-		end,
 		f8 = function()
 			love.graphics.captureScreenshot(SaveScreenshot)
 		end
@@ -378,6 +361,7 @@ local inputModes = {
 }
 
 function love.keypressed(key)
+	if debugmode and lovebug.keypressed(key) then return end
 	if messagebox.show then
 		messagebox.show = false
 		messagebox.error = false
@@ -448,6 +432,7 @@ function mouse.think()
 end
 
 function love.wheelmoved(x, y)
+	if debugmode and lovebug.wheelmoved(x, y) then return end
 	if gamestate == "editing" and mouse.mode == "editing" then
 		wheelmoved = 120
 		mouse.tile = math.min(math.max(mouse.tile+y, 1), 48)

@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.222"
+VERSION = "Version b9.0.223"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -189,6 +189,8 @@ function love.load(args)
 			LoadEditorMap(this.string)
 			notification.setMessage("Map saved")
 		end})
+		lovebug = require "lovebug"
+		love.mousepressed = lovebug.mousepressed
 	end
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	font = love.graphics.newFont("editundo.ttf", 24, "mono")
@@ -275,7 +277,7 @@ local updateModes = {
 		seconds, frames = DoTime(seconds, frames)
 		minutes, seconds = DoTime(minutes, seconds)
 		hours, minutes = DoTime(hours, minutes)
-		if debugmode and debugmode.Slowdown and leveltime % 60 ~= 0 then return end
+		if debugmode and debugmode.slowdown and leveltime % 60 ~= 0 then return end
 		flash = math.max(flash-0.02, 0)
 		if customEnv then
 			customEnv.leveltime = leveltime
@@ -499,7 +501,7 @@ local function DrawTilemap()
 		love.graphics.draw(help.particle, x, y, 0, scale)
 	end
 	love.graphics.pop()
-	if debugmode and debugmode["Camera info"] and player then
+	if debugmode and debugmode.camera and player then
 		local playerx = centerx + player.x * tilesize
 		local playery = centery + player.y * tilesize
 		love.graphics.setColor(1, 0, 0, 1)
@@ -598,7 +600,7 @@ local function DrawMenu(gs, prev)
 			local x = rectangle / 2 - width / 2
 			if not prev then
 				menuButtons[i] = {x = x, y = y, width = x + width, height = y + font:getHeight()}
-				if debugmode and debugmode["Button info"] then
+				if debugmode and debugmode.buttons then
 					love.graphics.rectangle("line", x, y, width, font:getHeight())
 				end
 			end
@@ -616,7 +618,7 @@ local function DrawMenu(gs, prev)
 				(i == pointer and AnimatedPrint or love.graphics.print)("back", x, 470)
 				if not prev then
 					menuButtons[i] = {x = x, y = 470, width = x + 48, height = 470 + font:getHeight()}
-					if debugmode and debugmode["Button info"] then
+					if debugmode and debugmode.buttons then
 						love.graphics.rectangle("line", x, 470, 48, font:getHeight())
 					end
 				end
@@ -626,7 +628,7 @@ local function DrawMenu(gs, prev)
 				if not prev then
 					local width = font:getWidth(n)
 					menuButtons[i] = {x = x, y = ly, width = x + width, height = ly + font:getHeight()}
-					if debugmode and debugmode["Button info"] then
+					if debugmode and debugmode.buttons then
 						love.graphics.rectangle("line", x, ly, width, font:getHeight())
 					end
 				end
@@ -1360,7 +1362,7 @@ function love.draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	if not debugmode and menu.settings[1].value == 1 then
 		love.graphics.print("FPS: "..tostring(math.min(love.timer.getFPS(), 60)), 10, 10)
-	elseif debugmode and debugmode["Game info"] then
+	elseif debugmode and debugmode.gameinfo then
 		local debuginfo, count, scale = debug.collectInfo()
 		if love.timer.getFPS() < 10 or count > 1499 then
 			love.graphics.setColor(1, 0, 0, 1)
@@ -1371,7 +1373,7 @@ function love.draw()
 		love.graphics.setColor(1, 1, 1, 1)
 	end
 	if debugmode then
-		if debugmode["Graphic info"] then
+		if debugmode.graphics then
 			local graphicinfo = ""
 			local rendererInfo = {love.graphics.getRendererInfo()}
 			for k, v in ipairs(rendererInfo) do
@@ -1387,7 +1389,7 @@ function love.draw()
 			love.graphics.printf(graphicinfo, 0, 10, screenwidth, "right")
 			love.graphics.setColor(1, 1, 1, 1)
 		end
-		if debugmode["Cache info"] then
+		if debugmode.cache then
 			love.graphics.setColor(1, 1, 0, 1)
 			local cacheinfo, scale = GetCacheInfo()
 			love.graphics.print(cacheinfo, 10, 10, 0, scale)
@@ -1423,6 +1425,10 @@ function love.draw()
 		love.graphics.printf(messagebox.contents, 0, height + 50, screenwidth, "center")
 		love.graphics.printf("(press any button to close this)", 0, height + messagebox.height, screenwidth / 0.7, "center", 0, 0.7)
 	end
+	if debugmode then
+		lovebug.draw()
+		love.graphics.setFont(font)
+	end
 end
 
 function love.resize(width, height)
@@ -1430,6 +1436,9 @@ function love.resize(width, height)
 	screenheight = height
 	if #tilemap > 0 then
 		UpdateTilemap()
+	end
+	if debugmode then
+		lovebug.updateWindow()
 	end
 end
 

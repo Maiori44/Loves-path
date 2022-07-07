@@ -182,7 +182,7 @@ function TryMove(mo, momx, momy)
 	local sgamemap = gamemap
 	if tilemap[mo.y+momy] and moCollisions[tilemap[mo.y+momy][mo.x+momx]] then
 		local obstmo = SearchObject(mo.x+momx, mo.y+momy, mo)
-		if (debugmode and debugmode["Noclip"]) or predicting then obstmo = nil end
+		if (debugmode and debugmode.noclip) or predicting then obstmo = nil end
 		if obstmo then
 			local obstmoType = ffi.string(obstmo.type)
 			local obstmoCollisions = collisions[obstmoType]
