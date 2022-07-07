@@ -47,7 +47,7 @@ function sound.playSound(filename)
 		return
 	end
 	local path = isFromMod and path.."/Sounds/" or "Sounds/"
-	for i = 1,20 do
+	for i = 1, 40 do
 		if not sound.list[i] then
 			sound.list[i] = love.audio.newSource(path..filename, "static")
 			sound.list[i]:play()
