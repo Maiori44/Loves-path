@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.224"
+VERSION = "Version b9.0.225"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -195,6 +195,7 @@ function love.load(args)
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	font = love.graphics.newFont("editundo.ttf", 24, "mono")
 	love.graphics.setFont(font)
+	love.keyboard.setKeyRepeat(true)
 	hisname = ""
 	leveltime = 0
 	frametime = 0
