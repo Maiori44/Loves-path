@@ -390,6 +390,7 @@ end
 function love.textinput(text)
 	if not menu[gamestate] then return end
 	local setting = menu[gamestate][pointer]
+	if not setting then return end
 	if setting.int and tonumber(text) and setting.int:len() < 2 then
 		setting.int = setting.int..text
 	elseif setting.string and setting.string:len() < 20 then
