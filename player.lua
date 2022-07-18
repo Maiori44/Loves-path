@@ -81,7 +81,7 @@ local menuInputs = setmetatable({
 		local selected = cmenu[pointer]
 		if selected.state then
 			ChangeGamestate(selected.state)
-			pointer = 1
+			pointer = selected.pos or 1
 			sound.playSound("menu_select.wav")
 		elseif selected.func then
 			selected.func(menu[gamestate][pointer])
@@ -93,7 +93,7 @@ local menuInputs = setmetatable({
 		if pback.name == "back" then
 			if pback.state then
 				ChangeGamestate(pback.state)
-				pointer = 1
+				pointer = pback.pos or 1
 			elseif pback.func then
 				pback.func()
 			end

@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.225"
+VERSION = "Version b9.0.226"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -179,7 +179,7 @@ function love.load(args)
 		debugmode = {}
 		table.insert(possibleTilesets, "bonus.png")
 		table.insert(possibleMusic, "mind.ogg")
-		table.insert(menu["level editor"], 3, {name = "Load file: ", string = "", func = function()
+		table.insert(menu["level editor"], 4, {name = "Load file: ", string = "", func = function()
 			mouse.tile = TILE_WALL1
 			gamestate = LoadEditorMap(menu["level editor"][3].string) and "editing" or "level editor"
 		end})

@@ -229,7 +229,7 @@ menu = {
 				UpdateTilemap()
 			end
 		end},
-		{name = "back", func = function() ChangeGamestate("level editor") pointer = 2 end}
+		{name = "back", state = "level editor", pos = 2}
 	},
 	["map settings"] = {
 		{name = "Map name: ", string = ""},
@@ -294,7 +294,7 @@ menu = {
 					end})
 				end
 			end
-			table.insert(menu["select mod"], {name = "back", func = function() ChangeGamestate("addons") pointer = 2 end})
+			table.insert(menu["select mod"], {name = "back", state = "addons", pos = 2})
 			ChangeGamestate("select mod")
 			pointer = 1
 		end},
@@ -323,7 +323,7 @@ menu = {
 				messagebox.setMessage("Documentation not found!", "Could not find \"readme.txt\" in your folder\nreinstall the game to get another copy", true)
 			end
 		end},
-		{name = "back", func = function() ChangeGamestate("title") pointer = 2 end}
+		{name = "back", state = "title", pos = 2}
 	},
 	extras = {
 		{name = "Sound test", func = function()
@@ -355,7 +355,7 @@ menu = {
 					end})
 				end
 			end
-			table.insert(list, {name = "back", func = function() ChangeGamestate("extras") pointer = 2 end})
+			table.insert(list, {name = "back", state = "extras", pos = 2})
 			menu["select cutscene"] = list
 		end},
 		{name = "????? ??????", func = function()
@@ -381,7 +381,7 @@ menu = {
 				darkshader:send("light", this.value == 1 and 160 or 200)
 			end
 		end},
-		{name = "back", func = function() ChangeGamestate("title") pointer = 3 end}
+		{name = "back", state = "title", pos = 3}
 	},
 	["bonus levels"] = {
 		{name = "pac love", func = function()
@@ -474,7 +474,7 @@ menu = {
 			local rotcounter = "Sprites/Bonuses/number monitor.png"
 			SpawnObject(rotcounter, 20, 1, "rotcounter", GetQuads(10, rotcounter), "frame").frame = 10
 		end},
-		{name = "back", func = function() ChangeGamestate("extras") pointer = 3 end}
+		{name = "back", state = "extras", pos = 3}
 	},
 	["bonus level complete!"] = {
 		{name = "retry", func = function() menu["bonus levels"][math.abs(gamemap)].func() end},
