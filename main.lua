@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.226"
+VERSION = "Version b9.0.229"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -1182,6 +1182,7 @@ Beta tester]], 0, 355, third, "center")
 		DrawMenu()
 	end,
 	["create map"] = DrawMenuWithBG,
+	["swap maps"] = DrawMenuWithBG,
 	["the end"] = function()
 		local n = "\n"
 		local msg =

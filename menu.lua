@@ -197,7 +197,44 @@ menu = {
 			menu["create map"][7].name = "Create map"
 			pointer = 1
 		end},
+		{name = "Swap Maps", func = function()
+			ChangeGamestate("swap maps")
+			menu["swap maps"][1].int = ""
+			menu["swap maps"][2].int = ""
+		end},
 		{name = "back", state = "addons"},
+	},
+	["swap maps"] = {
+		{name = "first map: ", int = ""},
+		{name = "second map: ", int = ""},
+		{name = "swap maps", func = function()
+			local map1 = menu["swap maps"][1].int
+			local map2 = menu["swap maps"][2].int
+			if map1 == "" then
+				messagebox.setMessage("Missing first map num!", "You need to set the 1st map number")
+				return
+			end
+			if map2 == "" then
+				messagebox.setMessage("Missing second map num!", "You need to set the 2nd map number")
+				return
+			end
+			local map1file = "map" .. GetMapNum(map1) .. ".map"
+			map1 = GetMapData(map1file)
+			if not map1 then
+				messagebox.setMessage("First map not found!", "If you want to create a new map\nselect the \"Create Map\" button instead")
+				return
+			end
+			local map2file = "map" .. GetMapNum(map2) .. ".map"
+			map2 = GetMapData(map2file)
+			if not map2 then
+				messagebox.setMessage("Second map not found!", "If you want to create a new map\nselect the \"Create Map\" button instead")
+				return
+			end
+			nativefs.write(mapspath..map1file, map2)
+			nativefs.write(mapspath..map2file, map1)
+			notification.setMessage("Maps swapped successfully")
+		end},
+		{name = "back", state = "level editor", pos = 3},
 	},
 	["create map"] = {
 		{name = "Map num: ", int = ""},
@@ -290,7 +327,7 @@ menu = {
 						EXTRA_WOBBLE = 3
 						EXTRA_SUPERDARK = 4
 						LoadData()
-						notification.setMessage("\""..filename.."\" loaded succesfully")
+						notification.setMessage("\""..filename.."\" loaded successfully")
 					end})
 				end
 			end
