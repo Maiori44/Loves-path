@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.229"
+VERSION = "Version b9.0.230"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -228,6 +228,10 @@ function love.load(args)
 	if coinsgot == coinstotal then
 		sound.soundtest[#sound.soundtest] = coins.soundtest
 		menu.extras[EXTRA_BONUSLEVELS].name = "Bonus levels"
+	end
+	if not discord.loaded then
+		messagebox.setMessage("Could not load DiscordRPC!", "The game can still be played\nbut Discord won't update your status", true)
+		return
 	end
 	discord.initialize("974379262792581231", true)
 	discord.updatePresence(discord.menu)

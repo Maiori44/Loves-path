@@ -1,5 +1,5 @@
 local ffi = require "ffi"
-local discordRPClib = ffi.load("discord-rpc")
+local _, discordRPClib = pcall(ffi.load, "discord-rpc")
 
 ffi.cdef[[
 typedef struct DiscordRichPresence {
@@ -61,7 +61,9 @@ void Discord_Respond(const char* userid, int reply);
 void Discord_UpdateHandlers(DiscordEventHandlers* handlers);
 ]]
 
-local discordRPC = {} -- module table
+local discordRPC = {
+    loaded = type(discordRPClib) == "table"
+} -- module table
 
 -- proxy to detect garbage collection of the module
 discordRPC.gcDummy = newproxy(true)
