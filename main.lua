@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.230"
+VERSION = "Version b9.0.231"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -1451,5 +1451,7 @@ end
 function love.quit()
 	SaveSettings()
 	SaveData()
-	discord.shutdown()
+	if discord.loaded then
+		discord.shutdown()
+	end
 end

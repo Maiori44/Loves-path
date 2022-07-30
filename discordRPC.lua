@@ -178,6 +178,7 @@ end
 jit.off(discordRPC.runCallbacks)
 
 function discordRPC.updatePresence(presence)
+    if not discordRPClib.Discord_UpdatePresence then return end
     local func = "discordRPC.updatePresence"
     checkArg(presence, "table", "presence", func)
 
