@@ -8,5 +8,5 @@ sussy.dat
 # dont ask why
 saveold.dat
 Compiler/
-build/
+*.zip
 build.sh
