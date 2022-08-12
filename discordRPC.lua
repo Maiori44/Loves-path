@@ -62,7 +62,7 @@ void Discord_UpdateHandlers(DiscordEventHandlers* handlers);
 ]]
 
 local discordRPC = {
-    loaded = type(discordRPClib) == "table"
+    loaded = type(discordRPClib) ~= "string"
 } -- module table
 
 -- proxy to detect garbage collection of the module
