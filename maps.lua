@@ -182,7 +182,7 @@ function LoadMap(mapname, oldscale)
 	local musicname = ReadLine()
 	sound.setMusic(musicname)
 	mapwidth = tonumber(ReadLine())
-	mapheight = tonumber(ReadLine())
+	mapheight = tonumber(ReadLine()) --[[@as number]]
 	if not mapwidth or not mapheight or tilesetname == "" then
 		messagebox.setMessage("Failed to load "..mapname.."!", "The map is corrupted.", true)
 		return "error"
@@ -363,7 +363,7 @@ function GetAllMaps()
 				name = tostring(mapn),
 				func = function()
 					LoadMap(mapname)
-					gamemap = tonumber(mapname:match("%d%d"))
+					gamemap = tonumber(mapname:match("%d%d")) --[[@as number]]
 					frames = 0
 					seconds = 0
 					minutes = 0

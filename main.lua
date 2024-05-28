@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.233"
+VERSION = "Version b9.0.235"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -6,6 +6,7 @@ end
 
 local SetColor = love.graphics.setColor
 
+---@diagnostic disable-next-line: redundant-parameter, duplicate-set-field
 function love.graphics.setColor(r, g, b, a)
 	if not rainbowmode then SetColor(r, g, b, a) return end
 	local clock = (os.clock()*100)%510
@@ -21,6 +22,7 @@ end
 
 local PrintFormatted = love.graphics.printf
 
+---@diagnostic disable-next-line: duplicate-set-field
 function love.graphics.printf(text, x, y, ...)
 	local r, g, b, a = love.graphics.getColor()
 	SetColor(0, 0, 0, a)
@@ -34,6 +36,7 @@ end
 
 local Print = love.graphics.print
 
+---@diagnostic disable-next-line: duplicate-set-field
 function love.graphics.print(text, x, y, ...)
 	local r, g, b, a = love.graphics.getColor()
 	SetColor(0, 0, 0, a)
@@ -108,7 +111,7 @@ local coins = require "coins"
 local discord = require "discordRPC"
 local cutscenes = require "cutscenes"
 
-startTimestamp = os.time(os.date("*t"))
+startTimestamp = os.time(os.date("*t") --[[@as osdateparam]])
 
 discord.menu = {
 	state = "Menu",
@@ -215,6 +218,7 @@ function love.load(args)
 	screenwidth = love.graphics.getWidth()
 	screenheight = love.graphics.getHeight()
 	wheelmoved = 0
+	---@type nil | ffi.cdata*
 	player = nil
 	gamemapname = "forest.png"
 	musicname = ""
@@ -363,7 +367,7 @@ function love.update(dt)
 		coins.hudtimer = math.max(coins.hudtimer-1, 0)
 		if #sound.list >= 10 then sound.collectGarbage() end
 		if #particles.list >= 20 then particles.collectGarbage() end
-		if updateModes[gamestate] then updateModes[gamestate](dt) end
+		if updateModes[gamestate] then updateModes[gamestate]() end
 	end
 end
 

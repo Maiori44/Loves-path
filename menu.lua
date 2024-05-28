@@ -541,7 +541,7 @@ menu = {
 				details = "Playing",
 				state = "Level 1: Grassy Forest",
 				largeImageKey = "logo",
-				startTimestamp = os.time(os.date("*t"))
+				startTimestamp = os.time(os.date("*t") --[[@as osdateparam]])
 			})
 			if menu.settings[8].value == 0 then return end
 			cutscenes.setCutscene(1)
@@ -684,6 +684,7 @@ function LoadSettings()
 	for i = 1,#menu.settings-2 do
 		local oldvalue = menu.settings[i].value
 		menu.settings[i].oldvalue = oldvalue
+		---@type number?
 		menu.settings[i].value = DataCheck(string.byte(file:read(1) or menu.settings[i].value))
 		if not menu.settings[i].value or menu.settings[i].value > ((menu.settings[i].values and #menu.settings[i].values + 1) or 1) then
 			local errormsg = 'Value "'..menu.settings[i].name..'" has missing or invalid value\nIt will be set to default.'

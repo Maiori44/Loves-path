@@ -18,19 +18,43 @@ DIR_DOWN = 7
 
 objects = {}
 voids = {}
-local collisions = {}
+collisions = {}
 thinkers = {}
 
 local MakeObject = ffi.typeof("gameobject")
 local MakePlayerObject = ffi.typeof("playerobject")
 
+---@class gameobject
+---@field quads number
+---@field key integer
+---@field char string
+---@field quadtype string
+---@field type string
+---@field hp integer
+---@field x integer
+---@field y integer
+---@field direction integer
+---@field var1 integer
+---@field frame integer
+---@field var2 boolean
+---@field lastaxis boolean
+---@field momx number
+---@field momy number
+
+---@class playerobject: gameobject
+---@field ftime integer
+---@field bosskey integer
+---@field fmomx number
+---@field fmomy number
+
+---@return gameobject | playerobject
 function SpawnObject(sprite, x, y, type, quads, quadtype, direction, hp)
 	if not collisions[type] then error('object type "'..type..'" does not exist!') end
 	quadtype = (quadtype and quadtype) or (not quads and "none") or (hp and "hp") or (#quads == 1 and "single") or (#quads == 8 and "directions") or "default"
 	local key = (#voids > 0 and table.remove(voids) or #objects + 1)
 	local newobject = (type == "player" and MakePlayerObject or MakeObject)(quads and CacheQuadArray(quads) or 0, key, sprite, quadtype, type, hp or 1, x, y, direction or DIR_LEFT, 0, 1, false, false, 0, 0)
 	objects[key] = newobject
-	return newobject
+	return newobject --[[@as gameobject | playerobject]]
 end
 
 function RemoveObject(mo, soundname)
