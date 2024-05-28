@@ -41,7 +41,10 @@ function GetExtraQuad(image)
 end
 
 function CacheQuadArray(quads)
-	local key = tonumber(tostring(quads):sub(7))
+	print(quads)
+	local key = tonumber(tostring(quads):sub(10), 16)
+	print(tostring(quads):sub(10))
+	print(key)
 	quadcache[key] = quads
 	return key
 end
