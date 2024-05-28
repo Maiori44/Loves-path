@@ -1,5 +1,5 @@
 typedef struct gameobject {
-	const int quads;
+	const double quads;
 	const uint8_t key;
 	const char *sprite, *quadtype, *type;
 	uint8_t hp, x, y, direction, var1, frame;
