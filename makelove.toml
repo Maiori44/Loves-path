@@ -1,0 +1,14 @@
+name = "Love's Path"
+default_targets = ["win32", "win64", "appimage"]
+build_directory = "Build"
+
+love_files = [
+	"*.lua",
+	"*.c",
+	"*.ttf",
+	"*.png",
+	"*.ogg",
+	"*.wav",
+	"*.glsl",
+	"*.map"
+]
