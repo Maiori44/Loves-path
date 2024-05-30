@@ -597,8 +597,7 @@ function SaveData()
 		return
 	end
 	SaverYield()
-	local l = string.char(math.min(lastmap, 255))
-	file:write(l..l)
+	local data = string.char(math.min(lastmap, 255))
 	SaverYield()
 	if not customEnv then
 		local extras = menu.extras
@@ -606,15 +605,19 @@ function SaveData()
 		local wobble = extras[EXTRA_WOBBLE].value and 4 or 1
 		local theater = extras[EXTRA_THEATER].name ~= "???????" and 7 or 1
 		SaverYield()
-		file:write(hisname.."\0"..string.char(superdark * wobble * theater))
+		data = data..hisname.."\0"..string.char(superdark * wobble * theater)
 		SaverYield()
 	end
 	for k, coin in pairs(coins) do
 		if type(k) == "number" then
-			file:write(string.char(k)..string.char((coin.got and 1) or 0))
+			data = data..string.char(k)..string.char((coin.got and 1) or 0)
 		end
 		SaverYield()
 	end
+	---@diagnostic disable-next-line: redundant-parameter, param-type-mismatch
+	file:write(love.data.hash("string", "md5", data))
+	SaverYield()
+	file:write(data)
 	file:close()
 end
 
@@ -656,18 +659,18 @@ function LoadData()
 		SaveData()
 		return
 	end
+	local hash = savefile:read(16)
+	---@diagnostic disable-next-line: redundant-parameter, param-type-mismatch
+	if hash ~= love.data.hash("string", "md5", savefile:read("*a")) then
+		love.window.showMessageBox("Error while loading saved data!", "The save is corrupted or was modified.", "error")
+		return
+	end
+	savefile:seek("set", 16)
 	local possibleval = savefile:read(1)
-	local savecheck = savefile:read(1)
 	lastmap = (possibleval and string.byte(possibleval)) or 256
-	savecheck = (savecheck and string.byte(savecheck)) or 256
 	local errormsg
 	if lastmap > 255 then
-		errormsg = 'Value "lastmap" is missing\nit will be set back to default.'
-	elseif lastmap ~= savecheck then
-		errormsg = 'Value "lastmap" is corrupted or was modified\nit will be set back to default.'
-	end
-	if errormsg then
-		love.window.showMessageBox("Error while loading saved data!", errormsg, "warning")
+		love.window.showMessageBox("Error while loading saved data!", 'Value "lastmap" is missing\nit will be set back to default.', "warning")
 		lastmap = 1
 	end
 	pcall(TryLoadData, savefile)
@@ -688,7 +691,7 @@ function LoadSettings()
 		menu.settings[i].value = DataCheck(string.byte(file:read(1) or menu.settings[i].value))
 		if not menu.settings[i].value or menu.settings[i].value > ((menu.settings[i].values and #menu.settings[i].values + 1) or 1) then
 			local errormsg = 'Value "'..menu.settings[i].name..'" has missing or invalid value\nIt will be set to default.'
-			love.window.showMessageBox("Error while loading saved data!", errormsg, "warning")
+			love.window.showMessageBox("Error while loading settings", errormsg, "warning")
 			menu.settings[i].value = oldvalue
 		end
 	end
