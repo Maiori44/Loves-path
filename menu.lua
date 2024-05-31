@@ -615,7 +615,7 @@ function SaveData()
 		SaverYield()
 	end
 	---@diagnostic disable-next-line: redundant-parameter, param-type-mismatch
-	file:write(love.data.hash("string", "md5", data))
+	file:write(love.data.hash("md5", data))
 	SaverYield()
 	file:write(data)
 	file:close()
@@ -661,7 +661,7 @@ function LoadData()
 	end
 	local hash = savefile:read(16)
 	---@diagnostic disable-next-line: redundant-parameter, param-type-mismatch
-	if hash ~= love.data.hash("string", "md5", savefile:read("*a")) then
+	if hash ~= love.data.hash("md5", savefile:read("*a")) then
 		love.window.showMessageBox("Error while loading saved data!", "The save is corrupted or was modified.", "error")
 		return
 	end
