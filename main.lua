@@ -1,23 +1,7 @@
-VERSION = "Version b9.0.237"
+VERSION = "Version b9.0.238"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
-end
-
-local SetColor = love.graphics.setColor
-
----@diagnostic disable-next-line: redundant-parameter, duplicate-set-field
-function love.graphics.setColor(r, g, b, a)
-	if not rainbowmode then SetColor(r, g, b, a) return end
-	local clock = (os.clock()*100)%510
-	if clock < 85 then r = 255-(clock%256)*6 g = g*255 b = b*255
-	elseif clock > 85 and clock < 170 then g = 255-(clock%256)*5 r = r*255 b = b*255
-	elseif clock > 170 and clock < 255 then b = 255-(clock%256)*4 g = g*255 r = r*255
-	elseif clock > 255 and clock < 340 then r = 255-(clock%256)*3 g = 255-(clock%256)*3 b = b*255
-	elseif clock > 340 and clock < 425 then r = 255-(clock%256)*2 g = g*255 b = 255-(clock%256)*2
-	else r = r*255 g = 255-(clock%256) b = 255-(clock%256) end
-	r, g, b = love.math.colorFromBytes(r, g, b)
-	SetColor(r, g, b, a)
 end
 
 local PrintFormatted = love.graphics.printf
@@ -25,12 +9,12 @@ local PrintFormatted = love.graphics.printf
 ---@diagnostic disable-next-line: duplicate-set-field
 function love.graphics.printf(text, x, y, ...)
 	local r, g, b, a = love.graphics.getColor()
-	SetColor(0, 0, 0, a)
+	love.graphics.setColor(0, 0, 0, a)
 	PrintFormatted(text, x + 1, y, ...)
 	PrintFormatted(text, x - 1, y, ...)
 	PrintFormatted(text, x, y + 1, ...)
 	PrintFormatted(text, x, y - 1, ...)
-	SetColor(r, g, b, a)
+	love.graphics.setColor(r, g, b, a)
 	PrintFormatted(text, x, y, ...)
 end
 
@@ -39,12 +23,12 @@ local Print = love.graphics.print
 ---@diagnostic disable-next-line: duplicate-set-field
 function love.graphics.print(text, x, y, ...)
 	local r, g, b, a = love.graphics.getColor()
-	SetColor(0, 0, 0, a)
+	love.graphics.setColor(0, 0, 0, a)
 	Print(text, x + 1, y, ...)
 	Print(text, x - 1, y, ...)
 	Print(text, x, y + 1, ...)
 	Print(text, x, y - 1, ...)
-	SetColor(r, g, b, a)
+	love.graphics.setColor(r, g, b, a)
 	Print(text, x, y, ...)
 end
 
