@@ -549,7 +549,7 @@ local function DrawMenu(gs, prev)
 	end
 	local wave
 	if gamestate == "title" or gamestate == "select level" then
-		wave = math.abs(math.sin(os.clock()))
+		wave = math.abs(math.sin(love.timer.getTime()))
 	end
 	if gamestate == "title" then
 		love.graphics.draw(titlescreen, (screenwidth / 2) - 150, 50)
@@ -1407,7 +1407,7 @@ function love.draw()
 	if messagebox.show then
 		love.graphics.setColor(0, 0, 0, 0.5)
 		love.graphics.rectangle("fill", 0, 0, screenwidth, screenheight)
-		local increase = math.abs(math.sin(os.clock()) / 5)
+		local increase = math.abs(math.sin(love.timer.getTime()) / 5)
 		local width = ((screenwidth / 2) - (messagebox.width / 2)) - 10
 		local height = (screenheight / 2) - (messagebox.height / 2)
 		love.graphics.setColor(0.7 + increase, 0, (messagebox.error and 0) or (0.5 + increase), 1)
