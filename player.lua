@@ -189,10 +189,6 @@ local inputModes = {
 			sound.reset()
 			sound.playSound("menu_back.wav")
 		end,
-		space = function()
-			if not player then return end
-			particles.spawnHelp(player.x, player.y)
-		end,
 		left = function()
 			if not player then return end
 			player.fmomx = -1
