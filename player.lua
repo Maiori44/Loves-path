@@ -189,6 +189,11 @@ local inputModes = {
 			sound.reset()
 			sound.playSound("menu_back.wav")
 		end,
+		space = function()
+			if AssistControl(3) == 1 then
+				AlternateSpikes()
+			end
+		end,
 		left = function()
 			if not player then return end
 			player.fmomx = -1
@@ -489,6 +494,7 @@ local gamepadToKeyboard = {
 	dpright = "right",
 	a = "return",
 	b = "escape",
+	y = "space",
 	start = "r"
 }
 

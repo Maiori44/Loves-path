@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.238"
+VERSION = "Version b9.0.241"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -258,6 +258,12 @@ local function FlashCutscene()
 	end
 end
 
+function AlternateSpikes()
+	if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
+		sound.playSound("spikes.wav")
+	end
+end
+
 local updateModes = {
 	ingame = function()
 		if not player then darkness = math.min(darkness + 0.2, 70) end
@@ -308,21 +314,22 @@ local updateModes = {
 				end
 			end
 		end
-		if ((leveltime + 40) % 60) == 0 then
+		local spikeinterval = math.ceil(600 / AssistControl(2))
+		if ((leveltime + 40) % spikeinterval) == 0 then
 			IterateMap(TILE_SPIKEOFF, SpikesWarn)
-		elseif (leveltime % 60) == 0 then
-			if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
-				sound.playSound("spikes.wav")
-			end
+		elseif (leveltime % spikeinterval) == 0 then
+			AlternateSpikes()
+		elseif (leveltime % 620) == 0 and tilesets[tilesetname].thunder and menu.settings[7].value == 1 and flash == 0 then
+			flash = 0.7
+			sound.playSound("thunder.wav")
+		end
+		if (leveltime % 60) == 0 then
 			if timer > 0 and player then
 				timer = timer - 1
 				if timer <= 0 then
 					RemoveObject(player)
 				end
 			end
-		elseif (leveltime % 620) == 0 and tilesets[tilesetname].thunder and menu.settings[7].value == 1 and flash == 0 then
-			flash = 0.7
-			sound.playSound("thunder.wav")
 		end
 	end,
 	editing = function()
@@ -564,7 +571,8 @@ local function DrawMenu(gs, prev)
 	for i = 1,#menu[gamestate] do
 		love.graphics.setColor(1, 1, 1, 1)
 		if i == pointer then love.graphics.setColor(1, 1, 0, 1)
-		elseif gamestate == "select level" and i > lastmap and tonumber(menu[gamestate][i].name) then 
+		elseif (gamestate == "select level" and i > lastmap and tonumber(menu[gamestate][i].name))
+		or (gamestate == "assist mode" and menu[gamestate][1].value == 0 and i > 1 and i < #menu[gamestate]) then 
 			love.graphics.setColor(1, 1, 1, 0.5)
 		elseif gamestate == "settings" and i == #menu.settings-1 then
 			love.graphics.setColor(1, 0, 0, 1)
@@ -1034,7 +1042,7 @@ local drawModes = {
 		particles.update(love.timer.getDelta())
 		DrawTilemap()
 		if not customEnv and gamemap == 0 then
-			love.graphics.print("CONTROLS:\nWASD/ARROWS: Move\nR: Reset map\nSPACE: Show position\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nESC: Pause", math.min((leveltime*1.5)-100, 10), 100)
+			love.graphics.print("CONTROLS:\nWASD/ARROWS: Move\nR: Reset map\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nESC: Pause", math.min((leveltime*1.5)-100, 10), 100)
 		end
 		if menu.settings[3].value == 1 then
 			local tseconds = (seconds < 10 and "0"..seconds) or tostring(seconds)
@@ -1261,7 +1269,8 @@ Beta tester]], 0, 355, third, "center")
 		DrawMenu()
 		love.graphics.origin()
 		DrawFlash()
-	end
+	end,
+	["assist mode"] = DrawMenuWithBG,
 }
 drawModes.chaptercomplete = drawModes.ingame
 
