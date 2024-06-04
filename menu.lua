@@ -111,6 +111,7 @@ menu = {
 	pause = {
 		{name = "Resume", state = "ingame"},
 		{name = "Restart", func = RestartMap},
+		{name = "Assist Mode", state = "assist mode"},
 		{name = "Return to title", func = function()
 			gamestate = "title"
 			sound.setMusic("menu.ogg")
@@ -139,7 +140,6 @@ menu = {
 		{name = "Particles", value = 3, values = {[0] = "none", [1] = "few", [2] = "most", [3] = "all"}},
 		{name = "Flashing stuff", value = 1, values = valuesnames},
 		{name = "Cutscenes", value = 1, values = valuesnames},
-		{name = "Assist Mode", state = "assist mode"},
 		{name = "Erase Data", func = function(this)
 			if this.name == "Erase Data" then
 				this.name = "Are you sure?"
@@ -574,7 +574,7 @@ menu = {
 		end},
 		{name = "Enemy speed", value = 10, values = percentuals},
 		{name = "Bullet speed", value = 10, values = percentuals},
-		{name = "back", state = "title"}
+		{name = "back", state = "pause"}
 	}
 }
 
@@ -584,7 +584,7 @@ function SaveSettings()
 		messagebox.setMessage("Failed to save settings!", errormsg, true)
 		return
 	end
-	for i = 1,#menu.settings-3 do
+	for i = 1,#menu.settings-2 do
 		file:write(string.char(menu.settings[i].value))
 	end
 	file:close()
@@ -714,7 +714,7 @@ function LoadSettings()
 		SaveSettings()
 		return
 	end
-	for i = 1,#menu.settings-3 do
+	for i = 1,#menu.settings-2 do
 		local oldvalue = menu.settings[i].value
 		menu.settings[i].oldvalue = oldvalue
 		---@type number?

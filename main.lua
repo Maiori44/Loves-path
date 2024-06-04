@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.241"
+VERSION = "Version b9.0.243"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -514,7 +514,7 @@ local function DrawTilemap()
 		love.graphics.setColor(1, 1, 1, 1)
 	end
 	scale = scale / GetScaleByScreen()
-	if gamestate ~= "pause" and gamestate ~= "map settings" then
+	if gamestate ~= "pause" and gamestate ~= "map settings" and gamestate ~= "assist mode" then
 		love.graphics.setColor(1, 1, 1, (180%(math.min(math.max(leveltime, 120), 180))/60))
 	else
 		love.graphics.setColor(1, 1, 1, 0)
@@ -1037,6 +1037,13 @@ local function DrawPage(page)
 	love.graphics.draw(page, screenwidth / 2 - (width * scale) / 2, screenheight / 2 - (height * scale) / 2, nil, scale)
 end
 
+local function DrawMenuAboveTilemap()
+	love.graphics.setColor(1, 1, 1, 0.5)
+	DrawTilemap()
+	love.graphics.setColor(1, 1, 1, 1)
+	DrawMenu()
+end
+
 local drawModes = {
 	ingame = function()
 		particles.update(love.timer.getDelta())
@@ -1067,12 +1074,7 @@ local drawModes = {
 		DrawFlash()
 	end,
 	title = DrawMenuWithBG,
-	pause = function()
-		love.graphics.setColor(1, 1, 1, 0.5)
-		DrawTilemap()
-		love.graphics.setColor(1, 1, 1, 1)
-		DrawMenu()
-	end,
+	pause = DrawMenuAboveTilemap,
 	settings = DrawMenuWithBG,
 	credits = function()
 		local fifteentens = screenwidth / 1.5
@@ -1270,7 +1272,7 @@ Beta tester]], 0, 355, third, "center")
 		love.graphics.origin()
 		DrawFlash()
 	end,
-	["assist mode"] = DrawMenuWithBG,
+	["assist mode"] = DrawMenuAboveTilemap,
 }
 drawModes.chaptercomplete = drawModes.ingame
 
