@@ -12,3 +12,15 @@ love_files = [
 	"*.glsl",
 	"*.map"
 ]
+
+win32.shared_libraries = [
+	"Build/discordRPC/win32/discord-rpc.dll"
+]
+
+win64.shared_libraries = [
+	"Build/discordRPC/win64/discord-rpc.dll"
+]
+
+appimage.shared_libraries = [
+	"Build/discordRPC/linux/libdiscord-rpc.so"
+]

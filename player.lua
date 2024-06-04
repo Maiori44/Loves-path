@@ -190,8 +190,9 @@ local inputModes = {
 			sound.playSound("menu_back.wav")
 		end,
 		space = function()
-			if not player then return end
-			particles.spawnHelp(player.x, player.y)
+			if AssistControl(3) == 1 then
+				AlternateSpikes()
+			end
 		end,
 		left = function()
 			if not player then return end
@@ -493,6 +494,7 @@ local gamepadToKeyboard = {
 	dpright = "right",
 	a = "return",
 	b = "escape",
+	y = "space",
 	start = "r"
 }
 

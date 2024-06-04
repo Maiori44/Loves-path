@@ -1,23 +1,7 @@
-VERSION = "Version b9.0.235"
+VERSION = "Version b9.0.241"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
-end
-
-local SetColor = love.graphics.setColor
-
----@diagnostic disable-next-line: redundant-parameter, duplicate-set-field
-function love.graphics.setColor(r, g, b, a)
-	if not rainbowmode then SetColor(r, g, b, a) return end
-	local clock = (os.clock()*100)%510
-	if clock < 85 then r = 255-(clock%256)*6 g = g*255 b = b*255
-	elseif clock > 85 and clock < 170 then g = 255-(clock%256)*5 r = r*255 b = b*255
-	elseif clock > 170 and clock < 255 then b = 255-(clock%256)*4 g = g*255 r = r*255
-	elseif clock > 255 and clock < 340 then r = 255-(clock%256)*3 g = 255-(clock%256)*3 b = b*255
-	elseif clock > 340 and clock < 425 then r = 255-(clock%256)*2 g = g*255 b = 255-(clock%256)*2
-	else r = r*255 g = 255-(clock%256) b = 255-(clock%256) end
-	r, g, b = love.math.colorFromBytes(r, g, b)
-	SetColor(r, g, b, a)
 end
 
 local PrintFormatted = love.graphics.printf
@@ -25,12 +9,12 @@ local PrintFormatted = love.graphics.printf
 ---@diagnostic disable-next-line: duplicate-set-field
 function love.graphics.printf(text, x, y, ...)
 	local r, g, b, a = love.graphics.getColor()
-	SetColor(0, 0, 0, a)
+	love.graphics.setColor(0, 0, 0, a)
 	PrintFormatted(text, x + 1, y, ...)
 	PrintFormatted(text, x - 1, y, ...)
 	PrintFormatted(text, x, y + 1, ...)
 	PrintFormatted(text, x, y - 1, ...)
-	SetColor(r, g, b, a)
+	love.graphics.setColor(r, g, b, a)
 	PrintFormatted(text, x, y, ...)
 end
 
@@ -39,12 +23,12 @@ local Print = love.graphics.print
 ---@diagnostic disable-next-line: duplicate-set-field
 function love.graphics.print(text, x, y, ...)
 	local r, g, b, a = love.graphics.getColor()
-	SetColor(0, 0, 0, a)
+	love.graphics.setColor(0, 0, 0, a)
 	Print(text, x + 1, y, ...)
 	Print(text, x - 1, y, ...)
 	Print(text, x, y + 1, ...)
 	Print(text, x, y - 1, ...)
-	SetColor(r, g, b, a)
+	love.graphics.setColor(r, g, b, a)
 	Print(text, x, y, ...)
 end
 
@@ -274,6 +258,12 @@ local function FlashCutscene()
 	end
 end
 
+function AlternateSpikes()
+	if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
+		sound.playSound("spikes.wav")
+	end
+end
+
 local updateModes = {
 	ingame = function()
 		if not player then darkness = math.min(darkness + 0.2, 70) end
@@ -324,21 +314,22 @@ local updateModes = {
 				end
 			end
 		end
-		if ((leveltime + 40) % 60) == 0 then
+		local spikeinterval = math.ceil(600 / AssistControl(2))
+		if ((leveltime + 40) % spikeinterval) == 0 then
 			IterateMap(TILE_SPIKEOFF, SpikesWarn)
-		elseif (leveltime % 60) == 0 then
-			if CheckMap(TILE_SPIKEON, TILE_SPIKEOFF, TILE_SPIKEOFF, TILE_SPIKEON) then
-				sound.playSound("spikes.wav")
-			end
+		elseif (leveltime % spikeinterval) == 0 then
+			AlternateSpikes()
+		elseif (leveltime % 620) == 0 and tilesets[tilesetname].thunder and menu.settings[7].value == 1 and flash == 0 then
+			flash = 0.7
+			sound.playSound("thunder.wav")
+		end
+		if (leveltime % 60) == 0 then
 			if timer > 0 and player then
 				timer = timer - 1
 				if timer <= 0 then
 					RemoveObject(player)
 				end
 			end
-		elseif (leveltime % 620) == 0 and tilesets[tilesetname].thunder and menu.settings[7].value == 1 and flash == 0 then
-			flash = 0.7
-			sound.playSound("thunder.wav")
 		end
 	end,
 	editing = function()
@@ -565,7 +556,7 @@ local function DrawMenu(gs, prev)
 	end
 	local wave
 	if gamestate == "title" or gamestate == "select level" then
-		wave = math.abs(math.sin(os.clock()))
+		wave = math.abs(math.sin(love.timer.getTime()))
 	end
 	if gamestate == "title" then
 		love.graphics.draw(titlescreen, (screenwidth / 2) - 150, 50)
@@ -580,7 +571,8 @@ local function DrawMenu(gs, prev)
 	for i = 1,#menu[gamestate] do
 		love.graphics.setColor(1, 1, 1, 1)
 		if i == pointer then love.graphics.setColor(1, 1, 0, 1)
-		elseif gamestate == "select level" and i > lastmap and tonumber(menu[gamestate][i].name) then 
+		elseif (gamestate == "select level" and i > lastmap and tonumber(menu[gamestate][i].name))
+		or (gamestate == "assist mode" and menu[gamestate][1].value == 0 and i > 1 and i < #menu[gamestate]) then 
 			love.graphics.setColor(1, 1, 1, 0.5)
 		elseif gamestate == "settings" and i == #menu.settings-1 then
 			love.graphics.setColor(1, 0, 0, 1)
@@ -1050,7 +1042,7 @@ local drawModes = {
 		particles.update(love.timer.getDelta())
 		DrawTilemap()
 		if not customEnv and gamemap == 0 then
-			love.graphics.print("CONTROLS:\nWASD/ARROWS: Move\nR: Reset map\nSPACE: Show position\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nESC: Pause", math.min((leveltime*1.5)-100, 10), 100)
+			love.graphics.print("CONTROLS:\nWASD/ARROWS: Move\nR: Reset map\nLEFT CLICK+DRAG: Move camera\nMOUSE WHEEL: Zoom in/out\nESC: Pause", math.min((leveltime*1.5)-100, 10), 100)
 		end
 		if menu.settings[3].value == 1 then
 			local tseconds = (seconds < 10 and "0"..seconds) or tostring(seconds)
@@ -1277,7 +1269,8 @@ Beta tester]], 0, 355, third, "center")
 		DrawMenu()
 		love.graphics.origin()
 		DrawFlash()
-	end
+	end,
+	["assist mode"] = DrawMenuWithBG,
 }
 drawModes.chaptercomplete = drawModes.ingame
 
@@ -1423,7 +1416,7 @@ function love.draw()
 	if messagebox.show then
 		love.graphics.setColor(0, 0, 0, 0.5)
 		love.graphics.rectangle("fill", 0, 0, screenwidth, screenheight)
-		local increase = math.abs(math.sin(os.clock()) / 5)
+		local increase = math.abs(math.sin(love.timer.getTime()) / 5)
 		local width = ((screenwidth / 2) - (messagebox.width / 2)) - 10
 		local height = (screenheight / 2) - (messagebox.height / 2)
 		love.graphics.setColor(0.7 + increase, 0, (messagebox.error and 0) or (0.5 + increase), 1)
