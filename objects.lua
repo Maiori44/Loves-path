@@ -621,8 +621,9 @@ AddObjectType("enemy", {
 	pacdot = true
 }, function(mo)
 	if not player or (mo.momx ~= 0 and mo.momy ~= 0) then return end
-	local time = leveltime % 100
-	if time == 40 then
+	local moveinterval = math.ceil(1000 / AssistControl(4))
+	local time = leveltime % moveinterval
+	if time == moveinterval - 60 then
 		FacePlayer(mo)
 		local tx, ty = DirectionMomentum(mo.direction)
 		particles.spawnWarning(mo.x + tx, mo.y + ty)
@@ -689,10 +690,11 @@ AddObjectType("snowball", {
 --SNOWMAN
 AddObjectType("snowman", nil, function(mo)
 	if not player then return end
-	local time = leveltime%180
+	local fireinterval = math.ceil(1800 / AssistControl(4))
+	local time = leveltime % fireinterval
 	if time == 0 then
 		FireShot(mo, mo.sprite, GetExtraQuad(mo.sprite))
-	elseif time == 110 then
+	elseif time == fireinterval - 70 then
 		FacePlayer(mo)
 		local tx, ty = DirectionMomentum(mo.direction)
 		particles.spawnWarning(mo.x+tx, mo.y+ty)
@@ -770,7 +772,8 @@ AddObjectType("miniman", {metalbox = false}, function(mo)
 	or (mo.direction == DIR_LEFT or mo.direction == DIR_RIGHT) and mo.y == player.y)
 	and PredictMove(mo, DirectionMomentum(mo.direction)) then
 		FireShot(mo, mo.sprite, GetExtraQuad(mo.sprite))
-		mo.var1 = 3
+		mo.var1 = math.ceil(30 / AssistControl(4))
+		print(mo.var1)
 	end
 end)
 

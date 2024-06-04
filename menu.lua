@@ -572,7 +572,7 @@ menu = {
 				notification.setMessage("press space to switch spikes!")
 			end
 		end},
-		{name = "Enemy speed", value = 10, values = percentuals},
+		{name = "Enemy speed", value = 10, normal = 10, values = percentuals},
 		{name = "Bullet speed", value = 10, values = percentuals},
 		{name = "back", state = "pause"}
 	}
