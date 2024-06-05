@@ -515,7 +515,7 @@ local function DrawTilemap()
 	end
 	scale = scale / GetScaleByScreen()
 	if gamestate ~= "pause" and gamestate ~= "map settings" and gamestate ~= "assist mode" then
-		love.graphics.setColor(1, 1, 1, (180%(math.min(math.max(leveltime, 120), 180))/60))
+		love.graphics.setColor(1, 1, 1, (360%(math.min(math.max(leveltime, 240), 360))/120))
 	else
 		love.graphics.setColor(1, 1, 1, 0)
 	end
