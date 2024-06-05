@@ -95,6 +95,24 @@ function RemoveCollidedObject(_, obstmo)
 	RemoveObject(obstmo)
 end
 
+function RemovePlayer(mo, obstmo)
+	local assist = AssistControl(5)
+	if assist == 0 then
+		RemoveObject(mo)
+	elseif assist == 2 then
+		RemoveObject(obstmo)
+	end
+end
+
+function RemoveCollidedPlayer(mo, obstmo)
+	local assist = AssistControl(5)
+	if assist == 0 then
+		RemoveObject(obstmo)
+	elseif assist == 2 then
+		RemoveObject(mo)
+	end
+end
+
 function EraseObject(mo)
 	objects[mo.key] = nil
 	table.insert(voids, mo.key)
@@ -304,8 +322,12 @@ function DashObject(mo)
 end
 
 function FireShot(mo, sprite, quads, type)
+	local assist = AssistControl(6) / 10
+	if assist == 0 then return end
 	local bullet = SpawnObject(sprite, mo.x, mo.y, type or "bullet", quads, nil, mo.direction)
 	DashObject(bullet)
+	bullet.momx = bullet.momx * assist
+	bullet.momy = bullet.momy * assist
 	sound.playSound("bullet.wav")
 	return bullet
 end
@@ -512,13 +534,13 @@ Good luck!
 		end
 		return check
 	end,
-	enemy = RemoveObject,
+	enemy = RemovePlayer,
 	bullet = RemoveObject,
 	snowball = SlowPushObject,
-	snowman = RemoveObject,
+	snowman = RemovePlayer,
 	masterbutton = PressButton,
 	metalbox = PushObject,
-	miniman = RemoveObject,
+	miniman = RemovePlayer,
 	bfmonitor = function(_, obstmo, momx, momy)
 		if momx == 0 and momy == 0 then return true end
 		obstmo.hp = math.max((obstmo.hp + 1) % 8, 1)
@@ -614,7 +636,7 @@ AddObjectType("key", {
 
 --ENEMY
 AddObjectType("enemy", {
-	player = RemoveCollidedObject,
+	player = RemoveCollidedPlayer,
 	key = PushObject,
 	box = PusherCheck,
 	masterbutton = PressButton,

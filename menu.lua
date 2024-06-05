@@ -573,7 +573,8 @@ menu = {
 			end
 		end},
 		{name = "Enemy speed", value = 10, normal = 10, values = percentuals},
-		{name = "Bullet speed", value = 10, values = percentuals},
+		{name = "Enemy touch", value = 0, normal = 0, values = {[0] = "die", "ignore", "kill"}},
+		{name = "Bullet speed", value = 10, normal = 10, values = percentuals},
 		{name = "back", state = "pause"}
 	}
 }
