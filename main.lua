@@ -75,7 +75,7 @@ notification = {
 	timer = 0,
 	setMessage = function(text)
 		notification.text = text
-		notification.timer = 240
+		notification.timer = 480
 	end
 }
 
