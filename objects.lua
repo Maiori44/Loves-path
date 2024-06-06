@@ -795,7 +795,6 @@ AddObjectType("miniman", {metalbox = false}, function(mo)
 	and PredictMove(mo, DirectionMomentum(mo.direction)) then
 		FireShot(mo, mo.sprite, GetExtraQuad(mo.sprite))
 		mo.var1 = math.ceil(30 / AssistControl(4))
-		print(mo.var1)
 	end
 end)
 
