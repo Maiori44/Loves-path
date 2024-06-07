@@ -459,10 +459,10 @@ function love.mousemoved(x, y, dx, dy)
 					pointer = i
 					sound.playSound("menu_move.wav")
 				end
-				return
+				break
 			end
 		end
-		return
+		--return
 	end
 	if not love.mouse.isDown(1) then return end
 	if (gamestate == "ingame" or gamestate == "editing") and mouse.mode == "camera" then
