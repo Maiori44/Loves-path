@@ -72,6 +72,18 @@ function sound.collectGarbage()
 	collectgarbage()
 end
 
+function sound.checkUnlocks(offset)
+	local unlocks = "Unlocked music:"
+	for _, entry in ipairs(sound.soundtest) do
+		if entry.require == gamemap + offset then
+			unlocks = unlocks.."\n"..entry.name
+		end
+	end
+	if unlocks ~= "Unlocked music:" then
+		notification.setMessage(unlocks)
+	end
+end
+
 sound.soundtest = {
 	{name = "Love's path", subtitle = "Main menu", creator = "MAKYUNI", filename = "menu.ogg"},
 	{name = "Grassy Forest", subtitle = "Chapter 1 Act 1", creator = "MAKYUNI", filename = "forest 1.ogg", require = 2},

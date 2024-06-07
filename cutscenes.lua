@@ -8,7 +8,7 @@ local cutscenes = {
 		{
 			name = "The story begins...",
 			"The cutscenes were not added yet",
-			"They will be added in the next beta!"
+			"They will be added...eventually!"
 		},
 		{
 			name = "WIP",

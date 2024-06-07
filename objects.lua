@@ -356,15 +356,7 @@ function EndLevel()
 	end
 	gamemap = gamemap + 1
 	if gamemap == lastmap then
-		local unlocks = "Unlocked music:"
-		for _, entry in ipairs(sound.soundtest) do
-			if entry.require == gamemap + 1 then
-				unlocks = unlocks.."\n"..entry.name
-			end
-		end
-		if unlocks ~= "Unlocked music:" then
-			notification.setMessage(unlocks)
-		end
+		sound.checkUnlocks(1)
 	end
 	local prevlastmap = lastmap
 	lastmap = math.max(gamemap + 1, lastmap)
@@ -384,7 +376,7 @@ function EndLevel()
 		local errorcheck2 = LoadMap("map"..GetMapNum(gamemap)..".map")
 		if errorcheck2 and errorcheck2 == "error" then
 			local finalcheck = LoadMap("map00.map")
-			messagebox.setMessage("Failed to load next or current map!", "as a last ditch effor map00.map was loaded\nsomething must really be broken...", true)
+			messagebox.setMessage("Failed to load next or current map!", "as a last ditch effort map00.map was loaded\nsomething must really be broken...", true)
 			if finalcheck and finalcheck == "error" then
 				error("Could not find a map to load\nthe Maps folder may be corrupted, reinstall the game and replace it.")
 			end

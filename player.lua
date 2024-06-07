@@ -159,6 +159,7 @@ local inputModes = {
 				gamestate = cutscenes.nextgamestate
 				sound.setMusic(cutscenes.prevmusic)
 				if cutscenes.num > 1 and gamestate == "ingame" then
+					sound.checkUnlocks(2)
 					lastmap = lastmap + 1
 					EndLevel()
 				end
