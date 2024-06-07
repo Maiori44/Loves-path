@@ -151,6 +151,7 @@ local cameraInputs = {
 }
 
 local inputModes = {
+	chaptercomplete = {},
 	cutscene = function()
 		if cutscenes.texttime >= cutscenes.current[cutscenes.page]:len() then
 			cutscenes.page = cutscenes.page + 1
