@@ -358,6 +358,24 @@ local inputModes = {
 			cmenu[1].name = "< " .. sound.soundtest[sound.soundtestpointer].name .. " >"
 			sound.playSound("menu_move.wav")
 		end
+	}, defaultInputs),
+	["assist mode"] = setmetatable({
+		up = function(cmenu)
+			if cmenu[1].value == 0 then
+				pointer = (pointer == 1 and #cmenu) or 1
+				sound.playSound("menu_move.wav")
+			else
+				menuInputs.up(cmenu)
+			end
+		end,
+		down = function(cmenu)
+			if cmenu[1].value == 0 then
+				pointer = (pointer == 1 and #cmenu) or 1
+				sound.playSound("menu_move.wav")
+			else
+				menuInputs.down(cmenu)
+			end
+		end,
 	}, defaultInputs)
 }
 
