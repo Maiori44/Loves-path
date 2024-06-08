@@ -598,8 +598,11 @@ function SaveSettings()
 		messagebox.setMessage("Failed to save settings!", errormsg, true)
 		return
 	end
-	for i = 1,#menu.settings-2 do
+	for i = 1, #menu.settings - 2 do
 		file:write(string.char(menu.settings[i].value))
+	end
+	for i = 1, #menu["assist mode"] - 2 do
+		file:write(string.char(menu["assist mode"][i].value))
 	end
 	file:close()
 end
@@ -728,7 +731,7 @@ function LoadSettings()
 		SaveSettings()
 		return
 	end
-	for i = 1,#menu.settings-2 do
+	for i = 1, #menu.settings-2 do
 		local oldvalue = menu.settings[i].value
 		menu.settings[i].oldvalue = oldvalue
 		---@type number?
@@ -742,11 +745,25 @@ function LoadSettings()
 			)
 			menu.settings[i].value = oldvalue
 		end
-	end
+	end	
 	if menu.settings[2].value == 1 then
-		love.window.setMode(800, 600, {fullscreen = true, resizable = true, minwidth = 800, minheight = 600})
+		love.window.setMode(800, 600, { fullscreen = true, resizable = true, minwidth = 800, minheight = 600 })
 		screenwidth = love.graphics.getWidth()
 		screenheight = love.graphics.getHeight()
+	end
+	for i = 1, #menu["assist mode"] - 2 do
+		---@type number?
+		menu["assist mode"][i].value = DataCheck(string.byte(file:read(1) or menu["assist mode"][i].value))
+		if not menu["assist mode"][i].value or
+		menu["assist mode"][i].value > ((menu["assist mode"][i].values and #menu["assist mode"][i].values + 1) or 1) then
+			local errormsg = 'Value "'..menu["assist mode"][i].name..'" has missing or invalid value\nIt will be set to default.'
+			love.window.showMessageBox(
+				"Error while loading assist mode",
+				errormsg,
+				"warning"
+			)
+			menu["assist mode"][i].value = menu["assist mode"][i].normal
+		end
 	end
 	file:close()
 end
