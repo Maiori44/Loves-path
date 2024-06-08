@@ -533,8 +533,8 @@ menu = {
 		end}
 	},
 	["name him"] = {
-		{name = "his name: ", string = "Brownie", func = function(self)
-			local newname = self.string
+		{name = "his name: ", string = "Brownie", func = function(this)
+			local newname = this.string
 			if newname:gsub("%s+", "") == "" then
 				messagebox.setMessage("Invalid name!", "Nothing can't be his name.")
 				return
@@ -567,15 +567,28 @@ menu = {
 	["assist mode"] = {
 		{name = "Enable", value = 0, values = valuesnames},
 		{name = "Spike speed", value = 10, normal = 10, values = percentuals},
-		{name = "Control spikes", value = 0, normal = 0, values = valuesnames, func = function(self)
-			if self.value == 1 then
+		{name = "Control spikes", value = 0, normal = 0, values = valuesnames, func = function(this)
+			if this.value == 1 then
 				notification.setMessage("press space to switch spikes!")
 			end
 		end},
 		{name = "Enemy speed", value = 10, normal = 10, values = percentuals},
 		{name = "Enemy touch", value = 0, normal = 0, values = {[0] = "die", "ignore", "kill"}},
 		{name = "Bullet speed", value = 10, normal = 10, values = percentuals},
-		{name = "back", state = "pause"}
+		{name = "Skip level", func = function(this)
+			if this.name == "Skip level" then
+				this.name = "Are you sure?"
+			elseif this.name == "Are you sure?" then
+				EndLevel()
+				this.name = "Skip level"
+			end
+		end},
+		{name = "back", func = function()
+			menu["assist mode"][#menu["assist mode"] - 1].name = "Skip level"
+			SaveSettings()
+			ChangeGamestate("pause")
+			pointer = 3
+		end}
 	}
 }
 

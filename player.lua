@@ -151,6 +151,7 @@ local cameraInputs = {
 }
 
 local inputModes = {
+	chaptercomplete = {},
 	cutscene = function()
 		if cutscenes.texttime >= cutscenes.current[cutscenes.page]:len() then
 			cutscenes.page = cutscenes.page + 1
@@ -159,6 +160,7 @@ local inputModes = {
 				gamestate = cutscenes.nextgamestate
 				sound.setMusic(cutscenes.prevmusic)
 				if cutscenes.num > 1 and gamestate == "ingame" then
+					sound.checkUnlocks(2)
 					lastmap = lastmap + 1
 					EndLevel()
 				end
@@ -358,6 +360,24 @@ local inputModes = {
 			cmenu[1].name = "< " .. sound.soundtest[sound.soundtestpointer].name .. " >"
 			sound.playSound("menu_move.wav")
 		end
+	}, defaultInputs),
+	["assist mode"] = setmetatable({
+		up = function(cmenu)
+			if cmenu[1].value == 0 then
+				pointer = (pointer == 1 and #cmenu) or 1
+				sound.playSound("menu_move.wav")
+			else
+				menuInputs.up(cmenu)
+			end
+		end,
+		down = function(cmenu)
+			if cmenu[1].value == 0 then
+				pointer = (pointer == 1 and #cmenu) or 1
+				sound.playSound("menu_move.wav")
+			else
+				menuInputs.down(cmenu)
+			end
+		end,
 	}, defaultInputs)
 }
 
@@ -459,10 +479,10 @@ function love.mousemoved(x, y, dx, dy)
 					pointer = i
 					sound.playSound("menu_move.wav")
 				end
-				return
+				break
 			end
 		end
-		return
+		--return
 	end
 	if not love.mouse.isDown(1) then return end
 	if (gamestate == "ingame" or gamestate == "editing") and mouse.mode == "camera" then
