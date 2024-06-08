@@ -1,4 +1,4 @@
-VERSION = "Version b9.0.244"
+VERSION = "Version b9.0.245"
 
 if love.filesystem.isFused() then
 	love.filesystem.mount(love.filesystem.getSourceBaseDirectory(), "Source")
@@ -1083,7 +1083,7 @@ local drawModes = {
 		local a = math.sin(love.timer.getTime() * 2) / 2
 		love.graphics.setColor(1, a, a)
 		love.graphics.printf([[
--Maiori-
+-Rosy.iso-
 Coder
 Mapper
 Story writer]], 0, 175, fifteentens, "center")
